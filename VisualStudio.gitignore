@@ -9,7 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
-
+CS202-SuperMarioGame/SuperMario/SFML/
+CS202-SuperMarioGame/SuperMario/box2d/
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
