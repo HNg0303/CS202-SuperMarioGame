@@ -1,8 +1,5 @@
 #pragma once
 #include "INCLUDE.h"
-
-
-
 enum CharacterType {MARIO, LUIGI, CustomCharacter};
 
 class Character {
