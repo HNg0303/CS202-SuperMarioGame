@@ -3,7 +3,7 @@
 
 void Map::CreateCheckerBoard(int width, int height)
 {
-	grid = std::vector(width, std::vector(height, 0));
+	grid = vector<vector<int>>(width, vector<int>(height, 0));
 	int last = 0;
 	for (auto& col : grid) {
 		for (auto& cell : col) {
@@ -42,7 +42,7 @@ void Map::Draw(Renderer& renderer)
 sf::Vector2f Map::CreateFromImage(const sf::Image& image)
 {
 	grid.clear(); //
-	grid = std::vector(image.getSize().x, std::vector(image.getSize().y, 0));
+	grid = vector<vector<int>> (image.getSize().x, vector<int> (image.getSize().y, 0));
 
 	sf::Vector2f marioPos{};
 

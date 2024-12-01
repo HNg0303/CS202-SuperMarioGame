@@ -1,6 +1,6 @@
 #pragma once
+#include "INCLUDE.h"
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include "Resources.h"
 #include "Renderer.h"
 class Map
