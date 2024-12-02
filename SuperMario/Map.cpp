@@ -22,6 +22,7 @@ void Map::CreateCheckerBoard(int width, int height)
 
 void Map::Draw(Renderer& renderer, Resources& resource)
 {
+
 	//std::cout << "Drawing stuff\n";
 	int x = 0;
 	for (const auto& col : grid) {

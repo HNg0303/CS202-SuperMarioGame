@@ -11,13 +11,15 @@ int main() {
 	Clock deltaClock;
 	Renderer renderer(window); //This is used to retain a renderer through out the loop
 	Resources resource;
-	Map map(0.02f);
-	Camera camera(0.05f);
+	Map map(32.0f);
+	Camera camera(800.0f);
 	Mario mario;
 
 	resource.loadResource();
 
 	/*
+	Game* game = Game::getInstance(map, mario, camera);
+	game->Begin(window);
 	while (window.isOpen()) {
 		Event event;
 		while (window.pollEvent(event)) {
@@ -25,12 +27,15 @@ int main() {
 				window.close();
 		}
 		window.clear();
-		mario.Draw(renderer, 0, resource);
+		game->Render(renderer, resource);
+		//renderer.Draw(resource.getTexture("block2.png"), Vector2f(600.0f, 450.f), sf::Vector2f(200.0f, 200.0f), 0);
+		//map.Draw(renderer, resource);
 		window.display();
-	}*/ //Testing
+	}*/
 	
 	
 	//Initialize Game instance => Should be an Game arrays of mementos or checkpointss here
+	
 	Game* game = Game::getInstance(map, mario, camera);
 	if (game) cout << "YES!" << endl;
 	game->Begin(window);
@@ -43,8 +48,7 @@ int main() {
 				window.close();
 		}
 		window.clear();
-		window.setView(camera.GetView(window.getSize()));
-		//game->Update(deltaTime);
+		game->Update(deltaTime, window);
 		game->Render(renderer, resource);
 		window.display();
 	}

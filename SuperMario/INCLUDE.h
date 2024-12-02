@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <filesystem>
+#include <algorithm>
 constexpr float PI = 3.14f;
 namespace fs = std::filesystem;
 using namespace std;

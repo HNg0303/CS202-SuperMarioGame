@@ -15,7 +15,7 @@ Mario::Mario(float x, float y) {
     position.x = x;
     position.y = y;
     goRight = goUp = goLeft = goDown = false;
-    movementVelocity = 3.0f;
+    movementVelocity = 150.0f;
     jumpVelocity = 1.0f;
     angle = 0.0f;
 
@@ -41,7 +41,8 @@ void Mario :: setPosition(float x, float y) {
 
 void Mario :: Draw(Renderer& renderer, int state, Resources& resource) {
     if (state == 0) //Small Mario.
-        renderer.Draw(resource.getTexture("mario.jpg"), position, Vector2f(480.0f, 450.0f), 0);
+        renderer.Draw(resource.getTexture("mario1.png"), position, Vector2f(64.0f, 128.0f), 0);
+    else return;
 }
  
 void Mario::Begin() {
@@ -68,10 +69,11 @@ void Mario::Update(float deltaTime) {
     float move = movementVelocity;
     if (Keyboard::isKeyPressed(Keyboard::LShift))
         move *= 2;
-    
+    if (Keyboard::isKeyPressed(Keyboard::Right))
+        position.x += move*deltaTime;
     //Update position and angle
-    position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
-    angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
+    //position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
+    //angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
 
 }
 

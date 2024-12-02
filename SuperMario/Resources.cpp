@@ -16,8 +16,9 @@ void Resources::loadResource() {
 	for (const auto& file : fs::directory_iterator(texturePath)) {
 		if (file.is_regular_file() && (file.path().extension() == ".png" || file.path().extension() == ".jpg")) {
 			string filePath = convertToUnixPath(file.path().string());
-			
-			if (!textures[file.path().filename().string()].loadFromFile(file.path().string())) {
+			Image image;
+			if (!image.loadFromFile(file.path().string())) cout << "Can't Load Image" << endl;
+			if (!textures[file.path().filename().string()].loadFromImage(image)) {
 				std::cout << "Loading from: " << file.path().string() << std::endl;
 				std::cout << "Load texture failed\n";
 			}
@@ -31,6 +32,8 @@ void Resources::loadResource() {
 	for (auto& file : fs::directory_iterator(marioPath)) {
 		if (file.is_regular_file() && (file.path().extension() == ".png" || file.path().extension() == ".jpg")) {
 			string filePath = convertToUnixPath(file.path().string());
+			Image image;
+			if (!image.loadFromFile(file.path().string())) cout << "Can't Load Image" << endl;
 			if (!textures[file.path().filename().string()].loadFromFile(file.path().string())) {
 				std::cout << "Loading from: " << file.path().string() << std::endl;
 				std::cout << "Load Mario failed\n";
@@ -44,6 +47,8 @@ void Resources::loadResource() {
 	for (auto& file : fs::directory_iterator(lugiPath)) {
 		if (file.is_regular_file() && (file.path().extension() == ".png" || file.path().extension() == ".jpg")) {
 			string filePath = convertToUnixPath(file.path().string());
+			Image image;
+			if (!image.loadFromFile(file.path().string())) cout << "Can't Load Image" << endl;
 			if (!textures[file.path().filename().string()].loadFromFile(file.path().string())) {
 				std::cout << "Load character Luigi failed\n";
 			}

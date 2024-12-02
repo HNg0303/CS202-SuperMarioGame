@@ -17,7 +17,7 @@ private:
 	~Game();
 public:
 	static Game* getInstance(Map& map, Mario& mario, Camera& camera);
-	void Begin(const sf::Window& window);
-	void Update(float deltaTime);
+	void Begin(sf::RenderWindow& window);
+	void Update(float deltaTime, RenderWindow& window);
 	void Render(Renderer& renderer, Resources& resource);
 };
