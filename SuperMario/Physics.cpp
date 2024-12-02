@@ -1,6 +1,6 @@
 #include "Physics.h"
 
-b2World Physics::world{(b2Vec2(0.0f, -9.8f))};
+b2World Physics::world{(b2Vec2(0.0f, -9.8f))}; //intialize gravity in this world => 9.8m/s^2 down to Earth.
 
 void Physics::Init() {
 

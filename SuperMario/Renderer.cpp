@@ -1,7 +1,5 @@
 #include "Renderer.h"
 
-
-
 Renderer::Renderer(sf::RenderTarget& t) : target(t) {} //Target is Window
 
 void Renderer::Draw(const sf::Texture& texture, const sf::Vector2f& position, const sf::Vector2f& size, float angle) {
