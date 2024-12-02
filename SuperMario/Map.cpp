@@ -3,7 +3,7 @@
 
 void Map::CreateCheckerBoard(int width, int height)
 {
-	grid = std::vector(width, std::vector(height, 0));
+	grid = vector<vector<int>>(width, vector<int>(height, 0));
 	int last = 0;
 	for (auto& col : grid) {
 		for (auto& cell : col) {
@@ -20,8 +20,9 @@ void Map::CreateCheckerBoard(int width, int height)
 	}
 }
 
-void Map::Draw(Renderer& renderer)
+void Map::Draw(Renderer& renderer, Resources& resource)
 {
+
 	//std::cout << "Drawing stuff\n";
 	int x = 0;
 	for (const auto& col : grid) {
@@ -31,7 +32,7 @@ void Map::Draw(Renderer& renderer)
 			if (cell == 1) {
 				//std::cout << "cell = 1\n";
 				sf::Vector2f cell_position(cellSize * x - cellSize * s, cellSize * y - cellSize * s);
-				renderer.Draw(Resources::textures["block2.png"],cell_position,sf::Vector2f(cellSize, cellSize));
+				renderer.Draw(resource.getTexture("block2.png"),cell_position,sf::Vector2f(cellSize, cellSize), 0);
 			}
 			y++;
 		}
@@ -42,7 +43,8 @@ void Map::Draw(Renderer& renderer)
 sf::Vector2f Map::CreateFromImage(const sf::Image& image)
 {
 	grid.clear(); //
-	grid = std::vector(image.getSize().x, std::vector(image.getSize().y, 0));
+	grid = vector<vector<int>> (image.getSize().x, vector<int> (image.getSize().y, 0));
+	cout << endl << image.getSize().x << " " << image.getSize().y << endl;
 
 	sf::Vector2f marioPos{};
 

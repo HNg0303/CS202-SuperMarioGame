@@ -1,52 +1,39 @@
 #include "Game.h"
-#include "Resources.h"
-#include <iostream>
-#include <filesystem>
-#include "Map.h"
-#include "Mario.h"
 
-Map map(0.02f);
-Camera camera(0.5f);
+Game::Game(Map& map, Mario& mario, Camera& camera) : map(map), mario(mario), camera(camera) {};
 
-Mario mario;
+Game :: ~Game() {
+	if (instance != nullptr)
+		delete instance;
+	instance = nullptr;
+}
 
-void Begin(const sf::Window& window)
+Game* Game::getInstance(Map& map, Mario& mario, Camera& camera) {
+	if (instance == nullptr) {
+		instance = new Game(map, mario, camera);
+	}
+	return instance;
+}
+
+void Game :: Begin(sf::RenderWindow& window)
 {
-	//load textures
-	for (auto& file : std::filesystem::directory_iterator("./Assets/Textures/")) {
-		if (file.is_regular_file() && (file.path().extension() == ".png" || file.path().extension() == ".jpg")) {
-			if (!Resources::textures[file.path().filename().string()].loadFromFile(file.path().string())) {
-				std::cout << "Load texture failed\n";
-			}
-			else {
-				std::cout << "Load texture succeed\n";
-			}
-		}
-	}
-	//load character
-	for (auto& file : std::filesystem::directory_iterator("./Assets/Character/")) {
-		if (file.is_regular_file() && (file.path().extension() == ".png" || file.path().extension() == ".jpg")) {
-			if (!Resources::textures[file.path().filename().string()].loadFromFile(file.path().string())) {
-				std::cout << "Load character failed\n";
-			}
-			else {
-				std::cout << "Load character succeed\n";
-			}
-		}
-	}
 	//Generate map
 	//map.CreateCheckerBoard(4, 2);
 	sf::Image map_image;
-	map_image.loadFromFile("./Assets/map.png");
+	string mapPath = convertToUnixPath(fs::current_path().string()) + "/Resource/map.png";
+	map_image.loadFromFile(mapPath);
 	mario.position = map.CreateFromImage(map_image);
+	window.setView(camera.GetView(window.getSize()));
 }
 
-void Update(float deltaTime) {
+void Game :: Update(float deltaTime, RenderWindow& window) {
 	mario.Update(deltaTime);
 	camera.position = mario.position;
+	window.setView(camera.GetView(window.getSize()));
 }
 
-void Render(Renderer& renderer) {
-	map.Draw(renderer);
-	mario.Draw(renderer);
+void Game :: Render(Renderer& renderer, Resources& resource) {
+	map.Draw(renderer, resource);
+
+	mario.Draw(renderer, 0, resource);
 }
