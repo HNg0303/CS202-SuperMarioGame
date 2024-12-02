@@ -19,6 +19,8 @@ Mario::Mario(float x, float y) {
     jumpVelocity = 1.0f;
     angle = 0.0f;
 
+
+    /*
     // Set Mario Sprite Properties
     if (!texture.loadFromFile("./Resource/Mario/mario.png")) { cout << "Can't load MARIO_CHARACTER\n"; }
     //if (!marioSuperTexture.loadFromFile(MARIO_SUPER_CHARACTER)) { std::cout << "Can't load MARIO_SUPER_CHARACTER\n"; }
@@ -29,6 +31,7 @@ Mario::Mario(float x, float y) {
 
     //Define here
     //Sound buffer and sound effect : Jump, d
+    */
 }
 
 
@@ -36,8 +39,9 @@ void Mario :: setPosition(float x, float y) {
     sprite.setPosition(x, y);
 }
 
-void Mario :: draw(RenderWindow& window, int state) {
-    window.draw(sprite);
+void Mario :: Draw(Renderer& renderer, int state, Resources& resource) {
+    if (state == 0) //Small Mario.
+        renderer.Draw(resource.getTexture("mario.jpg"), position, Vector2f(480.0f, 450.0f), 0);
 }
  
 void Mario::Begin() {
@@ -71,8 +75,5 @@ void Mario::Update(float deltaTime) {
 
 }
 
-void Mario::draw(RenderWindow& window, int state) {
-    return;
-}
 
 

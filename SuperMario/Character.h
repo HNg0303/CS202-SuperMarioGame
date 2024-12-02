@@ -1,5 +1,7 @@
 #pragma once
 #include "INCLUDE.h"
+#include "Renderer.h"
+#include "Resources.h"
 #include "Physics.h"
 enum CharacterType {MARIO, LUIGI, CustomCharacter};
 
@@ -14,7 +16,7 @@ public:
     virtual ~Character() = default;
     virtual void Begin() = 0;
     virtual void Update(float deltaTime) = 0;
-    virtual void draw(RenderWindow& window, int state) = 0;
+    virtual void Draw(Renderer& renderer, int state, Resources& resource) = 0;
 protected:
     Texture superTexture;
     Texture texture;
@@ -42,8 +44,8 @@ protected:
     Clock timer1, timer2;
     bool goRight, goUp, goLeft, goDown;
 public:
-    Mario(float x, float y); //set Position, Velocity and JumpVelocity
-    void draw(RenderWindow& window, int state) override;
+    Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
+    void Draw(Renderer& renderer, int state, Resources& resource) override;
     void setPosition(float x, float y);
     void Begin() override;
     void Update(float deltaTime) override;
