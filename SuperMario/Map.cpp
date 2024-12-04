@@ -32,7 +32,7 @@ void Map::Draw(Renderer& renderer, Resources& resource)
 			if (cell == 1) {
 				//std::cout << "cell = 1\n";
 				sf::Vector2f cell_position(cellSize * x - cellSize * s, cellSize * y - cellSize * s);
-				renderer.Draw(resource.getTexture("block2.png"),cell_position,sf::Vector2f(cellSize, cellSize), 0);
+				renderer.Draw(resource.getTexture("block2.png"),cell_position,sf::Vector2f(cellSize, cellSize), 0, false);
 			}
 			y++;
 		}

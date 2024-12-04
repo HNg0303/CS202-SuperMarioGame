@@ -22,6 +22,7 @@ void Game :: Begin(sf::RenderWindow& window)
 	sf::Image map_image;
 	string mapPath = convertToUnixPath(fs::current_path().string()) + "/Resource/map.png";
 	map_image.loadFromFile(mapPath);
+	mario.Begin();
 	mario.position = map.CreateFromImage(map_image);
 	window.setView(camera.GetView(window.getSize()));
 }

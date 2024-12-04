@@ -6,9 +6,9 @@
 class Resources
 {
 public:
-	std::unordered_map<std::string, sf::Texture> textures;
 	void loadResource();
 	Texture getTexture(string textureName);
+	static unordered_map<string,class Texture> textures;
 };
 
 string convertToUnixPath(const string& path);

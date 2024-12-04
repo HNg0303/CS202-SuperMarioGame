@@ -1,2 +1,9 @@
-D:\CS202-SuperMarioGame\SuperMario\main.cpp;D:\CS202-SuperMarioGame\SuperMario\SuperMario\x64\Release\main.obj
-D:\CS202-SuperMarioGame\SuperMario\Character.cpp;D:\CS202-SuperMarioGame\SuperMario\SuperMario\x64\Release\Character.obj
+F:\GitHub\SuperMARIO\SuperMARIO\Animation.cpp;F:\GitHub\SuperMARIO\SuperMARIO\SuperMario\x64\Release\Animation.obj
+F:\GitHub\SuperMARIO\SuperMARIO\Camera.cpp;F:\GitHub\SuperMARIO\SuperMARIO\SuperMario\x64\Release\Camera.obj
+F:\GitHub\SuperMARIO\SuperMARIO\Game.cpp;F:\GitHub\SuperMARIO\SuperMARIO\SuperMario\x64\Release\Game.obj
+F:\GitHub\SuperMARIO\SuperMARIO\main.cpp;F:\GitHub\SuperMARIO\SuperMARIO\SuperMario\x64\Release\main.obj
+F:\GitHub\SuperMARIO\SuperMARIO\Character.cpp;F:\GitHub\SuperMARIO\SuperMARIO\SuperMario\x64\Release\Character.obj
+F:\GitHub\SuperMARIO\SuperMARIO\Map.cpp;F:\GitHub\SuperMARIO\SuperMARIO\SuperMario\x64\Release\Map.obj
+F:\GitHub\SuperMARIO\SuperMARIO\Physics.cpp;F:\GitHub\SuperMARIO\SuperMARIO\SuperMario\x64\Release\Physics.obj
+F:\GitHub\SuperMARIO\SuperMARIO\Renderer.cpp;F:\GitHub\SuperMARIO\SuperMARIO\SuperMario\x64\Release\Renderer.obj
+F:\GitHub\SuperMARIO\SuperMARIO\Resources.cpp;F:\GitHub\SuperMARIO\SuperMARIO\SuperMario\x64\Release\Resources.obj

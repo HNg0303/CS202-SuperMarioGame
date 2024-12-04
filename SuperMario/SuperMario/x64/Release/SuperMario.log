@@ -1,8 +1,7 @@
-﻿  main.cpp
-  Character.cpp
-  Previous IPDB not found, fall back to full compilation.
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  Renderer.cpp
   Generating code
-  All 38 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  3 of 896 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  SuperMario.vcxproj -> D:\CS202-SuperMarioGame\SuperMario\x64\Release\SuperMario.exe
+  SuperMario.vcxproj -> F:\GitHub\SuperMARIO\SuperMARIO\x64\Release\SuperMario.exe
