@@ -11,10 +11,10 @@ int main() {
 	Clock deltaClock;
 	Renderer renderer(window); //This is used to retain a renderer through out the loop
 	Resources resource;
-	Map map(32.0f);
-	Camera camera(800.0f);
-	Mario mario;
-
+	Map map(1.0f);
+	Camera camera(30.0f);
+	Mario* mario = new Mario();
+	
 	resource.loadResource();
 
 	/*
@@ -35,7 +35,7 @@ int main() {
 	
 	
 	//Initialize Game instance => Should be an Game arrays of mementos or checkpointss here
-	
+	window.setFramerateLimit(60);
 	Game* game = Game::getInstance(map, mario, camera);
 	if (game) cout << "YES!" << endl;
 	game->Begin(window);
@@ -52,5 +52,4 @@ int main() {
 		game->Render(renderer, resource);
 		window.display();
 	}
-	
 }
