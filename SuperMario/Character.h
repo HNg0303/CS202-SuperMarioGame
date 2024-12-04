@@ -18,18 +18,13 @@ public:
     virtual void Update(float deltaTime) = 0;
     virtual void Draw(Renderer& renderer, int state, Resources& resource) = 0;
 protected:
-    Texture superTexture;
-    Texture texture;
-    Sprite sprite;
     string name;
     b2Body* dynamicBody = nullptr;
     int changeStateCounter; //3 states (Small, Big, Super) => we will need 3 bodies for each state.
-    //bool jumping, onGround;
+    bool onGround;
 
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.
     //float angle{};// => Use velocity in b2_body.
-
-    //virtual void update(float deltaTime) = 0;
 };
 
 
@@ -45,10 +40,13 @@ protected:
     bool goRight, goUp, goLeft, goDown;
 public:
     Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
+    void OnBeginContact();
+    void OnEndContact();
     void Draw(Renderer& renderer, int state, Resources& resource) override;
     void setPosition(float x, float y);
     void Begin() override;
     void Update(float deltaTime) override;
+    b2Body* getBody();
 };
 
 /*
