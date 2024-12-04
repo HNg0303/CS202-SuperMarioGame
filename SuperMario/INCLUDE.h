@@ -4,6 +4,9 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_polygon_shape.h>
 #include <box2d/b2_fixture.h>
+#include <box2d/b2_circle_shape.h>
+#include <box2d/b2_contact.h>
+#include <box2d/b2_draw.h>
 #include <memory>
 #include <string>
 #include <iostream>

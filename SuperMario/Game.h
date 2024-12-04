@@ -6,17 +6,18 @@
 #include "Character.h"
 #include "Camera.h"
 #include "Renderer.h"
+#include "Physics.h"
 
 class Game {
 private:
 	inline static Game* instance;
 	Map map;
-	Mario mario;
+	Mario* mario = nullptr;
 	Camera camera;
-	Game(Map& map, Mario& mario, Camera& camera);
+	Game(Map& map, Mario* mario, Camera& camera);
 	~Game();
 public:
-	static Game* getInstance(Map& map, Mario& mario, Camera& camera);
+	static Game* getInstance(Map& map, Mario* mario, Camera& camera);
 	void Begin(sf::RenderWindow& window);
 	void Update(float deltaTime, RenderWindow& window);
 	void Render(Renderer& renderer, Resources& resource);
