@@ -1,7 +1,14 @@
-﻿  Renderer.cpp
+﻿  Animation.cpp
+  Game.cpp
+  Map.cpp
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(30,9): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Physics.cpp
+  Renderer.cpp
+  Resources.cpp
+  main.cpp
   Generating code
-  3 of 896 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+  43 of 896 functions ( 4.8%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    3 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  SuperMario.vcxproj -> F:\GitHub\SuperMARIO\SuperMARIO\x64\Release\SuperMario.exe
+  SuperMario.vcxproj -> F:\GitHub\SuperMario\SuperMARIO\x64\Release\SuperMario.exe
