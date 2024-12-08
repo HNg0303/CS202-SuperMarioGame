@@ -82,17 +82,19 @@ class myGlobalContact : public b2ContactListener {
     virtual void BeginContact(b2Contact* contact) {
         
         if (contact->GetFixtureA()->IsSensor()) {
-            reinterpret_cast<Mario*> (contact->GetFixtureA()->GetUserData().pointer)->OnBeginContact();
+            reinterpret_cast<Character*> (contact->GetFixtureA()->GetUserData().pointer)->OnBeginContact();
+            cout << "Foot Sensor Begin" << endl;
             return;
         }
         if (contact->GetFixtureB()->IsSensor()) {
-            reinterpret_cast<Mario*> (contact->GetFixtureB()->GetUserData().pointer)->OnBeginContact();
+            reinterpret_cast<Character*> (contact->GetFixtureB()->GetUserData().pointer)->OnBeginContact();
+            cout << "Foot Sensor Begin" << endl;
             return;
         }
         
         b2BodyUserData* data = &(contact->GetFixtureA()->GetBody()->GetUserData());
         if (data->pointer) {
-            reinterpret_cast<Mario*> (data->pointer)->OnBeginContact();
+            reinterpret_cast<Character*> (data->pointer)->OnBeginContact();
             std::cout << "???Begin";
         }
         else {
@@ -102,7 +104,7 @@ class myGlobalContact : public b2ContactListener {
         data = &(contact->GetFixtureB()->GetBody()->GetUserData());
 
         if (data->pointer) {
-            reinterpret_cast<Mario*> (data->pointer)->OnBeginContact();
+            reinterpret_cast<Character*> (data->pointer)->OnBeginContact();
             std::cout << "???Begin";
         }
         else {
@@ -114,17 +116,19 @@ class myGlobalContact : public b2ContactListener {
     virtual void EndContact(b2Contact* contact) {
         
         if (contact->GetFixtureA()->IsSensor()) {
-            reinterpret_cast<Mario*> (contact->GetFixtureA()->GetUserData().pointer)->OnEndContact();
+            reinterpret_cast<Character*> (contact->GetFixtureA()->GetUserData().pointer)->OnEndContact();
+            cout << "Foot Sensor End" << endl;
             return;
         }
         if (contact->GetFixtureB()->IsSensor()) {
-            reinterpret_cast<Mario*> (contact->GetFixtureB()->GetUserData().pointer)->OnEndContact();
+            reinterpret_cast<Character*> (contact->GetFixtureB()->GetUserData().pointer)->OnEndContact();
+            cout << "Foot Sensor End" << endl;
             return;
         }
 
         b2BodyUserData* data = &(contact->GetFixtureA()->GetBody()->GetUserData());
         if (data->pointer) {
-            reinterpret_cast<Mario*> (data->pointer)->OnEndContact();
+            reinterpret_cast<Character*> (data->pointer)->OnEndContact();
             std::cout << "???End";
         }
         else {
@@ -134,7 +138,7 @@ class myGlobalContact : public b2ContactListener {
         data = &(contact->GetFixtureB()->GetBody()->GetUserData());
 
         if (data->pointer) {
-            reinterpret_cast<Mario*>(data->pointer)->OnEndContact();
+            reinterpret_cast<Character*>(data->pointer)->OnEndContact();
             std::cout << "???End";
         }
         else {

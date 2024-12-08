@@ -7,14 +7,21 @@
 
 
 int main() {
+	Map map(1.0f);
+	Camera camera(30.0f);
+	Character* character = nullptr;
+	string name;
+	cout << "Enter your Hero Name(Luigi or Mario): "; getline(cin, name);
+	if (name == "Luigi")
+		character = CharacterFactory::createCharacter(LUIGI);
+	else if (name == "Mario")
+		character = CharacterFactory::createCharacter(MARIO);
+
+
 	RenderWindow window(VideoMode(1200, 900), "Super Mario !!!");
 	Clock deltaClock;
 	Renderer renderer(window); //This is used to retain a renderer through out the loop
 	Resources resource;
-	Map map(1.0f);
-	Camera camera(30.0f);
-	Mario* mario = new Mario();
-	
 	resource.loadResource();
 
 	/*
@@ -36,7 +43,7 @@ int main() {
 	
 	//Initialize Game instance => Should be an Game arrays of mementos or checkpointss here
 	window.setFramerateLimit(60);
-	Game* game = Game::getInstance(map, mario, camera);
+	Game* game = Game::getInstance(map, character, camera);
 	if (game) cout << "YES!" << endl;
 	game->Begin(window);
 	while (window.isOpen()) {
