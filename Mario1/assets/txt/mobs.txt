@@ -1,0 +1,2 @@
+goombas 1400 400
+koopas 2400 100

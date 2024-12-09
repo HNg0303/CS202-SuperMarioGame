@@ -1,0 +1,42 @@
+Thu Aug 24 22:51:13 2023
+Coins: 085 Score: 1150 Time: 087 NIJIYA
+
+Thu Aug 24 22:52:14 2023
+Coins: 064 Score: 0890 Time: 055 RUBIKA
+
+Thu Aug 24 22:52:59 2023
+Coins: 053 Score: 0780 Time: 041 SADHANA
+
+Fri Aug 25 10:04:24 2023
+Coins: 029 Score: 0340 Time: 040 jhdjfh
+
+Fri Aug 25 10:51:11 2023
+Coins: 003 Score: 0030 Time: 037 nijiya
+
+Fri Aug 25 10:51:45 2023
+Coins: 009 Score: 0190 Time: 025 nijiya
+
+Fri Aug 25 10:52:40 2023
+Coins: 036 Score: 0560 Time: 052 niji
+
+Fri Aug 25 10:56:03 2023
+Coins: 008 Score: 0180 Time: 027 hihi
+
+Fri Aug 25 12:15:50 2023
+Coins: 008 Score: 0180 Time: 047 nijiya
+
+Fri Aug 25 12:16:41 2023
+Coins: 035 Score: 0500 Time: 047 nijiya
+
+Fri Aug 25 12:38:22 2023
+Coins: 009 Score: 0190 Time: 030 nijiya
+
+Fri Aug 25 12:39:14 2023
+Coins: 038 Score: 0530 Time: 048 nijiya
+
+Sat Nov 30 10:32:08 2024
+Coins: 075 Score: 0950 Time: 122 my
+
+Sun Dec  1 22:04:57 2024
+Coins: 008 Score: 0080 Time: 009 myan
+
