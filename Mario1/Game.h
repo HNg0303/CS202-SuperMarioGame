@@ -70,9 +70,10 @@ public:
 		askRestart(2, { "YES","NO" }),
 		sfEvent()
 	{
-
+		loadPausedTimeToFile();
 		loadMobs();
 		mainMenu.loadResultsToArray();
+
 		this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Mario");
 		view.reset(sf::FloatRect(0.f, 0.f, WINDOW_WIDTH, WINDOW_HEIGHT));
 	}
@@ -81,16 +82,15 @@ public:
 	void run();
 
 	void handleMainMenu();
+	void handleHelpMenu();
+	void handlePauseMenu();
 	void handleChooseCharacter();
 	void handleScoreboard();
-	void handleHelpMenu();
 	void handlePlayingGame();
 	void handleChooseLevel();
-	void handlePauseMenu();
 	void handleAskRestart();
-
 	void handleEntity();
-
+	void handleClosed();
 
 	//Mobs
 	void loadMobs();
@@ -99,8 +99,12 @@ public:
 	std::vector<sf::Texture>  loadFrame(std::string folderPath);
 	//void loadFrame(std::string folderPath, sf::RenderWindow& window);
 
+
+	//Clock
 	void pauseClock();
 	void resumeClock();
 	void handleClock();
+	void savePausedTimeToFile();
+	void loadPausedTimeToFile();
 
 };

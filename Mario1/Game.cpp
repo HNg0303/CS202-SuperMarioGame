@@ -2,6 +2,7 @@
 
 Game::~Game()
 {
+	savePausedTimeToFile();
 	delete this->window;
 }
 
@@ -46,6 +47,92 @@ void Game::loadMobs()
 
 }
 
+void Game::handleClock()
+{
+	sf::Font font;
+	try {
+		if (!font.loadFromFile("assets/font/PixeloidSans.ttf"))
+		{
+			throw - 1;
+		}
+	}
+	catch (int)
+	{
+		std::cout << "Error: Cannot load menu font.";
+		exit(1);
+	}
+	// Text for the label "Time"
+	sf::Text labelText;
+	labelText.setFont(font);
+	labelText.setPosition({ 50, 50 });
+	labelText.setCharacterSize(25);
+	labelText.setFillColor(sf::Color::Yellow); // Set the color for the label
+
+	// Text for the elapsed time
+	sf::Text timeText;
+	timeText.setFont(font);
+	timeText.setPosition({ 125, 50 }); // Adjust the position to be next to the label
+	timeText.setCharacterSize(24);
+	timeText.setFillColor(sf::Color::White); // Set the color for the elapsed time
+
+	sf::Time elapsed = pausedTime + clock.getElapsedTime();
+	std::ostringstream oss;
+	oss << std::fixed << std::setprecision(0) << elapsed.asSeconds();
+	std::string elapsedString = oss.str();
+
+	// Update the text
+	labelText.setString("TIME:");
+	timeText.setString("  " + elapsedString + "s");
+
+	// Draw the texts
+	window->draw(labelText);
+	window->draw(timeText);
+}
+
+void Game::savePausedTimeToFile()
+{
+	std::ofstream outFile("assets/txt/pausedTime.txt");
+	if (outFile.is_open())
+	{
+		outFile << pausedTime.asSeconds() + clock.getElapsedTime().asSeconds();
+		outFile.close();
+	}
+	else
+	{
+		std::cerr << "Unable to open file for saving paused time." << std::endl;
+	}
+}
+
+void Game::loadPausedTimeToFile()
+{
+	std::ifstream inFile("assets/txt/pausedTime.txt");
+	if (inFile.is_open())
+	{
+		float seconds;
+		inFile >> seconds;
+		pausedTime = sf::seconds(seconds);
+		inFile.close();
+	}
+	else
+	{
+		std::cerr << "Unable to open file for loading paused time. Starting with zero time." << std::endl;
+		pausedTime = sf::Time::Zero;
+	}
+}
+
+
+void Game::pauseClock()
+{
+	isPaused = true;
+	pausedTime += clock.getElapsedTime();
+}
+
+void Game::resumeClock()
+{
+	isPaused = true;
+	pausedTime = sf::Time::Zero;
+}
+
 void Game::handleMainMenu() //handles controls in menu
 {
 	int center = WINDOW_WIDTH / 2;
@@ -58,8 +145,8 @@ void Game::handleMainMenu() //handles controls in menu
 
 	while (window->pollEvent(sfEvent))
 	{
-		if (sfEvent.type == sf::Event::Closed)
-			window->close();
+
+		handleClosed();
 
 		if (sfEvent.type == sf::Event::KeyPressed)
 		{
@@ -81,7 +168,7 @@ void Game::handleMainMenu() //handles controls in menu
 					chooseCharacterMenu.drawChooseCharacter(*window, center);
 					this->window->display();
 				}
-				
+
 				if (mainMenu.GetPressedItem() == 2)
 				{
 
@@ -110,48 +197,6 @@ void Game::handleMainMenu() //handles controls in menu
 	}
 }
 
-
-void Game::handleClock()
-{
-	sf::Font font;
-	try {
-		if (!font.loadFromFile("assets/font/PixeloidSans.ttf"))
-		{
-			throw - 1;
-		}
-	}
-	catch (int)
-	{
-		std::cout << "Error: Cannot load menu font.";
-		exit(1);
-	}
-	// Text for the label "Time"
-	sf::Text labelText;
-	labelText.setFont(font);
-	labelText.setPosition({ 50, 50 });
-	labelText.setCharacterSize(24);
-	labelText.setFillColor(sf::Color::Yellow); // Set the color for the label
-
-	// Text for the elapsed time
-	sf::Text timeText;
-	timeText.setFont(font);
-	timeText.setPosition({ 120, 50 }); // Adjust the position to be next to the label
-	timeText.setCharacterSize(24);
-	timeText.setFillColor(sf::Color::White); // Set the color for the elapsed time
-
-	sf::Time elapsed = pausedTime + clock.getElapsedTime();
-	std::ostringstream oss;
-	oss << std::fixed << std::setprecision(0) << elapsed.asSeconds();
-	std::string elapsedString = oss.str();
-
-	// Update the text
-	labelText.setString("Time:   ");
-	timeText.setString(elapsedString + "s");
-
-	// Draw the texts
-	window->draw(labelText);
-	window->draw(timeText);
-}
 void Game::handlePlayingGame()
 {
 
@@ -164,11 +209,7 @@ void Game::handlePlayingGame()
 		}
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -194,12 +235,10 @@ void Game::handlePlayingGame()
 					return;
 				}
 
-				//handleExit(sfEvent, curState, GameState::MainMenu);
 				
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
-					pauseClock();
-					curState = static_cast<int>(GameState::MainMenu);
+					curState = static_cast<int>(GameState::ChooseLevel);
 					return;
 				}
 			}
@@ -316,11 +355,8 @@ void Game::handlePauseMenu()
 
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
+
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -369,11 +405,7 @@ void Game::handleAskRestart()
 
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -414,11 +446,7 @@ void Game::handleScoreboard()
 
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -432,7 +460,6 @@ void Game::handleScoreboard()
 	}
 }
 
-
 void Game::handleHelpMenu()
 {
 	while (true)
@@ -442,11 +469,7 @@ void Game::handleHelpMenu()
 
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -457,6 +480,24 @@ void Game::handleHelpMenu()
 				}
 			}
 		}
+	}
+}
+
+void Game::handleClosed()
+{
+	if (sfEvent.type == sf::Event::Closed)
+	{
+		window->close();
+		return;
+	}
+}
+
+void handleExit(sf::Event sfEvent, int& curState, Game::GameState& newState)
+{
+	if (sfEvent.key.code == sf::Keyboard::Escape)
+	{
+		curState = static_cast<int>(newState);
+		return;
 	}
 }
 
@@ -507,7 +548,6 @@ void Game::run()
 	}
 }
 
-
 void Menu::MoveUp() //keyboard input UP in menu
 {
 	texts[selectedItemIndex].setFillColor(sf::Color::White);
@@ -539,6 +579,7 @@ void Menu::handleUpDown(sf::Event sfEvent)
 		MoveDown();
 
 }
+
 void Menu::handleLeftRight(sf::Event sfEvent)
 {
 	if (sfEvent.key.code == sf::Keyboard::Left)
@@ -547,15 +588,6 @@ void Menu::handleLeftRight(sf::Event sfEvent)
 		MoveRight();
 }
 
-
-void handleExit(sf::Event sfEvent, int &curState, Game::GameState &newState)
-{
-	if (sfEvent.key.code == sf::Keyboard::Escape)
-	{
-		curState = static_cast<int>(newState);
-		return;
-	}
-}
 void Menu::MoveLeft()
 {
 	MoveUp();
@@ -575,7 +607,6 @@ void Menu::setPressedItem(int item)
 {
 	selectedItemIndex = item;
 }
-
 
 std::vector<sf::Texture> Game::loadFrame(std::string folderPath)
 {
@@ -598,17 +629,5 @@ std::vector<sf::Texture> Game::loadFrame(std::string folderPath)
 	}
 
 	return textures;
-}
-
-void Game::pauseClock()
-{
-	isPaused = true;
-	pausedTime += clock.getElapsedTime();
-}
-
-void Game::resumeClock()
-{
-	isPaused = true;
-	pausedTime = sf::Time::Zero;
 }
 
