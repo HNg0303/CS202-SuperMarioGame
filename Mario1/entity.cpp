@@ -31,7 +31,7 @@ void Entity::draw(sf::RenderWindow& window)
 	{
 		sf::Sprite sprite;
 		sprite.setTexture(frames[currentFrame]);
-		sprite.setScale(-1.f * direction, 1.f);
+		sprite.setScale(2.f * direction, 2.f);
 		sprite.setPosition(position);
 		window.draw(sprite);
 	}
