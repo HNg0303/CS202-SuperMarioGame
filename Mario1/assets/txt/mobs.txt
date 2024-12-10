@@ -1,2 +1,3 @@
-goombas 500 400 900
-koopas 700 800 900
+goombas 500 400 600
+koopas 700 400 900
+coin 100 300 0

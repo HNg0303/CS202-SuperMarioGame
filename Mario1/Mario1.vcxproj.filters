@@ -27,9 +27,6 @@
     <ClCompile Include="entity.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="Goombas.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -39,9 +36,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Goombas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

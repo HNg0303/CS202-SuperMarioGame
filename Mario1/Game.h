@@ -33,7 +33,17 @@ public:
 		AskRestart,
 		PlayingGame
 	};
+	
+	//clock 
 
+	/*static sf::Clock clock;
+	static sf::Time pausedTime;
+	static bool isPaused;
+	*/
+
+	sf::Clock clock;
+	sf::Time pausedTime;
+	bool isPaused = true;
 
 	//std::string entityName[11] = { "cheep","coin","flame","goombas","koopas","levelUp","plant1","plant2","plant3","qblock","star" };
 	std::string entityName[2] = { "goombas","koopas" };
@@ -60,6 +70,7 @@ public:
 		askRestart(2, { "YES","NO" }),
 		sfEvent()
 	{
+
 		loadMobs();
 		mainMenu.loadResultsToArray();
 		this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Mario");
@@ -78,11 +89,18 @@ public:
 	void handlePauseMenu();
 	void handleAskRestart();
 
+	void handleEntity();
+
 
 	//Mobs
 	void loadMobs();
-	void drawMobs();
+	//void drawMobs();
 
 	std::vector<sf::Texture>  loadFrame(std::string folderPath);
 	//void loadFrame(std::string folderPath, sf::RenderWindow& window);
+
+	void pauseClock();
+	void resumeClock();
+	void handleClock();
+
 };
