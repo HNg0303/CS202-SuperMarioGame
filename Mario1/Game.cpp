@@ -8,12 +8,12 @@ Game::~Game()
 void Game::loadMobs()
 {
 	std::string line;
-	float x, y;
+	float x1, x2, y;
 	std::fstream infile;
 	std::string mobName;
-	Entity* wsk;
 
-	mobs.clear();
+	entities.clear();
+	//std::string entityName[11] = { "cheep","coin","flame","goombas","koopas","levelUp","plant1","plant2","plant3","qblock","star" };
 
 	infile.open("assets/txt/mobs.txt");
 	if (!infile) {
@@ -25,26 +25,17 @@ void Game::loadMobs()
 			std::stringstream ss(line);
 			ss >> mobName;
 			std::string temp;
-			ss >> x;
+			ss >> x1;
 			ss >> y;
+			ss >> x2;
 
-			/*if (mobName.compare("Turtle") == 0)
-				wsk = new Goombas;
+			std::cout << mobName << '\n';
 
-			else if (mobName.compare("Spikey") == 0)
-				wsk = new Koopas;
+			if (mobName.compare("goombas") == 0)
+				entities.push_back(std::make_unique<Moveable>("goombas", 0.5, 0.05f, x1, x2, y));
 
-			/*else if (mobName.compare("FlyTur") == 0)
-				wsk = new FlyTur;
-
-			else if (mobName.compare("Plant1") == 0)
-				wsk = new Plant1;
-
-			else if (mobName.compare("Plant2") == 0)
-				wsk = new Plant2;
-
-			else
-				wsk = nullptr; // if no mobName read from exist take Abysss*/
+			else if (mobName.compare("koopas") == 0)
+				entities.push_back(std::make_unique<Moveable>("koopas", 0.5, 0.05f, x1, x2, y));
 
 			/*if (wsk != nullptr)
 			{
@@ -58,31 +49,6 @@ void Game::loadMobs()
 
 	infile.close();
 
-	//repairSFMLTextures();
-}
-
-void Game::drawMobs() //draws enemies
-{
-	/*for (int i = 0; i < mobs.size(); i++)
-	{
-		//std::cout << "yess";
-		if (mobs[i].getIsAlive())
-		{
-			//std::cout << "yess";
-			//if (movingSide == LEFT)
-				mobs.at(i).MovingDirectiongLeft();
-				mobs.at(i).update();
-				//else if (movingSide == RIGHT)
-				//mobs.at(i).MovingDirectiongRight();
-
-			mobs.at(i).update();
-			mobs[i].setPosition(sf::Vector2f(100*i,200));
-			window->draw(mobs[i]);
-		}
-	}*/
-	//mobs.at(0).moveLeft();
-	mobs.at(0).update();
-	window->draw(mobs[0]);
 }
 
 void Game::handleMainMenu() //handles controls in menu
@@ -150,40 +116,6 @@ void Game::handleMainMenu() //handles controls in menu
 
 void Game::handlePlayingGame()
 {
-	int n = 2;
-	std::vector<size_t> currentFrames(11, 0);
-	std::vector<std::vector<sf::Texture>> textures(11);
-	for (int i = 0; i < 2; ++i)
-	{
-		textures[i] = loadFrame("assets/frame/" + entityName[i]);
-		if (textures[i].empty())
-		{
-			std::cerr << "No frames loaded for entity " << i << std::endl;
-			return;
-		}
-	}
-	std::vector<sf::Sprite> sprites(11);
-	std::pair<float, float> X[2];
-
-	for (int i = 0; i < 2; ++i)
-	{
-		sprites[i].setScale(2.0f, 2.0f);
-		sprites[i].setPosition(100, i * 200.0f); // Set positions for each sprite
-		X[i].first = 100;
-		X[i].second = 500;
-	}
-
-	sf::Clock clock;
-	sf::Clock clock2;
-	float frameDuration = 0.4f; // Time per frame in seconds
-	float speed = 100.f; // pixel per second
-	float direction = 1.f;
-
-	//each enity
-	//name
-	//frameDuration: fixed
-	// (name, velocity, x, y): move -> range of movement(x,y)
-	// (name, x, y): do not move, coordinate(x,y)
 
 	while (window->isOpen())
 	{
@@ -229,44 +161,16 @@ void Game::handlePlayingGame()
 			}
 		}
 
-		if (clock.getElapsedTime().asSeconds() > frameDuration)
-		{
-			std::cout << "come HERE";
-			for (int i = 0; i < 2; ++i)
-			{
-				currentFrames[i] = (currentFrames[i] + 1) % textures[i].size();
-				sprites[i].setTexture(textures[i][currentFrames[i]]);
-			}
-			clock.restart();
-		}
-
-		float deltaTime = clock2.restart().asSeconds();
-
-		for (int i = 0; i < 2; ++i)
-		{
-			sf::Vector2f position = sprites[i].getPosition();
-			position.x += direction * speed * deltaTime;
-
-			// Đổi hướng nếu vượt phạm vi
-			if (position.x <= X[i].first)
-			{
-				position.x = X[i].first; // Giữ trong phạm vi
-				direction = 1.f; // Chuyển hướng sang phải
-			}
-			else if (position.x >= X[i].second)
-			{
-				position.x = X[i].second; // Giữ trong phạm vi
-				direction = -1.f; // Chuyển hướng sang trái
-			}
-
-			sprites[i].setPosition(position);
-		}
+		
 		// Render
 		window->clear();
-		for (const auto& sprite : sprites)
+		//std::cout << entities.size() << '\n';
+		for (const auto& anEntity: entities)
 		{
-			window->draw(sprite);
-			std::cout << "already draw";
+			
+			anEntity->update();
+			anEntity->draw(*window);
+			//std::cout << "already draw" << '\n';
 		}
 		window->display();
 	}

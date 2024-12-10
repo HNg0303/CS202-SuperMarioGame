@@ -1,6 +1,6 @@
 #include "entity.h"
 
-
+/*
 void Entity::draw(RenderTarget& target, RenderStates state)const
 {
 	target.draw(this->sprite, state);
@@ -72,3 +72,4 @@ void Entity::repair() {
 	sprite.setTexture(texture);
 }
 
+*/

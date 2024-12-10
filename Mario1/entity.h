@@ -7,19 +7,37 @@
 #include <iostream>
 
 using namespace sf;
-class Entity : public Drawable // Drawable makes possible to use window.draw(object)
+class Entity // Drawable makes possible to use window.draw(object)
 {
 	public:
-	Texture texture;
+	
+	std::string name;
+	std::vector<sf::Texture> frames;
+	int currentFrame;
+	float frameDuration;
+	sf::Clock clock;
+	
+	float speed;
+	float direction;
+
+	Vector2f position;
+
+
+	/*
+	move: starting pos
+	range [x1,x2]
+	*/
+	//void draw(RenderTarget& target, RenderStates state) const; // to use window.draw(object)
+	
+	/*Texture texture;
 	Sprite sprite;
 	float Width;
 	float Height;
 	float Velocity;
 
-	Vector2f startingPosition;
+	Vector2f position;
 	Vector2f velocity{ Velocity, Velocity };
 
-	void draw(RenderTarget& target, RenderStates state) const; // to use window.draw(object)
 
 	bool destroyMode = 0;
 	bool isFriendly = 0;
@@ -29,14 +47,51 @@ class Entity : public Drawable // Drawable makes possible to use window.draw(obj
 	sf::VertexArray m_vertices;
 	sf::Texture m_texture;
 
-	std::string file;
+	std::string file;*/
 
 public:
-	Entity() {};
+	Entity(std::string name_i, float frameDuration_i, float speed_i):
+	name(name_i), frameDuration(frameDuration_i), currentFrame(0), speed(speed_i), direction(1.0) {};
 
-	~Entity() = default;
+	std::vector<sf::Texture> loadFrame(std::string folderPath)
+	{
+		std::vector<sf::Texture> textures;
 
-	Vector2f getPosition();
+		for (const auto& entry : std::filesystem::directory_iterator(folderPath))
+		{
+			if (entry.is_regular_file())
+			{
+				sf::Texture texture;
+				if (texture.loadFromFile(entry.path().string()))
+				{
+					textures.push_back(texture);
+				}
+				else
+				{
+					std::cerr << "Failed to load: " << entry.path().string() << std::endl;
+				}
+			}
+		}
+
+		return textures;
+	}
+
+	void draw(sf::RenderWindow& window)
+	{
+		
+		if (!frames.empty())
+		{
+			sf::Sprite sprite;
+			sprite.setTexture(frames[currentFrame]);
+			sprite.setScale(-1.f*direction, 1.f);
+			sprite.setPosition(position);
+			window.draw(sprite);
+		}
+	}
+
+	virtual void update() =0 ; 
+
+	/*Vector2f getPosition();
 
 	void setPosition(Vector2f position);
 
@@ -53,9 +108,9 @@ public:
 	void moveTop();
 	void moveBottom();
 
-	bool isAlive = true;
+	bool isAlive = true;*/
 
-	void MovingDirectionLeft() { velocity.x = -Velocity; }
+	/*void MovingDirectionLeft() { velocity.x = -Velocity; }
 	void MovingDirectionRight() { velocity.x = Velocity; }
 
 	Sprite getSprite() { return sprite; }
@@ -68,10 +123,58 @@ public:
 	bool getIsFriendly() { return isFriendly; }
 
 	void repair();
-	bool isKillable() { return killable; }
+	bool isKillable() { return killable; }*/
 
 	//void loadFrame(std::string folderPath, sf::RenderWindow& window);
 
 };
 
 
+class Moveable : public Entity
+{
+private:
+	std::pair<float, float> xBound; //fixed bound [start, end]
+	float yPosition;
+public:
+	Moveable(std::string name_i, float frameDuration_i, float speed_i, float start, float end, float y) : Entity(name_i, frameDuration_i, speed_i), yPosition(y)
+	{
+		xBound = std::make_pair(start, end);
+		position.x = start;
+		position.y = y;
+
+		frames = loadFrame("assets/frame/" + name);
+		if (frames.empty())
+		{
+			std::cerr << "No frames loaded for entity " << name << std::endl;
+			return;
+		}
+	};
+
+	
+	void update() override
+	{
+		std::cout << position.x << " " << position.y;
+		if (clock.getElapsedTime().asSeconds() > frameDuration)
+		{
+			currentFrame = (currentFrame + 1) % frames.size();
+			std::cout << "check frame " << currentFrame << " " << frames.size() << '\n';
+			clock.restart();
+		}
+		move();
+	}
+
+	void checkAndChangeDirection()
+	{
+		if (position.x <= xBound.first || position.x >= xBound.second)
+		{
+			direction = -direction; // Reverse direction
+		}
+	}
+
+	void move()
+	{
+		position.x += speed * direction;
+		checkAndChangeDirection();
+	}
+
+};
