@@ -1,74 +1,79 @@
 #include "entity.h"
 
 
-void Entity::draw(RenderTarget& target, RenderStates state)const
+std::vector<sf::Texture> Entity::loadFrame(std::string folderPath)
 {
-	target.draw(this->sprite, state);
-}
+	std::vector<sf::Texture> textures;
 
-Vector2f Entity::getPosition()
-{
-	return sprite.getPosition();
-}
-
-void Entity::setPosition(Vector2f position)
-{
-	startingPosition = position;
-	sprite.setPosition(position);
-}
-
-void Entity::update()
-{
-	this->sprite.move(this->velocity);
-}
-
-float Entity::left()
-{
-	return this->sprite.getPosition().x - Width / 2.f;
-}
-
-float Entity::right()
-{
-	return this->sprite.getPosition().x + Width / 2.f;
-}
-float Entity::top()
-{
-	return this->sprite.getPosition().y - Height / 2.f;
-}
-float Entity::bottom()
-{
-	return this->sprite.getPosition().y + Height / 2.f;
-}
-
-void Entity::moveLeft()
-{
-	this->sprite.move(sf::Vector2f(-1, 0));
-}
-void Entity::moveRight()
-{
-	this->sprite.move({ 1,0 });
-}
-void Entity::moveTop()
-{
-	this->sprite.move({ 0,-1 });
-}
-void Entity::moveBottom()
-{
-	this->sprite.move({ 0,1 });
-}
-
-void Entity::reset()
-{
-	sprite.setPosition(startingPosition);
-	isAlive = true;
-}
-
-void Entity::repair() {
-	if (!texture.loadFromFile("assets/image/" + file, sf::IntRect(0, 0, Height, Width)))
+	for (const auto& entry : std::filesystem::directory_iterator(folderPath))
 	{
-		std::cout << "Error: Texture did not load." << std::endl;
+		if (entry.is_regular_file())
+		{
+			sf::Texture texture;
+			if (texture.loadFromFile(entry.path().string()))
+			{
+				textures.push_back(texture);
+				std::cerr << "Successful to load : " << entry.path().string() << std::endl;
+			}
+			else
+			{
+				std::cerr << "Failed to load: " << entry.path().string() << std::endl;
+			}
+		}
 	}
 
-	sprite.setTexture(texture);
+	return textures;
 }
 
+void Entity::draw(sf::RenderWindow& window)
+{
+	if (!frames.empty())
+	{
+		sf::Sprite sprite;
+		sprite.setTexture(frames[currentFrame]);
+		sprite.setScale(2.f * direction, 2.f);
+		sprite.setPosition(position);
+		window.draw(sprite);
+	}
+}
+
+
+
+void Moveable::update() 
+{
+	//std::cout << position.x << " " << position.y;
+	if (clock.getElapsedTime().asSeconds() > frameDuration)
+	{
+		currentFrame = (currentFrame + 1) % frames.size();
+		//std::cout << "check frame " << currentFrame << " " << frames.size() << '\n';
+		clock.restart();
+	}
+	move();
+}
+
+void Moveable::move()
+{
+	position.x += speed * direction;
+	checkAndChangeDirection();
+}
+
+void Moveable::checkAndChangeDirection()
+{
+	if (position.x <= xBound.first || position.x >= xBound.second)
+	{
+		direction = -direction; // Reverse direction
+	}
+}
+
+
+void Unmoveable::update()
+{
+	//std::cout << "unmoveable" ;
+	//std::cout << position.x << " " << position.y;
+	if (clock.getElapsedTime().asSeconds() > frameDuration)
+	{
+		currentFrame = (currentFrame + 1) % frames.size();
+		clock.restart();
+		//std::cout << "check frame " << currentFrame << " " << frames.size() << '\n';
+	}
+}

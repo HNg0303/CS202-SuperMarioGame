@@ -7,71 +7,70 @@
 #include <iostream>
 
 using namespace sf;
-class Entity : public Drawable // Drawable makes possible to use window.draw(object)
+class Entity // Drawable makes possible to use window.draw(object)
 {
 	public:
-	Texture texture;
-	Sprite sprite;
-	float Width;
-	float Height;
-	float Velocity;
+	
+	std::string name;
+	std::vector<sf::Texture> frames;
+	int currentFrame;
+	float frameDuration;
+	sf::Clock clock;
+	
+	float direction; //left/right
 
-	Vector2f startingPosition;
-	Vector2f velocity{ Velocity, Velocity };
+	Vector2f position; //starting position
 
-	void draw(RenderTarget& target, RenderStates state) const; // to use window.draw(object)
-
-	bool destroyMode = 0;
-	bool isFriendly = 0;
-	bool killable = true;
-
-
-	sf::VertexArray m_vertices;
-	sf::Texture m_texture;
-
-	std::string file;
 
 public:
-	Entity() {};
+	Entity(std::string name_i, float frameDuration_i, float x, float y):
+	name(name_i), frameDuration(frameDuration_i), currentFrame(0), direction(1.0) 
+	{
+		position.x = x;
+		position.y = y;
+		frames = loadFrame("assets/frame/" + name);
+		if (frames.empty())
+		{
+			std::cerr << "No frames loaded for entity " << name << std::endl;
+			return;
+		}
+	};
 
-	~Entity() = default;
+	std::vector<sf::Texture> loadFrame(std::string folderPath);
+	void draw(sf::RenderWindow& window);
+	virtual void update() = 0; 
+};
 
-	Vector2f getPosition();
 
-	void setPosition(Vector2f position);
+class Moveable : public Entity
+{
+private:
+	float speed; //velocity
+	std::pair<float, float> xBound; //fixed bound [start, end]
+	float yPosition;
+public:
+	Moveable(std::string name_i, float frameDuration_i, float speed_i, float start, float end, float y) :
+		Entity(name_i, frameDuration_i, start, y), yPosition(y), speed(speed_i)
+	{
+		xBound = std::make_pair(start, end);
+	};
 
-
-	void update();
-
-	float left();
-	float right();
-	float top();
-	float bottom();
-
-	void moveLeft();
-	void moveRight();
-	void moveTop();
-	void moveBottom();
-
-	bool isAlive = true;
-
-	void MovingDirectionLeft() { velocity.x = -Velocity; }
-	void MovingDirectionRight() { velocity.x = Velocity; }
-
-	Sprite getSprite() { return sprite; }
-
-	void dead() { isAlive = false; }
-	void deadAtOnce() { isAlive = false; }
-	bool getIsAlive() { return isAlive; }
-	bool getDestroyMode() { return destroyMode; }
-	void reset();
-	bool getIsFriendly() { return isFriendly; }
-
-	void repair();
-	bool isKillable() { return killable; }
-
-	//void loadFrame(std::string folderPath, sf::RenderWindow& window);
+	
+	void update() override;
+	void checkAndChangeDirection();
+	void move();
 
 };
 
+class Unmoveable : public Entity
+{
+private:
+
+public:
+	Unmoveable(std::string name_i, float frameDuration_i, float x, float y) :
+		Entity(name_i, frameDuration_i, x, y) {}
+
+
+	void update() override;	
+};
 

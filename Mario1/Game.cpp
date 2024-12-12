@@ -2,19 +2,19 @@
 
 Game::~Game()
 {
+	savePausedTimeToFile();
 	delete this->window;
 }
 
 void Game::loadMobs()
 {
 	std::string line;
-	float x, y;
+	float x1, x2, y, speed;
 	std::fstream infile;
 	std::string mobName;
-	Entity* wsk;
 
-	mobs.clear();
-
+	entities.clear();
+	
 	infile.open("assets/txt/mobs.txt");
 	if (!infile) {
 		std::cout << "can not open file to read results from";
@@ -25,64 +25,146 @@ void Game::loadMobs()
 			std::stringstream ss(line);
 			ss >> mobName;
 			std::string temp;
-			ss >> x;
+			ss >> x1;
 			ss >> y;
+			ss >> x2;
+			ss >> speed;
 
-			/*if (mobName.compare("Turtle") == 0)
-				wsk = new Goombas;
+			//std::string entityName[11] = { "cheep","coin","flame","goombas","koopas","levelUp","plant1","plant2","plant3","qblock","star","winning","princess_winning" };
 
-			else if (mobName.compare("Spikey") == 0)
-				wsk = new Koopas;
+			if (mobName.compare("goombas") == 0)
+				entities.push_back(std::make_unique<Moveable>("goombas", 0.5, speed, x1, x2, y));
 
-			/*else if (mobName.compare("FlyTur") == 0)
-				wsk = new FlyTur;
+			else if (mobName.compare("koopas") == 0)
+				entities.push_back(std::make_unique<Moveable>("koopas", 0.5, speed, x1, x2, y));
 
-			else if (mobName.compare("Plant1") == 0)
-				wsk = new Plant1;
+			else if (mobName.compare("cheep") == 0)
+				entities.push_back(std::make_unique<Moveable>("cheep", 0.5, speed, x1, x2, y));
 
-			else if (mobName.compare("Plant2") == 0)
-				wsk = new Plant2;
+			else if (mobName.compare("flame") == 0)
+				entities.push_back(std::make_unique<Moveable>("flame", 0.5, speed, x1, x2, y));
 
-			else
-				wsk = nullptr; // if no mobName read from exist take Abysss*/
+			else if (mobName.compare("coin") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("coin", 0.3, x1, y));
 
-			/*if (wsk != nullptr)
-			{
-				wsk->setPosition({ x, y });
-				mobs.push_back(*wsk);
-			}*/
-			//This line of code adds a copy of the object pointed to by wsk to the mobs vector. 
-		//The push_back function is a method available for vectors, and it adds a new element to the end of the vector.
+			else if (mobName.compare("mushroom") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("mushroom", 0.3, x1, y));
+
+			else if (mobName.compare("levelUp") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("levelUp", 0.3, x1, y));
+
+			else if (mobName.compare("plant1") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("plant1", 0.3, x1, y));
+
+			else if (mobName.compare("plant2") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("plant2", 0.3, x1, y));
+
+			else if (mobName.compare("plant3") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("plant3", 0.3, x1, y));
+
+			else if (mobName.compare("qblock") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("qblock", 0.2, x1, y));
+
+			else if (mobName.compare("star") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("star", 0.3, x1, y));
+
+			else if (mobName.compare("winning") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("winning", 0.05, x1, y));
+
+			else if (mobName.compare("princess_winning") == 0)
+				entities.push_back(std::make_unique<Unmoveable>("princess_winning", 0.5, x1, y));
+
 		}
 	}
 
 	infile.close();
 
-	//repairSFMLTextures();
 }
 
-void Game::drawMobs() //draws enemies
+void Game::handleClock()
 {
-	/*for (int i = 0; i < mobs.size(); i++)
-	{
-		//std::cout << "yess";
-		if (mobs[i].getIsAlive())
+	sf::Font font;
+	try {
+		if (!font.loadFromFile("assets/font/PixeloidSans.ttf"))
 		{
-			//std::cout << "yess";
-			//if (movingSide == LEFT)
-				mobs.at(i).MovingDirectiongLeft();
-				mobs.at(i).update();
-				//else if (movingSide == RIGHT)
-				//mobs.at(i).MovingDirectiongRight();
-
-			mobs.at(i).update();
-			mobs[i].setPosition(sf::Vector2f(100*i,200));
-			window->draw(mobs[i]);
+			throw - 1;
 		}
-	}*/
-	//mobs.at(0).moveLeft();
-	mobs.at(0).update();
-	window->draw(mobs[0]);
+	}
+	catch (int)
+	{
+		std::cout << "Error: Cannot load menu font.";
+		exit(1);
+	}
+	// Text for the label "Time"
+	sf::Text labelText;
+	labelText.setFont(font);
+	labelText.setPosition({ 50, 50 });
+	labelText.setCharacterSize(25);
+	labelText.setFillColor(sf::Color::Yellow); // Set the color for the label
+
+	// Text for the elapsed time
+	sf::Text timeText;
+	timeText.setFont(font);
+	timeText.setPosition({ 125, 50 }); // Adjust the position to be next to the label
+	timeText.setCharacterSize(24);
+	timeText.setFillColor(sf::Color::White); // Set the color for the elapsed time
+
+	sf::Time elapsed = pausedTime + clock.getElapsedTime();
+	std::ostringstream oss;
+	oss << std::fixed << std::setprecision(0) << elapsed.asSeconds();
+	std::string elapsedString = oss.str();
+
+	// Update the text
+	labelText.setString("TIME:");
+	timeText.setString("  " + elapsedString + "s");
+
+	// Draw the texts
+	window->draw(labelText);
+	window->draw(timeText);
+}
+
+void Game::savePausedTimeToFile()
+{
+	std::ofstream outFile("assets/txt/pausedTime.txt");
+	if (outFile.is_open())
+	{
+		outFile << pausedTime.asSeconds() + clock.getElapsedTime().asSeconds();
+		outFile.close();
+	}
+	else
+	{
+		std::cerr << "Unable to open file for saving paused time." << std::endl;
+	}
+}
+
+void Game::loadPausedTimeToFile()
+{
+	std::ifstream inFile("assets/txt/pausedTime.txt");
+	if (inFile.is_open())
+	{
+		float seconds;
+		inFile >> seconds;
+		pausedTime = sf::seconds(seconds);
+		inFile.close();
+	}
+	else
+	{
+		std::cerr << "Unable to open file for loading paused time. Starting with zero time." << std::endl;
+		pausedTime = sf::Time::Zero;
+	}
+}
+
+
+void Game::pauseClock()
+{
+	isPaused = true;
+	pausedTime += clock.getElapsedTime();
+}
+
+void Game::resumeClock()
+{
+	isPaused = true;
+	pausedTime = sf::Time::Zero;
 }
 
 void Game::handleMainMenu() //handles controls in menu
@@ -97,8 +179,8 @@ void Game::handleMainMenu() //handles controls in menu
 
 	while (window->pollEvent(sfEvent))
 	{
-		if (sfEvent.type == sf::Event::Closed)
-			window->close();
+
+		handleClosed();
 
 		if (sfEvent.type == sf::Event::KeyPressed)
 		{
@@ -108,21 +190,23 @@ void Game::handleMainMenu() //handles controls in menu
 			{
 				if (mainMenu.GetPressedItem() == 0)
 				{
-					
-
+					if (pausedTime == sf::Time::Zero)
+						curState = static_cast<int>(GameState::ChooseCharacter);
+					else curState = static_cast<int>(GameState::PlayingGame);
 				}
 
 				if (mainMenu.GetPressedItem() == 1)
 				{
 					this->window->clear();
-					curState = 1;
+					curState = static_cast<int>(GameState::ChooseCharacter);
 					chooseCharacterMenu.drawChooseCharacter(*window, center);
 					this->window->display();
 				}
-				
+
 				if (mainMenu.GetPressedItem() == 2)
 				{
-					curState = 2;
+
+					curState = static_cast<int>(GameState::Scoreboard);
 					mainMenu.drawScoreboard(*window, center);
 					this->window->display();
 
@@ -130,14 +214,14 @@ void Game::handleMainMenu() //handles controls in menu
 
 				if (mainMenu.GetPressedItem() == 3)
 				{
-					curState = 3;
+					curState = static_cast<int>(GameState::HelpMenu);
 					mainMenu.drawHelpMenu(*window, center);
 					this->window->display();
 				}
 
 				if (mainMenu.GetPressedItem() == 4)
 				{
-					curState = 4;
+					curState = static_cast<int>(GameState::Exit);
 					window->close();
 					delete this->window;
 					exit(0);
@@ -147,54 +231,19 @@ void Game::handleMainMenu() //handles controls in menu
 	}
 }
 
-
 void Game::handlePlayingGame()
 {
-	int n = 2;
-	std::vector<size_t> currentFrames(11, 0);
-	std::vector<std::vector<sf::Texture>> textures(11);
-	for (int i = 0; i < 2; ++i)
-	{
-		textures[i] = loadFrame("assets/frame/" + entityName[i]);
-		if (textures[i].empty())
-		{
-			std::cerr << "No frames loaded for entity " << i << std::endl;
-			return;
-		}
-	}
-	std::vector<sf::Sprite> sprites(11);
-	std::pair<float, float> X[2];
-
-	for (int i = 0; i < 2; ++i)
-	{
-		sprites[i].setScale(2.0f, 2.0f);
-		sprites[i].setPosition(100, i * 200.0f); // Set positions for each sprite
-		X[i].first = 100;
-		X[i].second = 500;
-	}
-
-	sf::Clock clock;
-	sf::Clock clock2;
-	float frameDuration = 0.4f; // Time per frame in seconds
-	float speed = 100.f; // pixel per second
-	float direction = 1.f;
-
-	//each enity
-	//name
-	//frameDuration: fixed
-	// (name, velocity, x, y): move -> range of movement(x,y)
-	// (name, x, y): do not move, coordinate(x,y)
 
 	while (window->isOpen())
 	{
-		
+		if (isPaused == true)
+		{
+			isPaused = false;
+			clock.restart();
+		}
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -215,61 +264,43 @@ void Game::handlePlayingGame()
 
 				if (sfEvent.key.code == sf::Keyboard::P)
 				{
+					pauseClock();
 					curState = static_cast<int>(GameState::PauseMenu);
 					return;
 				}
 
-				//handleExit(sfEvent, curState, GameState::MainMenu);
 				
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
-					curState = static_cast<int>(GameState::MainMenu);
+					curState = static_cast<int>(GameState::ChooseLevel);
 					return;
 				}
 			}
 		}
 
-		if (clock.getElapsedTime().asSeconds() > frameDuration)
-		{
-			std::cout << "come HERE";
-			for (int i = 0; i < 2; ++i)
-			{
-				currentFrames[i] = (currentFrames[i] + 1) % textures[i].size();
-				sprites[i].setTexture(textures[i][currentFrames[i]]);
-			}
-			clock.restart();
-		}
-
-		float deltaTime = clock2.restart().asSeconds();
-
-		for (int i = 0; i < 2; ++i)
-		{
-			sf::Vector2f position = sprites[i].getPosition();
-			position.x += direction * speed * deltaTime;
-
-			// Đổi hướng nếu vượt phạm vi
-			if (position.x <= X[i].first)
-			{
-				position.x = X[i].first; // Giữ trong phạm vi
-				direction = 1.f; // Chuyển hướng sang phải
-			}
-			else if (position.x >= X[i].second)
-			{
-				position.x = X[i].second; // Giữ trong phạm vi
-				direction = -1.f; // Chuyển hướng sang trái
-			}
-
-			sprites[i].setPosition(position);
-		}
+		
 		// Render
 		window->clear();
-		for (const auto& sprite : sprites)
-		{
-			window->draw(sprite);
-			std::cout << "already draw";
-		}
+
+		handleEntity();
+		handleClock();
+		
 		window->display();
 	}
+}
+
+void Game::handleEntity()
+{
+	for (const auto& anEntity : entities)
+	{
+
+		anEntity->update();
+		anEntity->draw(*window);
+	
+		//std::cout << "already draw" << '\n';
+	}
+	//std::cout << entities.size() << '\n';
+
 }
 
 void Game::handleChooseCharacter()
@@ -333,6 +364,7 @@ void Game::handleChooseLevel()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					resumeClock();
 					curState = static_cast<int>(GameState::PlayingGame);
 					return;
 				}
@@ -357,11 +389,8 @@ void Game::handlePauseMenu()
 
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
+
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -410,11 +439,7 @@ void Game::handleAskRestart()
 
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -422,16 +447,17 @@ void Game::handleAskRestart()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
-					if (askRestart.GetPressedItem() == 1) //continue
+					if (askRestart.GetPressedItem() == 0) //restart
 					{
+						resumeClock();
 						curState = static_cast<int>(GameState::PlayingGame);
 						return;
 					}
 
-					if (askRestart.GetPressedItem() == 0) //restart
+					if (askRestart.GetPressedItem() == 1) //continue
 					{
-
-
+						curState = static_cast<int>(GameState::PlayingGame);
+						return;
 					}
 				}
 
@@ -454,11 +480,7 @@ void Game::handleScoreboard()
 
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -472,7 +494,6 @@ void Game::handleScoreboard()
 	}
 }
 
-
 void Game::handleHelpMenu()
 {
 	while (true)
@@ -482,11 +503,7 @@ void Game::handleHelpMenu()
 
 		while (window->pollEvent(sfEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-			{
-				window->close();
-				return;
-			}
+			handleClosed();
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
@@ -497,6 +514,24 @@ void Game::handleHelpMenu()
 				}
 			}
 		}
+	}
+}
+
+void Game::handleClosed()
+{
+	if (sfEvent.type == sf::Event::Closed)
+	{
+		window->close();
+		return;
+	}
+}
+
+void handleExit(sf::Event sfEvent, int& curState, Game::GameState& newState)
+{
+	if (sfEvent.key.code == sf::Keyboard::Escape)
+	{
+		curState = static_cast<int>(newState);
+		return;
 	}
 }
 
@@ -547,7 +582,6 @@ void Game::run()
 	}
 }
 
-
 void Menu::MoveUp() //keyboard input UP in menu
 {
 	texts[selectedItemIndex].setFillColor(sf::Color::White);
@@ -579,6 +613,7 @@ void Menu::handleUpDown(sf::Event sfEvent)
 		MoveDown();
 
 }
+
 void Menu::handleLeftRight(sf::Event sfEvent)
 {
 	if (sfEvent.key.code == sf::Keyboard::Left)
@@ -587,15 +622,6 @@ void Menu::handleLeftRight(sf::Event sfEvent)
 		MoveRight();
 }
 
-
-void handleExit(sf::Event sfEvent, int &curState, Game::GameState &newState)
-{
-	if (sfEvent.key.code == sf::Keyboard::Escape)
-	{
-		curState = static_cast<int>(newState);
-		return;
-	}
-}
 void Menu::MoveLeft()
 {
 	MoveUp();
@@ -615,7 +641,6 @@ void Menu::setPressedItem(int item)
 {
 	selectedItemIndex = item;
 }
-
 
 std::vector<sf::Texture> Game::loadFrame(std::string folderPath)
 {
@@ -639,3 +664,4 @@ std::vector<sf::Texture> Game::loadFrame(std::string folderPath)
 
 	return textures;
 }
+
