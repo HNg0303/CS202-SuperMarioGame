@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <box2d/b2_body.h>
 #include <box2d/b2_world.h>
 #include <box2d/b2_polygon_shape.h>
@@ -9,6 +10,8 @@
 #include <box2d/b2_draw.h>
 #include <memory>
 #include <string>
+#include <fstream>
+#include <sstream>
 #include <iostream>
 #include <vector>
 #include <filesystem>

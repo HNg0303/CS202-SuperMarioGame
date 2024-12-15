@@ -2,6 +2,10 @@
 
 Renderer::Renderer(sf::RenderTarget& t) : target(t) {} //Target is Window
 
+sf::RenderWindow* Renderer :: getRenderWindow() {
+	return dynamic_cast<sf::RenderWindow*>(&target);
+}
+
 void Renderer::Draw(const sf::Texture& texture, const sf::Vector2f& position, const sf::Vector2f& size, float angle) {
 	sprite.setTexture(texture, true);
 	sf::Vector2f origin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);

@@ -1,7 +1,11 @@
 #pragma once
-#include <box2d/b2_world.h>
-#include "Character.h"
 #include "INCLUDE.h"
+#include <box2d/b2_world.h>
+#include "Renderer.h"
+
+class Character;
+class Entity;
+
 class MyDebugDraw : public b2Draw {
 private: 
 	RenderTarget& target;
@@ -30,13 +34,34 @@ public:
     virtual void DrawPoint(const b2Vec2& p, float size, const b2Color& color) override;
 
 };
+
+class ContactListener {
+public:
+    virtual void OnBeginContact(b2Fixture* self, b2Fixture* other) = 0;
+    virtual void OnEndContact(b2Fixture* self, b2Fixture* other) = 0;
+    virtual ~ContactListener() = default;
+};
+
+enum class FixtureDataType {
+    MapTile,
+    Character,
+    Entity,
+    Enemy
+};
+
+struct FixtureData {
+    ContactListener* listener = nullptr;
+    Entity* entity = nullptr;
+    FixtureDataType type;
+};
+
 class Physics {
 	//b2_world is a world that controls every bodies in this world.
 public:
 	static MyDebugDraw* debugDraw;
 	static void draw(Renderer& renderer);
 	static void Init();
-	static void Update(float deltaTime);
+	static void Update(float& deltaTime);
 	static b2World world; //Static object helps this class act as a mediator to interaction between Mario and Map. 
 };
 

@@ -1,10 +1,4 @@
-#include "Character.h"
-#include "Map.h"
-#include "INCLUDE.h"
-#include "Renderer.h"
-#include "Camera.h"
-#include "Game.h"
-
+#include "GameFlow.h"
 
 int main() {
 	Map map(1.0f);
@@ -17,12 +11,12 @@ int main() {
 	else if (name == "Mario")
 		character = CharacterFactory::createCharacter(MARIO);
 
-
+	/*
 	RenderWindow window(VideoMode(1200, 900), "Super Mario !!!");
 	Clock deltaClock;
 	Renderer renderer(window); //This is used to retain a renderer through out the loop
 	Resources resource;
-	resource.loadResource();
+	resource.loadResource();*/
 
 	/*
 	Game* game = Game::getInstance(map, mario, camera);
@@ -42,21 +36,10 @@ int main() {
 	
 	
 	//Initialize Game instance => Should be an Game arrays of mementos or checkpointss here
-	window.setFramerateLimit(60);
+	//window.setFramerateLimit(60);
 	Game* game = Game::getInstance(map, character, camera);
 	if (game) cout << "YES!" << endl;
-	game->Begin(window);
-	while (window.isOpen()) {
-		float deltaTime = deltaClock.restart().asSeconds();
-
-		Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == Event::Closed)
-				window.close();
-		}
-		window.clear();
-		game->Update(deltaTime, window);
-		game->Render(renderer, resource);
-		window.display();
-	}
+	
+	GameFlow* flow = new GameFlow(game);
+	flow->run();
 }

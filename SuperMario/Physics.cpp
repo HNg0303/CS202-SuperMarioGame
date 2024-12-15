@@ -80,7 +80,20 @@ void MyDebugDraw :: DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, 
 class myGlobalContact : public b2ContactListener {
 
     virtual void BeginContact(b2Contact* contact) {
-        
+        FixtureData* data = reinterpret_cast<FixtureData*> (contact->GetFixtureA()->GetUserData().pointer);
+
+        if (data && data->listener) {
+            data->listener->OnBeginContact(contact->GetFixtureA(), contact->GetFixtureB());
+        }
+
+
+        data = reinterpret_cast<FixtureData*> (contact->GetFixtureB()->GetUserData().pointer);
+        if (data && data->listener) {
+            data->listener->OnBeginContact(contact->GetFixtureB(), contact->GetFixtureA());
+        }
+        //delete data;
+
+        /*
         if (contact->GetFixtureA()->IsSensor()) {
             reinterpret_cast<Character*> (contact->GetFixtureA()->GetUserData().pointer)->OnBeginContact();
             cout << "Foot Sensor Begin" << endl;
@@ -109,12 +122,24 @@ class myGlobalContact : public b2ContactListener {
         }
         else {
             std::cout << "Begin UserData B is null!" << std::endl;
-        }
+        }*/
     }
 
     /// Called when two fixtures cease to touch.
     virtual void EndContact(b2Contact* contact) {
         
+        FixtureData* data = reinterpret_cast<FixtureData*> (contact->GetFixtureA()->GetUserData().pointer);
+
+        if (data && data->listener) {
+            data->listener->OnEndContact(contact->GetFixtureA(), contact->GetFixtureB());
+        }
+
+        data = reinterpret_cast<FixtureData*> (contact->GetFixtureB()->GetUserData().pointer);
+        if (data && data->listener) {
+            data->listener->OnEndContact(contact->GetFixtureB(), contact->GetFixtureA());
+        }
+        //delete data;
+        /*
         if (contact->GetFixtureA()->IsSensor()) {
             reinterpret_cast<Character*> (contact->GetFixtureA()->GetUserData().pointer)->OnEndContact();
             cout << "Foot Sensor End" << endl;
@@ -143,7 +168,7 @@ class myGlobalContact : public b2ContactListener {
         }
         else {
             std::cout << "End UserData B is null!" << std::endl;
-        }
+        }*/
     }
 };
 
@@ -151,7 +176,7 @@ void Physics::Init() {
     world.SetContactListener(new myGlobalContact());
 }
 
-void Physics::Update(float deltaTime) {
+void Physics::Update(float& deltaTime) {
 	world.Step(deltaTime, 8, 4);
 }
 
