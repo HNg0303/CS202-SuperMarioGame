@@ -46,12 +46,17 @@ void Mario :: Draw(Renderer& renderer, int state, Resources& resource) {
 }
  
 void Mario::Begin() {
-    runAnimation = Animation(0.45f, 
+    runAnimation = Animation(0.6f, 
         { 
             Frame(0.15f, Resources::textures["run1.png"]), 
             Frame(0.3f, Resources::textures["run2.png"]), 
-            Frame(0.45f, Resources::textures["run3.png"])
+            Frame(0.45f, Resources::textures["run3.png"]),
+            Frame(0.6f, Resources::textures["stop.png"])
         });
+
+    jumpSFX.setBuffer(Resources::sfx["jump.wav"]);
+    jumpSFX.setVolume(20);
+
     //Initialize a body of Character in the b2World.
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody; // specify type of body
@@ -91,6 +96,11 @@ void Mario::Update(float deltaTime) {
         drawingTexture = runAnimation.getTexture();
         faceLeft = true;
         position.x -= move * deltaTime;
+    }
+    if (Keyboard::isKeyPressed(Keyboard::Space) && onGround)
+    {
+        drawingTexture = Resources::textures["jump.png"];
+        jumpSFX.play();
     }
 
     //Update position and angle

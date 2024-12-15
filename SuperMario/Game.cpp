@@ -1,4 +1,7 @@
 #include "Game.h"
+#include "SFML/Audio.hpp"
+
+Music music{};
 
 Game::Game(Map& map, Mario& mario, Camera& camera) : map(map), mario(mario), camera(camera) {};
 
@@ -22,9 +25,13 @@ void Game :: Begin(sf::RenderWindow& window)
 	sf::Image map_image;
 	string mapPath = convertToUnixPath(fs::current_path().string()) + "/Resource/map.png";
 	map_image.loadFromFile(mapPath);
+	music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/music.wav"));
+	music.setLoop(true);
+	music.setVolume(30);
 	mario.Begin();
 	mario.position = map.CreateFromImage(map_image);
 	window.setView(camera.GetView(window.getSize()));
+	music.play();
 }
 
 void Game :: Update(float deltaTime, RenderWindow& window) {

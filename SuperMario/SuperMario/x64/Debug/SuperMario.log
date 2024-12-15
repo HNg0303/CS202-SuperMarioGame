@@ -1,1 +1,13 @@
-﻿  SuperMario.vcxproj -> F:\GitHub\SuperMario\SuperMARIO\x64\Debug\SuperMario.exe
+﻿  Animation.cpp
+  Camera.cpp
+  Game.cpp
+  main.cpp
+  Character.cpp
+  Map.cpp
+  Physics.cpp
+  Renderer.cpp
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(30,9): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Resources.cpp
+  Generating Code...
+  LINK : F:\GitHub\SuperMario\SuperMARIO\x64\Debug\SuperMario.exe not found or not built by the last incremental link; performing full link
+LINK : fatal error LNK1104: cannot open file 'box2d.lib'

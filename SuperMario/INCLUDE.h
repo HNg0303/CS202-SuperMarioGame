@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <box2d/b2_body.h>
 #include <box2d/b2_world.h>
 #include <box2d/b2_polygon_shape.h>

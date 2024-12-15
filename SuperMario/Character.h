@@ -42,11 +42,14 @@ public:
 
 class Mario : public Character {
 protected:
-    Animation runAnimation;
     Clock timer1, timer2;
     bool goRight, goUp, goLeft, goDown;
-    Texture drawingTexture{};
+
+    //Animation and sound effect handling
+    Animation runAnimation;
+    Texture drawingTexture;
     bool faceLeft = false, onGround = true;
+    Sound jumpSFX{};
 public:
     Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
     void Draw(Renderer& renderer, int state, Resources& resource) override;

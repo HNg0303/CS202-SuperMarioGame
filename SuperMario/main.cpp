@@ -1,6 +1,7 @@
 #include "Character.h"
 #include "Map.h"
 #include "INCLUDE.h"
+#include <SFML/Audio.hpp>
 #include "Renderer.h"
 #include "Camera.h"
 #include "Game.h"
