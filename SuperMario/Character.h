@@ -3,33 +3,36 @@
 #include "Renderer.h"
 #include "Resources.h"
 #include "Physics.h"
+#include "entity.h"
 
 enum CharacterType {MARIO, LUIGI, CustomCharacter};
 
-class Character {
+class Character : public ContactListener {
 public:
     float movementVelocity;
     float jumpVelocity;
     Vector2f position;
     float angle;
-    int groundContactCount = 0;
+    int onGround = 0;
 
+    //Testing collecting coin
+    int coin = 0;
 
-
-    virtual void OnBeginContact();
-    virtual void OnEndContact();
+    virtual void OnBeginContact(b2Fixture* self, b2Fixture *other) override;
+    virtual void OnEndContact(b2Fixture* self, b2Fixture * other) override;
     virtual void setPosition(float x, float y);
     virtual Vector2f getPos();
-    virtual ~Character() = default;
+    virtual ~Character();
     virtual void Begin() = 0;
-    virtual void Update(float deltaTime);
+    virtual void Update(float& deltaTime);
     virtual void Draw(Renderer& renderer, int state, Resources& resource) = 0;
 protected:
-    string name;
     b2Body* dynamicBody = nullptr;
     int changeStateCounter; //3 states (Small, Big, Super) => we will need 3 bodies for each state.
-    bool onGround, isJumping;
+    bool isJumping;
 
+    FixtureData* fixtureData = nullptr;
+    b2Fixture* groundFixture;
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.
     //float angle{};// => Use velocity in b2_body.
 };
@@ -61,4 +64,5 @@ public:
     void Draw(Renderer& renderer, int state, Resources& resource) override;
     void Begin() override;
 };
+
 
