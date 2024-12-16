@@ -3,6 +3,10 @@
 #include "Physics.h"
 
 using namespace sf;
+
+extern vector<Entity*> onEntities; //For using on-screen entities
+void deleteEntity(Entity* entity);
+
 class Entity // Drawable makes possible to use window.draw(object)
 {
 public:
@@ -25,7 +29,7 @@ public:
 	vector<Texture> loadFrame(string folderPath);
 	void draw(RenderWindow* window, const Vector2f& size);
 	virtual void Begin() = 0;
-	virtual void update() = 0; 
+	virtual void Update(float deltaTime) = 0; 
 	virtual string getName();
 	virtual ~Entity() = default;
 	void markDeleted();
@@ -38,15 +42,17 @@ private:
 	float speed; //velocity
 	pair<float, float> xBound; //fixed bound [start, end]
 	float yPosition;
+	
 public:
 	Moveable(string name_i, double frameDuration_i, float speed_i, float start, float end, float y) :
 		Entity(name_i, frameDuration_i, start, y), yPosition(y), speed(speed_i)
 	{
 		xBound = make_pair(start, end);
 	};
-
+	float destroyingTimer = 0.0f;
+	bool isDead = false;
 	void Begin() override {};
-	void update() override;
+	void Update(float deltaTime) override;
 	void checkAndChangeDirection();
 	void move();
 
@@ -58,7 +64,7 @@ public:
 	Unmoveable(string name_i, double frameDuration_i, float x, float y) :
 		Entity(name_i, frameDuration_i, x, y) {}
 	void Begin() override {};
-	void update() override;	
+	void Update(float deltaTime) override;	
 };
 
 class Coin : public Unmoveable {
@@ -83,9 +89,14 @@ public:
 
 class Enemy : public Moveable {
 public:
+	
 	Enemy(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size) :
 		Moveable(name_i, frameDuration_i, speed_i, start, end, y) {
 		this->size = size;
 	}
 	void Begin() override;
+	void Die();
+	~Enemy();
 };
+
+

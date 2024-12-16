@@ -1,6 +1,5 @@
 #include "Game.h"
 
-vector<Entity*>Game::onEntities;
 
 Game::Game(Map& map, Character* character, Camera& camera) : map(map), character(character), camera(camera) {
 };
@@ -60,7 +59,8 @@ void Game :: Update(float& deltaTime, RenderWindow& window) {
 	character->Update(deltaTime);
 	camera.position = character->getPos();
 	for (auto& entity : onEntities)
-		entity->update();
+		entity->Update(deltaTime);
+	
 	window.setView(camera.GetView(window.getSize()));
 }
 
@@ -69,7 +69,7 @@ void Game :: Render(Renderer& renderer, Resources& resource) {
 	for (auto& entity : onEntities)
 		entity->draw(renderer.getRenderWindow(), Vector2f(map.cellSize, map.cellSize));
 	character->Draw(renderer, 0, resource);
-	//Physics::draw(renderer);
+	Physics::draw(renderer);
 }
 
 /*void Game::deleteEntities(Entity* entity) {

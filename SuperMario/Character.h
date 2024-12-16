@@ -29,8 +29,8 @@ public:
 protected:
     b2Body* dynamicBody = nullptr;
     int changeStateCounter; //3 states (Small, Big, Super) => we will need 3 bodies for each state.
-    bool isJumping;
-
+    bool isDead;
+    int lives = 3;
     FixtureData* fixtureData = nullptr;
     b2Fixture* groundFixture;
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.

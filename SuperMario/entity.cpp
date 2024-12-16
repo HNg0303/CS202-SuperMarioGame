@@ -1,5 +1,6 @@
 #include "entity.h"
 
+vector<Entity*> onEntities;
 
 Entity :: Entity(string name_i, double frameDuration_i, float x, float y) :
 	name(name_i), frameDuration(frameDuration_i), currentFrame(0), direction(1.0)
@@ -44,7 +45,7 @@ std::vector<sf::Texture> Entity::loadFrame(std::string folderPath)
 
 void Entity::draw(sf::RenderWindow* window, const Vector2f& size)
 {
-	if (deleted) return;
+	//if (deleted) return;
 	if (!frames.empty())
 	{
 		sf::Sprite sprite;
@@ -60,33 +61,46 @@ void Entity::draw(sf::RenderWindow* window, const Vector2f& size)
 }
 
 void Entity::markDeleted() {
-	if (deleted == false)
-	deleted = true;
-}
-
-
-void Moveable::update() 
-{
-	//std::cout << position.x << " " << position.y;
-	if (clock.getElapsedTime().asSeconds() > frameDuration)
-	{
-		currentFrame = (currentFrame + 1) % frames.size();
-		//std::cout << "check frame " << currentFrame << " " << frames.size() << '\n';
-		clock.restart();
+	if (deleted == false) {
+		deleted = true;
 	}
-	move();
-	const b2Vec2& bodyPos = body->GetPosition();
-	position.x = bodyPos.x;
-	position.y = bodyPos.y;
 }
+
+
+void Moveable::Update(float deltaTime) 
+{
+	if (isDead) {
+		if (body) {
+			Physics::world.DestroyBody(this->body);
+			this->body = nullptr;
+			destroyingTimer += deltaTime;
+			if (destroyingTimer >= 3.0f) 
+				deleteEntity(this);
+		}
+		return;
+	}
+	if (body) {
+		//std::cout << position.x << " " << position.y;
+		if (clock.getElapsedTime().asSeconds() > frameDuration)
+		{
+			currentFrame = (currentFrame + 1) % frames.size();
+			//std::cout << "check frame " << currentFrame << " " << frames.size() << '\n';
+			clock.restart();
+		}
+		move();
+		const b2Vec2& bodyPos = body->GetPosition();
+		position.x = bodyPos.x;
+		position.y = bodyPos.y;
+	}
+	//cout << "x: " << position.x << ", y:" << position.y << endl;
+ }
 
 void Moveable::move()
 {
 	//position.x += speed * direction;
-	if (body) {
-		b2Vec2 velocity(speed * direction, 0.0f);
-		body->SetLinearVelocity(velocity);  // Update the body's velocity
-	}
+	b2Vec2 velocity = body->GetLinearVelocity();
+	velocity.x += speed * direction;
+	body->SetLinearVelocity(velocity);  // Update the body's velocity
 	checkAndChangeDirection();
 }
 
@@ -97,33 +111,33 @@ void Moveable::checkAndChangeDirection()
 	{
 		direction = -direction; // Reverse direction
 	}*/
-	const b2Vec2& currentPos = body->GetPosition();
+	//const b2Vec2& currentPos = body->GetPosition();
 
 	// Reverse direction if bounds are exceeded
-	if (currentPos.x <= xBound.first || currentPos.x >= xBound.second) {
+	if (body->GetPosition().x <= xBound.first || body->GetPosition().x >= xBound.second) {
 		direction = -direction;
 
 		// Adjust velocity to match the new direction
-		body->SetLinearVelocity(b2Vec2(speed * direction, 0.0f));
+		//body->SetLinearVelocity(b2Vec2(speed * direction, 0.0f));
 	}
 }
 
 
 
-void Unmoveable::update()
+void Unmoveable::Update(float deltaTime)
 {
-	if (!body) return;
 	if (deleted) {
-		Physics::world.DestroyBody(body);
-		body = nullptr;
+		deleteEntity(this);
 	}
-	//std::cout << "unmoveable" ;
-	//std::cout << position.x << " " << position.y;
-	if (clock.getElapsedTime().asSeconds() > frameDuration)
-	{
-		currentFrame = (currentFrame + 1) % frames.size();
-		clock.restart();
-		//std::cout << "check frame " << currentFrame << " " << frames.size() << '\n';
+	if (body) {
+		//std::cout << "unmoveable" ;
+		//std::cout << position.x << " " << position.y;
+		if (clock.getElapsedTime().asSeconds() > frameDuration)
+		{
+			currentFrame = (currentFrame + 1) % frames.size();
+			clock.restart();
+			//std::cout << "check frame " << currentFrame << " " << frames.size() << '\n';
+		}
 	}
 }
 
@@ -148,17 +162,15 @@ void Coin::Begin() {
 	fixtureDef.density = 0.0f;
 
 	body->CreateFixture(&fixtureDef);
-
 }
 
 
 Coin :: ~Coin() {
-	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext()) {
-		auto* data = reinterpret_cast<FixtureData*>(fixture->GetUserData().pointer);
-		delete data;  // Free the FixtureData memory
-	}
+	delete fixtureData;
+	fixtureData = nullptr;
 	Physics::world.DestroyBody(body);
 	body = nullptr;
+	cout << "Successfully Destroyed Coin !" << endl;
 }
 
 void Block::Begin() {
@@ -180,10 +192,12 @@ void Block::Begin() {
 }
 
 Block::~Block(){
-	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext()) {
+	/*for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext()) {
 		auto* data = reinterpret_cast<FixtureData*>(fixture->GetUserData().pointer);
 		delete data;  // Free the FixtureData memory
-	}
+	}*/
+	delete fixtureData;
+	fixtureData = nullptr;
 	Physics::world.DestroyBody(body);
 	body = nullptr;
 }
@@ -201,7 +215,8 @@ void Enemy::Begin() {
 	body = Physics::world.CreateBody(&bodyDef);
 
 	b2CircleShape circle;
-	circle.m_radius = 0.5f;
+	circle.m_p.Set(0.0f, 0.2f);
+	circle.m_radius = 0.4f;
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
@@ -209,4 +224,23 @@ void Enemy::Begin() {
 	fixtureDef.friction = 0.0f;
 	fixtureDef.density = 1.0f;
 	body->CreateFixture(&fixtureDef);
+}
+
+Enemy :: ~Enemy() {
+	delete fixtureData;
+	fixtureData = nullptr;
+	cout << "Successfully Destroyed Enemy !" << endl;
+}
+
+void Enemy::Die() {
+	isDead = true;
+	size.y = size.y / 5.0f;
+	position.y += size.y / 5.0f;
+}
+void deleteEntity(Entity* entity) {
+	const auto& it = find(onEntities.begin(), onEntities.end(), entity);
+	if (it != onEntities.end()) {
+		onEntities.erase(it);
+		delete entity;
+	}
 }

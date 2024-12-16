@@ -1,4 +1,54 @@
-﻿  main.cpp
+﻿  entity.cpp
+  Game.cpp
+  GameFlow.cpp
+D:\CS202-SuperMarioGame\SuperMario\GameFlow.cpp(316,68): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\GameFlow.cpp(316,68): warning C4244:         with
+D:\CS202-SuperMarioGame\SuperMario\GameFlow.cpp(316,68): warning C4244:         [
+D:\CS202-SuperMarioGame\SuperMario\GameFlow.cpp(316,68): warning C4244:             T=float
+D:\CS202-SuperMarioGame\SuperMario\GameFlow.cpp(316,68): warning C4244:         ]
+D:\CS202-SuperMarioGame\SuperMario\GameFlow.cpp(594,40): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  main.cpp
   Character.cpp
+  Map.cpp
+  Menu.cpp
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(130,39): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,66): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,66): warning C4244:         with
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,66): warning C4244:         [
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,66): warning C4244:             T=float
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,66): warning C4244:         ]
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,55): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,55): warning C4244:         with
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,55): warning C4244:         [
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,55): warning C4244:             T=float
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(154,55): warning C4244:         ]
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(266,10): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(269,29): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Menu.cpp(270,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Physics.cpp
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(13,84): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(13,69): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(13,54): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(13,39): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(21,84): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(21,69): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(21,54): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(21,39): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(34,87): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(34,72): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(34,57): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(34,42): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(45,86): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(45,71): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(45,56): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(45,41): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(51,19): warning C4244: 'argument': conversion from 'float' to 'sf::Uint32', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(74,83): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(74,68): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(74,53): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+D:\CS202-SuperMarioGame\SuperMario\Physics.cpp(74,38): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+  Renderer.cpp
+  Resources.cpp
   Generating Code...
+  LINK : D:\CS202-SuperMarioGame\SuperMario\x64\Debug\SuperMario.exe not found or not built by the last incremental link; performing full link
   SuperMario.vcxproj -> D:\CS202-SuperMarioGame\SuperMario\x64\Debug\SuperMario.exe

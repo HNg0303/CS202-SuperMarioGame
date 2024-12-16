@@ -22,7 +22,7 @@ private:
 	
 	~Game();
 public:
-	static vector<Entity*> onEntities;
+	//static vector<Entity*> onEntities;
 	//static void deleteEntities(Entity* entity);
 	Entity* getEntity(string name);
 	void loadEntities(vector<unique_ptr<Entity>> &entities);

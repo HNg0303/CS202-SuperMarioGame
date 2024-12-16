@@ -97,7 +97,7 @@ sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entit
 				entities.push_back(coin);
 			}
 			else if (color == sf::Color::Green) {
-				Entity* goomba = new Enemy("goombas", 0.05f, 0.01f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize));
+				Entity* goomba = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize));
 				entities.push_back(goomba);
 			}
 		}

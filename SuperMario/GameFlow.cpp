@@ -296,7 +296,7 @@ void GameFlow::handleEntity()
 {
 	for (const auto& anEntity : entities)
 	{
-		anEntity->update();
+		anEntity->Update(0.0f);
 		anEntity->draw(window, Vector2f(0.0f,0.0f));
 	
 		//std::cout << "already draw" << '\n';

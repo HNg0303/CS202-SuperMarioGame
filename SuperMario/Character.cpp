@@ -1,5 +1,4 @@
 #include "Character.h"
-#include "Game.h"
 
 Character* CharacterFactory :: createCharacter(CharacterType type) {
     switch (type) {
@@ -21,20 +20,23 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
     if (!data) return;
     if (groundFixture == self && data->type == FixtureDataType::MapTile)
         onGround++;
-    if (data->type == FixtureDataType::Entity && data->entity->getName() == "coin") {
-        /*const auto& it = find(Game::onEntities.begin(), Game::onEntities.end(), data->entity);
-        if (it != Game::onEntities.end())
-            Game::onEntities.erase(it);*/
+    else if (data->type == FixtureDataType::Entity && data->entity && data->entity->getName() == "coin") {
+        //deleteEntity(data->entity);
         data->entity->markDeleted();
         cout << "Coin: " << ++coin << endl;
     }
-
-    /*
-    if (groundContactCount > 0) {
-        onGround = true;  // Mario is on the ground
-        isJumping = false;
+    else if (data->entity && data->type == FixtureDataType::Enemy && data->entity->getName() == "goombas") {
+        if (groundFixture == self) {
+            Enemy* enemy = dynamic_cast<Enemy*> (data->entity);
+            if (enemy) {
+                enemy->Die();
+                cout << "Kill Goombas" << endl;
+            }
+        }
+        else {
+            this->isDead = true;
+        }
     }
-    std::cout << "Begin Contact - Ground count: " << groundContactCount << std::endl;*/
 }
 
 void Character::OnEndContact(b2Fixture* self, b2Fixture* other) {
@@ -55,6 +57,15 @@ void Character::OnEndContact(b2Fixture* self, b2Fixture* other) {
 }
 
 void Character::Update(float& deltaTime) {
+    if (isDead && lives) {
+        isDead = false;
+        lives--;
+        cout << "You have " << lives << " left !" << endl;
+    }
+    else if (isDead && !lives) {
+        isDead = false;
+        cout << "YOU DIED !!!!!!!!!!!" << endl;
+    }
     float move = movementVelocity;
     float jump = jumpVelocity;
     if (Keyboard::isKeyPressed(Keyboard::LShift))
@@ -86,6 +97,8 @@ Vector2f Character::getPos() {
 }
 
 Character::~Character() {
+    Physics::world.DestroyBody(dynamicBody);
+    dynamicBody = nullptr;
     delete fixtureData;
     delete groundFixture;
 }
@@ -93,25 +106,13 @@ Character::~Character() {
 Mario::Mario(float x, float y) {
     position.x = x;
     position.y = y;
-    goRight = goUp = goLeft = goDown = isJumping = false;
+    goRight = goUp = goLeft = goDown = isDead = false;
     movementVelocity = 7.0f;
     jumpVelocity = 5.0f;
     angle = 0.0f;
     fixtureData = new FixtureData();
     //groundFixture = new b2Fixture();
     cout << "Initialize Mario successfully !\n";
-    /*
-    // Set Mario Sprite Properties
-    if (!texture.loadFromFile("./Resource/Mario/mario.png")) { cout << "Can't load MARIO_CHARACTER\n"; }
-    //if (!marioSuperTexture.loadFromFile(MARIO_SUPER_CHARACTER)) { std::cout << "Can't load MARIO_SUPER_CHARACTER\n"; }
-    texture.setSmooth(true);
-    sprite.setTexture(texture);
-    sprite.setPosition(x, y);
-    sprite.setScale(2, 2);
-
-    //Define here
-    //Sound buffer and sound effect : Jump, d
-    */
 }
 
 
@@ -146,7 +147,7 @@ void Mario::Begin() {
     b2CircleShape circle{};
     fixtureDef.shape = &circle;
     circle.m_p.Set(0.0f, -0.5f); //His head.
-    circle.m_radius = 0.5f;
+    circle.m_radius = 0.4f;
     dynamicBody->CreateFixture(&fixtureDef);
 
     circle.m_p.Set(0.0f, 0.5f); //His feet.
@@ -162,49 +163,19 @@ void Mario::Begin() {
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
-    //dynamicBody->GetUserData().pointer = (uintptr_t)this;
-
-
-    /*
-    fixtureData.type = FixtureDataType::Character;
-    fixtureData.listener = this;
-
-
-    // Initialize a body of Character in the b2World
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;  // Specify type of body
-    bodyDef.position.Set(position.x, position.y);  // Set position
-    bodyDef.fixedRotation = true;  // Prevent Mario from rotating on collision
-    dynamicBody = Physics::world.CreateBody(&bodyDef);
-
-    // Body fixture (Main Body)
-    b2PolygonShape bodyShape;
-    bodyShape.SetAsBox(0.2f, 0.9f);  // Main body size
-    b2FixtureDef FixtureDef{};
-    FixtureDef.shape = &bodyShape;
-    FixtureDef.density = 1.0f;
-    FixtureDef.friction = 0.3f;
-    dynamicBody->CreateFixture(&bodyFixtureDef);
-
-    // Feet sensor (Ground detection)
-    b2PolygonShape feetShape;
-    feetShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, 0.8f), 0.0f);  // Positioned slightly below Mario
-
-    b2FixtureDef sensorFixtureDef{};
-    sensorFixtureDef.shape = &feetShape;
-    sensorFixtureDef.isSensor = true;  // Sensor detects ground
-    sensorFixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(this);  // Set sensor user data
-    dynamicBody->CreateFixture(&sensorFixtureDef);*/
 }
 
 
 Luigi :: Luigi(float x, float y) {
     position.x = x;
     position.y = y;
-    goRight = goUp = goLeft = goDown = false;
+    goRight = goUp = goLeft = goDown = isDead = false;
     movementVelocity = 5.0f;
     jumpVelocity = 8.0f;
     angle = 0.0f;
+
+    fixtureData = new FixtureData();
+    cout << "Initializing Luigi successfully !";
 }
 
 void Luigi :: Begin() { 

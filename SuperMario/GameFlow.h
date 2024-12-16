@@ -80,6 +80,7 @@ public:
 		mainMenu.loadResultsToArray();
 		game->loadEntities(entities);
 		this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Mario");
+		this->window->setFramerateLimit(60);
 		this->renderer = new Renderer(*this->window);
 		view.reset(sf::FloatRect(0.f, 0.f, WINDOW_WIDTH, WINDOW_HEIGHT));
 		resources.loadResource();

@@ -91,38 +91,6 @@ class myGlobalContact : public b2ContactListener {
         if (data && data->listener) {
             data->listener->OnBeginContact(contact->GetFixtureB(), contact->GetFixtureA());
         }
-        //delete data;
-
-        /*
-        if (contact->GetFixtureA()->IsSensor()) {
-            reinterpret_cast<Character*> (contact->GetFixtureA()->GetUserData().pointer)->OnBeginContact();
-            cout << "Foot Sensor Begin" << endl;
-            return;
-        }
-        if (contact->GetFixtureB()->IsSensor()) {
-            reinterpret_cast<Character*> (contact->GetFixtureB()->GetUserData().pointer)->OnBeginContact();
-            cout << "Foot Sensor Begin" << endl;
-            return;
-        }
-        
-        b2BodyUserData* data = &(contact->GetFixtureA()->GetBody()->GetUserData());
-        if (data->pointer) {
-            reinterpret_cast<Character*> (data->pointer)->OnBeginContact();
-            std::cout << "???Begin";
-        }
-        else {
-            std::cout << "Begin UserData A is null!" << std::endl;
-        }
-
-        data = &(contact->GetFixtureB()->GetBody()->GetUserData());
-
-        if (data->pointer) {
-            reinterpret_cast<Character*> (data->pointer)->OnBeginContact();
-            std::cout << "???Begin";
-        }
-        else {
-            std::cout << "Begin UserData B is null!" << std::endl;
-        }*/
     }
 
     /// Called when two fixtures cease to touch.
@@ -138,37 +106,6 @@ class myGlobalContact : public b2ContactListener {
         if (data && data->listener) {
             data->listener->OnEndContact(contact->GetFixtureB(), contact->GetFixtureA());
         }
-        //delete data;
-        /*
-        if (contact->GetFixtureA()->IsSensor()) {
-            reinterpret_cast<Character*> (contact->GetFixtureA()->GetUserData().pointer)->OnEndContact();
-            cout << "Foot Sensor End" << endl;
-            return;
-        }
-        if (contact->GetFixtureB()->IsSensor()) {
-            reinterpret_cast<Character*> (contact->GetFixtureB()->GetUserData().pointer)->OnEndContact();
-            cout << "Foot Sensor End" << endl;
-            return;
-        }
-
-        b2BodyUserData* data = &(contact->GetFixtureA()->GetBody()->GetUserData());
-        if (data->pointer) {
-            reinterpret_cast<Character*> (data->pointer)->OnEndContact();
-            std::cout << "???End";
-        }
-        else {
-            std::cout << "End UserData A is null!" << std::endl;
-        }
-
-        data = &(contact->GetFixtureB()->GetBody()->GetUserData());
-
-        if (data->pointer) {
-            reinterpret_cast<Character*>(data->pointer)->OnEndContact();
-            std::cout << "???End";
-        }
-        else {
-            std::cout << "End UserData B is null!" << std::endl;
-        }*/
     }
 };
 
@@ -177,13 +114,13 @@ void Physics::Init() {
 }
 
 void Physics::Update(float& deltaTime) {
-	world.Step(deltaTime, 8, 4);
+	world.Step(deltaTime, 8, 3);
 }
 
 void Physics::draw(Renderer& renderer) {
     if (!debugDraw) {
         debugDraw = new MyDebugDraw(renderer.target);
-        debugDraw->SetFlags(b2Draw::e_aabbBit);
+        debugDraw->SetFlags(0u);
         world.SetDebugDraw(debugDraw);
     }
     world.DebugDraw();
