@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "Resources.h"
 
 vector<Entity*> onEntities;
 
@@ -7,7 +8,7 @@ Entity :: Entity(string name_i, double frameDuration_i, float x, float y) :
 {
 	position.x = x;
 	position.y = y;
-	frames = loadFrame("Resource/asset/frame/" + name);
+	frames = loadFrame(convertToUnixPath("Resource/asset/frame/" + name));
 	if (frames.empty())
 	{
 		std::cerr << "No frames loaded for entity " << name << std::endl;

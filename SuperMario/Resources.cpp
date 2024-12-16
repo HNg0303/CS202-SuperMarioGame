@@ -1,5 +1,8 @@
 #include "Resources.h"
 
+unordered_map<string, Texture> Resources::textures;
+unordered_map<string, SoundBuffer> Resources::sfx;
+
 string convertToUnixPath(const string& path) {
 	std::string unixPath = path;
 	std::replace(unixPath.begin(), unixPath.end(), '\\', '/');
@@ -11,6 +14,7 @@ void Resources::loadResource() {
 	string texturePath = convertToUnixPath(fs::current_path().string() + "/Resource/Textures/");
 	string marioPath = convertToUnixPath(fs::current_path().string() + "/Resource/Mario/");
 	string lugiPath = convertToUnixPath(fs::current_path().string() + "/Resource/Luigi/");
+	string sfxPath = convertToUnixPath(fs::current_path().string() + "/Resource/SFX/");
 
 
 	for (const auto& file : fs::directory_iterator(texturePath)) {
@@ -54,6 +58,20 @@ void Resources::loadResource() {
 			}
 			else {
 				std::cout << "Load character Luigi succeed\n";
+			}
+		}
+	}
+
+	//load SFX
+	for (auto& file : fs::directory_iterator(sfxPath))
+	{
+		if (file.is_regular_file() && (file.path().extension() == ".ogg" || file.path().extension() == ".wav")) {
+			string filePath = convertToUnixPath(file.path().string());
+			if (!sfx[file.path().filename().string()].loadFromFile(file.path().string())) {
+				std::cout << "Load sound effect failed\n";
+			}
+			else {
+				std::cout << "Load sound effect succeed\n";
 			}
 		}
 	}

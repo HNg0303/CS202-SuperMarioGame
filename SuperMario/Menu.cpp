@@ -1,10 +1,14 @@
 ﻿#include "Menu.h"
+#include "INCLUDE.h"
+#include "Resources.h"
 #include <fstream>
+#include <filesystem>
+
 
 Menu::Menu()
 {
 	try {
-		if (!font.loadFromFile("Resource/asset/font/PixeloidSans.ttf"))
+		if (!font.loadFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/asset/font/PixeloidSans.ttf")))
 		{
 			throw - 1;
 		}
@@ -21,7 +25,7 @@ Menu::Menu()
 Menu::Menu(int n, std::vector<std::string> textVec)
 {
 	try {
-		if (!font.loadFromFile("Resource/asset/font/PixeloidSans.ttf"))
+		if (!font.loadFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/asset/font/PixeloidSans.ttf")))
 		{
 			throw - 1;
 		}
@@ -74,7 +78,7 @@ void MainMenu::readResultsFromFile() //load scoreboard
 
 	loadedResults.clear();
 
-	infile.open("results/results.txt");
+	infile.open(convertToUnixPath(fs::current_path().string() + "/results/Results.txt"));
 
 	try
 	{
@@ -142,7 +146,7 @@ void MainMenu::loadResultsToArray() //set scoreboard details
 
 void MainMenu::drawScoreboardBackground(sf::RenderWindow& window, int center) //draw scoreboard background
 {
-	sf::Texture texture = loadTexture("Resource/asset/image/scoreboard.png");
+	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/scoreboard.png"));
 	drawCenterMenuBackground(window, texture);
 }
 
@@ -164,13 +168,13 @@ void MainMenu::drawScoreboard(sf::RenderWindow& window, int center) //draws scor
 
 void MainMenu::drawHelpMenu(sf::RenderWindow& window, int center) //help menu
 {
-	sf::Texture texture = loadTexture("Resource/asset/image/help.png");
+	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/help.png"));
 	drawCenterMenuBackground(window, texture);
 }
 
 void ChooseCharacterMenu::drawChooseCharacter(sf::RenderWindow& window, int center) //background for choosing character background
 {
-	sf::Texture texture = loadTexture("Resource/asset/image/choosecharacter.png");
+	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/choosecharacter.png"));
 	drawMenuBackground(window, texture, 0, 0);
 
 	float H = 750;
@@ -185,27 +189,27 @@ void ChooseCharacterMenu::drawChooseCharacter(sf::RenderWindow& window, int cent
 
 void ChooseLevelMenu::drawChooseLevel(sf::RenderWindow& window, float x, float y) //background for choosing level
 {
-	sf::Texture texture = loadTexture("Resource/asset/image/chooseLevel.png");
+	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/chooseLevel.png"));
 	drawMenuBackground(window, texture, 0, 0);
 	drawItemSelection(window, texts, 60, x, y, 662, 80, 150);
 }
 void MainMenu::drawMainMenu(sf::RenderWindow& window, float x, float y) //draw menu screen
 {
-	sf::Texture texture = loadTexture("Resource/asset/image/MainMenu.png");
+	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/MainMenu.png"));
 	drawMenuBackground(window, texture, 0, 0);
 	drawItemSelection(window, texts, 35, x, y, 553, 50, 140);
 }
 
 void PauseMenu::drawPauseMenu(sf::RenderWindow& window, float x, float y)
 {
-	sf::Texture texture = loadTexture("Resource/asset/image/PauseMenu.png");
+	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/PauseMenu.png"));
 	drawMenuBackground(window, texture, x, y);
 	drawItemSelection(window, texts, 40, x, y, 630, 70, 160);
 }
 
 void AskRestart::drawAskRestart(sf::RenderWindow& window, float x, float y)
 {
-	sf::Texture texture = loadTexture("Resource/asset/image/Ask_Restart.png");
+	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/Ask_Restart.png"));
 	drawMenuBackground(window, texture, x, y);
 
 	float X = 400;

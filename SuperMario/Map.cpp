@@ -48,7 +48,7 @@ void Map::Draw(Renderer& renderer, Resources& resource)
 				//sf::Vector2f cell_position(cellSize * x - cellSize * s, cellSize * y - cellSize * s);
 				Vector2f cell_position(cellSize * x + cellSize / 2.0f, cellSize * y + cellSize / 2.0f);
 
-				renderer.Draw(resource.getTexture("block2.png"),cell_position,sf::Vector2f(cellSize, cellSize), 0);
+				renderer.Draw(resource.getTexture("block2.png"),cell_position,sf::Vector2f(cellSize, cellSize), 0, 0);
 			}
 			y++;
 		}

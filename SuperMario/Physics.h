@@ -1,6 +1,5 @@
 #pragma once
 #include "INCLUDE.h"
-#include <box2d/b2_world.h>
 #include "Renderer.h"
 
 class Character;

@@ -84,7 +84,7 @@ void GameFlow::handleClock()
 {
 	sf::Font font;
 	try {
-		if (!font.loadFromFile("Resource/asset/font/PixeloidSans.ttf"))
+		if (!font.loadFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/asset/font/PixeloidSans.ttf")))
 		{
 			throw - 1;
 		}
@@ -124,7 +124,7 @@ void GameFlow::handleClock()
 
 void GameFlow::savePausedTimeToFile()
 {
-	std::ofstream outFile("assets/txt/pausedTime.txt");
+	std::ofstream outFile(convertToUnixPath(fs::current_path().string() + "/Resource/asset/txt/pausedTime.txt"));
 	if (outFile.is_open())
 	{
 		outFile << pausedTime.asSeconds() + clock.getElapsedTime().asSeconds();
@@ -138,7 +138,7 @@ void GameFlow::savePausedTimeToFile()
 
 void GameFlow::loadPausedTimeToFile()
 {
-	std::ifstream inFile("assets/txt/pausedTime.txt");
+	std::ifstream inFile(convertToUnixPath(fs::current_path().string() + "/Resource/asset/txt/pausedTime.txt"));
 	if (inFile.is_open())
 	{
 		float seconds;

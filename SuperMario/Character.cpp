@@ -56,36 +56,6 @@ void Character::OnEndContact(b2Fixture* self, b2Fixture* other) {
     std::cout << "Begin Contact - Ground count: " << groundContactCount << std::endl;*/
 }
 
-void Character::Update(float& deltaTime) {
-    if (isDead && lives) {
-        isDead = false;
-        lives--;
-        cout << "You have " << lives << " left !" << endl;
-    }
-    else if (isDead && !lives) {
-        isDead = false;
-        cout << "YOU DIED !!!!!!!!!!!" << endl;
-    }
-    float move = movementVelocity;
-    float jump = jumpVelocity;
-    if (Keyboard::isKeyPressed(Keyboard::LShift))
-        move *= 2;
-    b2Vec2 velocity = dynamicBody->GetLinearVelocity();
-    velocity.x = 0;
-    if (Keyboard::isKeyPressed(Keyboard::Right))
-        velocity.x += move;
-    if (Keyboard::isKeyPressed(Keyboard::Left))
-        velocity.x -= move;
-    if (Keyboard::isKeyPressed(Keyboard::Up) && onGround) {
-        velocity.y -= jump;
-    }
-    dynamicBody->SetLinearVelocity(velocity);
-    //Update position and angle
-
-    position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
-    angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
-}
-
 void Character::setPosition(float x, float y) {
     position.x = x;
     position.y = y;
@@ -106,7 +76,6 @@ Character::~Character() {
 Mario::Mario(float x, float y) {
     position.x = x;
     position.y = y;
-    goRight = goUp = goLeft = goDown = isDead = false;
     movementVelocity = 7.0f;
     jumpVelocity = 5.0f;
     angle = 0.0f;
@@ -118,11 +87,21 @@ Mario::Mario(float x, float y) {
 
 void Mario :: Draw(Renderer& renderer, int state, Resources& resource) {
     if (state == 0) //Small Mario.
-        renderer.Draw(resource.getTexture("mario1.png"), position, Vector2f(1.0f, 2.0f), 0);
+        renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
     else return;
 }
  
 void Mario::Begin() {
+    //Set up animation and SFX
+    runAnimation = Animation(0.45f,
+        {
+            Frame(0.15f, Resources::textures["run1.png"]),
+            Frame(0.3f, Resources::textures["run2.png"]),
+            Frame(0.45f, Resources::textures["run3.png"])
+        });
+    jumpSFX.setBuffer(Resources::sfx["jump.wav"]);
+    jumpSFX.setVolume(7);
+
     //Set up Fixture Data for handle collision
     fixtureData->type = FixtureDataType::Character;
     fixtureData->listener = this;
@@ -165,11 +144,59 @@ void Mario::Begin() {
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 }
 
+void Mario::Update(float& deltaTime)
+{
+    drawingTexture = Resources::textures["mario1.png"];
+    if (isDead) {
+        if (lives)
+        {
+            isDead = false;
+            lives--;
+            cout << "You have " << lives << " left!" << endl;
+        }
+        else
+        {
+            isDead = false;
+            cout << "YOU DIED !!!!!!!!!!!" << endl;
+        }
+    }
+    float move = movementVelocity;
+    float jump = jumpVelocity;
+    if (Keyboard::isKeyPressed(Keyboard::LShift))
+        move *= 2;
+    b2Vec2 velocity = dynamicBody->GetLinearVelocity();
+    velocity.x = 0;
+    if (Keyboard::isKeyPressed(Keyboard::Right))
+    {
+        runAnimation.Update(deltaTime);
+        drawingTexture = runAnimation.getTexture();
+        faceLeft = false;
+        velocity.x += move;
+    }
+    if (Keyboard::isKeyPressed(Keyboard::Left))
+    {
+        runAnimation.Update(deltaTime);
+        drawingTexture = runAnimation.getTexture();
+        faceLeft = true;
+        velocity.x -= move;
+    }
+    if (Keyboard::isKeyPressed(Keyboard::Up) && onGround) {
+        velocity.y -= jump;
+        jumpSFX.play();
+    }
+    if (!onGround)
+        drawingTexture = Resources::textures["jump.png"];
+    dynamicBody->SetLinearVelocity(velocity);
+    //Update position and angle
+
+    position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
+    angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
+}
+
 
 Luigi :: Luigi(float x, float y) {
     position.x = x;
     position.y = y;
-    goRight = goUp = goLeft = goDown = isDead = false;
     movementVelocity = 5.0f;
     jumpVelocity = 8.0f;
     angle = 0.0f;
@@ -221,10 +248,41 @@ void Luigi :: Begin() {
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 }
 
+void Luigi::Update(float& deltaTime)
+{
+    if (isDead && lives) {
+        isDead = false;
+        lives--;
+        cout << "You have " << lives << " left !" << endl;
+    }
+    else if (isDead && !lives) {
+        isDead = false;
+        cout << "YOU DIED !!!!!!!!!!!" << endl;
+    }
+    float move = movementVelocity;
+    float jump = jumpVelocity;
+    if (Keyboard::isKeyPressed(Keyboard::LShift))
+        move *= 2;
+    b2Vec2 velocity = dynamicBody->GetLinearVelocity();
+    velocity.x = 0;
+    if (Keyboard::isKeyPressed(Keyboard::Right))
+        velocity.x += move;
+    if (Keyboard::isKeyPressed(Keyboard::Left))
+        velocity.x -= move;
+    if (Keyboard::isKeyPressed(Keyboard::Up) && onGround) {
+        velocity.y -= jump;
+    }
+    dynamicBody->SetLinearVelocity(velocity);
+    //Update position and angle
+
+    position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
+    angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
+}
+
 
 void Luigi::Draw(Renderer& renderer, int state, Resources& resource) {
     if (state == 0) //Small Luigi.
-        renderer.Draw(resource.getTexture("luigi.png"), position, Vector2f(1.0f, 2.0f), 0);
+        renderer.Draw(resource.getTexture("luigi.png"), position, Vector2f(1.0f, 2.0f), 0, 0);
     else return;
 }
 

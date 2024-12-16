@@ -4,6 +4,7 @@
 #include "Resources.h"
 #include "Physics.h"
 #include "entity.h"
+#include "Animation.h"
 
 enum CharacterType {MARIO, LUIGI, CustomCharacter};
 
@@ -13,6 +14,7 @@ public:
     float jumpVelocity;
     Vector2f position;
     float angle;
+    bool faceLeft = 0;
     int onGround = 0;
 
     //Testing collecting coin
@@ -24,7 +26,7 @@ public:
     virtual Vector2f getPos();
     virtual ~Character();
     virtual void Begin() = 0;
-    virtual void Update(float& deltaTime);
+    virtual void Update(float& deltaTime) = 0;
     virtual void Draw(Renderer& renderer, int state, Resources& resource) = 0;
 protected:
     b2Body* dynamicBody = nullptr;
@@ -46,23 +48,24 @@ public:
 
 class Mario : public Character {
 protected:
-    Clock timer1, timer2;
-    bool goRight, goUp, goLeft, goDown;
+    Texture drawingTexture{};
+    Animation runAnimation;
+    Sound jumpSFX{};
 public:
     Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
     void Draw(Renderer& renderer, int state, Resources& resource) override;
     void Begin() override;
+    void Update(float& deltaTime) override;
 };
 
 
 class Luigi : public Character {
 protected:
-    Clock timer1, timer2;
-    bool goRight, goUp, goLeft, goDown;
 public:
     Luigi(float x = 1.0f, float y = 1.0f);
     void Draw(Renderer& renderer, int state, Resources& resource) override;
     void Begin() override;
+    void Update(float& deltaTime) override;
 };
 
 

@@ -1,5 +1,6 @@
 #include "Game.h"
 
+//Music music{};
 
 Game::Game(Map& map, Character* character, Camera& camera) : map(map), character(character), camera(camera) {
 };
@@ -52,6 +53,10 @@ void Game :: Begin(sf::RenderWindow& window)
 	for (auto& entity : onEntities)
 		entity->Begin();
 	window.setView(camera.GetView(window.getSize()));
+	/*music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/music.wav"));
+	music.setLoop(true);
+	music.setVolume(30);
+	music.play();*/
 }
 
 void Game :: Update(float& deltaTime, RenderWindow& window) {
