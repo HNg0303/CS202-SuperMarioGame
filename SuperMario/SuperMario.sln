@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.7.34031.279
+VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SuperMario", "SuperMario.vcxproj", "{73317967-1797-4660-B5A1-D20204551052}"
 EndProject
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {42BCAF7E-E01E-483E-9B15-54055F165C5E}
+		SolutionGuid = {3B464500-38CF-4736-8504-818F98AFBFF9}
 	EndGlobalSection
 EndGlobal
