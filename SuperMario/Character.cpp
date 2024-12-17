@@ -34,8 +34,19 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
             }
         }
         else {
-            this->isDead = true;
+            if (changeStateCounter == 1) {
+                changeStateCounter -= 1;
+                transform = true;
+            }
+            else
+                this->isDead = true;
         }
+    }
+    else if (data->entity && data->type == FixtureDataType::Entity && data->entity->getName() == "levelUp") {
+        data->entity->markDeleted();
+        cout << "BIG MARIO HEHEE !!!!!!!!!!" << endl;
+        changeStateCounter = 1;
+        transform = true;
     }
 }
 
@@ -70,7 +81,7 @@ Character::~Character() {
     Physics::world.DestroyBody(dynamicBody);
     dynamicBody = nullptr;
     delete fixtureData;
-    delete groundFixture;
+    fixtureData = nullptr;
 }
 
 Mario::Mario(float x, float y) {
@@ -85,9 +96,11 @@ Mario::Mario(float x, float y) {
 }
 
 
-void Mario :: Draw(Renderer& renderer, int state, Resources& resource) {
-    if (state == 0) //Small Mario.
+void Mario :: Draw(Renderer& renderer, Resources& resource) {
+    if (changeStateCounter == 0) //Small Mario.
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
+    if (changeStateCounter == 1) //Big Mario
+        renderer.Draw(drawingTexture, position, Vector2f(1.5f, 3.0f), 0, faceLeft);
     else return;
 }
  
@@ -101,51 +114,97 @@ void Mario::Begin() {
         });
     jumpSFX.setBuffer(Resources::sfx["jump.wav"]);
     jumpSFX.setVolume(7);
-
     //Set up Fixture Data for handle collision
     fixtureData->type = FixtureDataType::Character;
     fixtureData->listener = this;
 
-    //Initialize a body of Character in the b2World.
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody; // specify type of body
-    bodyDef.position.Set(position.x, position.y); //Set position
-    bodyDef.fixedRotation = true;
-    dynamicBody = Physics::world.CreateBody(&bodyDef);
-    
-    //Create and add Fixtures for the body => This will set for collision
-    b2FixtureDef fixtureDef{};
-    fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
-    b2PolygonShape shape;
-    //shape.SetAsBox(0.2f, 1.0f);
+    if (changeStateCounter == 0) {
+        //Initialize a body of Character in the b2World.
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_dynamicBody; // specify type of body
+        bodyDef.position.Set(position.x, position.y); //Set position
+        bodyDef.fixedRotation = true;
+        dynamicBody = Physics::world.CreateBody(&bodyDef);
 
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.0f;
-    //Create fixture for body => Done;
-    
-    b2CircleShape circle{};
-    fixtureDef.shape = &circle;
-    circle.m_p.Set(0.0f, -0.5f); //His head.
-    circle.m_radius = 0.4f;
-    dynamicBody->CreateFixture(&fixtureDef);
+        //Create and add Fixtures for the body => This will set for collision
+        b2FixtureDef fixtureDef{};
+        fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
+        b2PolygonShape shape;
+        //shape.SetAsBox(0.2f, 1.0f);
 
-    circle.m_p.Set(0.0f, 0.5f); //His feet.
-    dynamicBody->CreateFixture(&fixtureDef);
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.0f;
+        //Create fixture for body => Done;
 
-    b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.3f, 0.5f);
-    fixtureDef.shape = &polygonShape;
-    dynamicBody->CreateFixture(&fixtureDef);
+        b2CircleShape circle{};
+        fixtureDef.shape = &circle;
+        circle.m_p.Set(0.0f, -0.5f); //His head.
+        circle.m_radius = 0.4f;
+        dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, 1.0f), 0.0f);
-    //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
-    fixtureDef.shape = &polygonShape;
-    fixtureDef.isSensor = true;
-    groundFixture = dynamicBody->CreateFixture(&fixtureDef);
+        circle.m_p.Set(0.0f, 0.5f); //His feet.
+        dynamicBody->CreateFixture(&fixtureDef);
+
+        b2PolygonShape polygonShape;
+        polygonShape.SetAsBox(0.3f, 0.5f);
+        fixtureDef.shape = &polygonShape;
+        dynamicBody->CreateFixture(&fixtureDef);
+
+        polygonShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, 1.0f), 0.0f);
+        //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
+        fixtureDef.shape = &polygonShape;
+        fixtureDef.isSensor = true;
+        groundFixture = dynamicBody->CreateFixture(&fixtureDef);
+    }
+    else if (changeStateCounter == 1) {
+        float scale = 1.5f;
+        //Initialize a body of Character in the b2World.
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_dynamicBody; // specify type of body
+        bodyDef.position.Set(position.x, position.y); //Set position
+        bodyDef.fixedRotation = true;
+        dynamicBody = Physics::world.CreateBody(&bodyDef);
+
+        //Create and add Fixtures for the body => This will set for collision
+        b2FixtureDef fixtureDef{};
+        fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
+        b2PolygonShape shape;
+        //shape.SetAsBox(0.2f, 1.0f);
+
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.0f;
+        //Create fixture for body => Done;
+
+        b2CircleShape circle{};
+        fixtureDef.shape = &circle;
+        circle.m_p.Set(0.0f, -0.5f*scale); //His head.
+        circle.m_radius = 0.4f*scale;
+        dynamicBody->CreateFixture(&fixtureDef);
+
+        circle.m_p.Set(0.0f, 0.5f*scale); //His feet.
+        dynamicBody->CreateFixture(&fixtureDef);
+
+        b2PolygonShape polygonShape;
+        polygonShape.SetAsBox(0.3f*scale, 0.5f*scale);
+        fixtureDef.shape = &polygonShape;
+        dynamicBody->CreateFixture(&fixtureDef);
+
+        polygonShape.SetAsBox(0.2f*(scale) , 0.1f*(scale - 0.1f), b2Vec2(0.0f, 1.5f), 0.0f);
+        //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
+        fixtureDef.shape = &polygonShape;
+        fixtureDef.isSensor = true;
+        groundFixture = dynamicBody->CreateFixture(&fixtureDef);
+    }
 }
 
 void Mario::Update(float& deltaTime)
 {
+    if (transform) {
+        Physics::world.DestroyBody(dynamicBody);
+        dynamicBody = nullptr;
+        Begin();
+        transform = false;
+    }
     drawingTexture = Resources::textures["mario1.png"];
     if (isDead) {
         if (lives)
@@ -280,8 +339,8 @@ void Luigi::Update(float& deltaTime)
 }
 
 
-void Luigi::Draw(Renderer& renderer, int state, Resources& resource) {
-    if (state == 0) //Small Luigi.
+void Luigi::Draw(Renderer& renderer, Resources& resource) {
+    if (changeStateCounter == 0) //Small Luigi.
         renderer.Draw(resource.getTexture("luigi.png"), position, Vector2f(1.0f, 2.0f), 0, 0);
     else return;
 }

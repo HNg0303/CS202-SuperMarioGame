@@ -16,7 +16,7 @@ public:
     float angle;
     bool faceLeft = 0;
     int onGround = 0;
-
+    bool transform = false;
     //Testing collecting coin
     int coin = 0;
 
@@ -24,13 +24,13 @@ public:
     virtual void OnEndContact(b2Fixture* self, b2Fixture * other) override;
     virtual void setPosition(float x, float y);
     virtual Vector2f getPos();
-    virtual ~Character();
+    ~Character();
     virtual void Begin() = 0;
     virtual void Update(float& deltaTime) = 0;
-    virtual void Draw(Renderer& renderer, int state, Resources& resource) = 0;
+    virtual void Draw(Renderer& renderer, Resources& resource) = 0;
 protected:
     b2Body* dynamicBody = nullptr;
-    int changeStateCounter; //3 states (Small, Big, Super) => we will need 3 bodies for each state.
+    int changeStateCounter = 0; //3 states (Small, Big, Super) => we will need 3 bodies for each state.
     bool isDead;
     int lives = 3;
     FixtureData* fixtureData = nullptr;
@@ -53,7 +53,7 @@ protected:
     Sound jumpSFX{};
 public:
     Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
-    void Draw(Renderer& renderer, int state, Resources& resource) override;
+    void Draw(Renderer& renderer, Resources& resource) override;
     void Begin() override;
     void Update(float& deltaTime) override;
 };
@@ -63,7 +63,7 @@ class Luigi : public Character {
 protected:
 public:
     Luigi(float x = 1.0f, float y = 1.0f);
-    void Draw(Renderer& renderer, int state, Resources& resource) override;
+    void Draw(Renderer& renderer, Resources& resource) override;
     void Begin() override;
     void Update(float& deltaTime) override;
 };
