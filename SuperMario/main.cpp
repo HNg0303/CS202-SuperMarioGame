@@ -1,16 +1,7 @@
 #include "GameFlow.h"
 
 int main() {
-	Map map(1.0f);
-	Camera camera(30.0f);
-	Character* character = nullptr;
-	string name;
-	cout << "Enter your Hero Name(Luigi or Mario): "; getline(cin, name);
-	if (name == "Luigi")
-		character = CharacterFactory::createCharacter(LUIGI);
-	else if (name == "Mario")
-		character = CharacterFactory::createCharacter(MARIO);
-
+	
 	/*
 	RenderWindow window(VideoMode(1200, 900), "Super Mario !!!");
 	Clock deltaClock;
@@ -37,9 +28,6 @@ int main() {
 	
 	//Initialize Game instance => Should be an Game arrays of mementos or checkpointss here
 	//window.setFramerateLimit(60);
-	Game* game = Game::getInstance(map, character, camera);
-	if (game) cout << "YES!" << endl;
-	
-	GameFlow* flow = new GameFlow(game);
+	GameFlow* flow = GameFlow::getInstance();
 	flow->run();
 }

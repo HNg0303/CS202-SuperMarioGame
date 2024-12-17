@@ -1,7 +1,5 @@
 ﻿#pragma once
-#include <SFML/Graphics.hpp>
-#include "Windows.h"
-#include <iostream>
+#include "INCLUDE.h"
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 900
