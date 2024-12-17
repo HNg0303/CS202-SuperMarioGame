@@ -7,6 +7,7 @@
 class Map
 {
 public:
+	void Update();
 	Map(float c = 0.015f): cellSize(c), grid() {}
 	void CreateCheckerBoard(int width, int height);
 	void Draw(Renderer& renderer, Resources& resource);

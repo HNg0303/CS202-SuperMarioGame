@@ -20,6 +20,14 @@ void Map::CreateCheckerBoard(int width, int height)
 	}
 }
 
+void Map::Update() {
+	for (auto& entity : onEntities) {
+		if (entity->deleted) {
+			this->grid[entity->getCoords().x][entity->getCoords().y] = 0;
+		}
+	}
+}
+
 void Map::Draw(Renderer& renderer, Resources& resource)
 {
 
@@ -69,35 +77,20 @@ sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entit
 		for (int y = 0; y < grid[x].size(); y++) {
 			sf::Color color = image.getPixel(x, y);
 			if (color == sf::Color::Black) {
-				/*
 				grid[x][y] = 1;
-				//Create static tile in a box2D world through Physics class.
-				b2BodyDef bodyDef;
-				bodyDef.type = b2_staticBody;
-				bodyDef.position.Set(cellSize * x + cellSize / 2.0f, cellSize * y + cellSize / 2.0f);
-				b2Body* body = Physics::world.CreateBody(&bodyDef);
-				//Set Shape
-				b2PolygonShape shape;
-				shape.SetAsBox(cellSize / 2.0f, cellSize / 2.0f);//Set at the center
-				//Set Fixture Data for handle collision
-				FixtureData* fixture = new FixtureData();
-				fixture->type = FixtureDataType::MapTile;
-				
-				b2FixtureDef fixtureDef;
-				fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixture);
-				fixtureDef.shape = &shape;
-				body->CreateFixture(&fixtureDef);*/
-				Entity* block = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize));
+				Entity* block = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x,y));
 				entities.push_back(block);
 			}
 			else if (color == sf::Color::Red)
 				marioPos = sf::Vector2f(cellSize * x, cellSize * y);
 			else if (color == sf::Color::Yellow) {
-				Entity* coin = new Coin("coin", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize));
+				grid[x][y] = 2;
+				Entity* coin = new Coin("coin", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 				entities.push_back(coin);
 			}
 			else if (color == sf::Color::Green) {
-				Entity* goomba = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize));
+				grid[x][y] = 3;
+				Entity* goomba = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 				entities.push_back(goomba);
 			}
 		}

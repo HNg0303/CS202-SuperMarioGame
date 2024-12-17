@@ -3,8 +3,8 @@
 
 vector<Entity*> onEntities;
 
-Entity :: Entity(string name_i, double frameDuration_i, float x, float y) :
-	name(name_i), frameDuration(frameDuration_i), currentFrame(0), direction(1.0)
+Entity :: Entity(string name_i, double frameDuration_i, float x, float y, Vector2f coords) :
+	name(name_i), frameDuration(frameDuration_i), currentFrame(0), direction(1.0), coords(coords)
 {
 	position.x = x;
 	position.y = y;
@@ -18,6 +18,10 @@ Entity :: Entity(string name_i, double frameDuration_i, float x, float y) :
 
 string Entity::getName() {
 	return name;
+}
+
+Vector2f Entity::getCoords(){
+	return coords;
 }
 
 std::vector<sf::Texture> Entity::loadFrame(std::string folderPath)

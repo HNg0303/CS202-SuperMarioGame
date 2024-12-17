@@ -21,17 +21,19 @@ public:
 
 	bool deleted = false;
 	float direction; //left/right
+	Vector2f coords; //Coordinates in grid.
 	Vector2f size; //Render size
 	Vector2f position; //starting position
 
 	//Method
-	Entity(string name_i, double frameDuration_i, float x, float y);
+	Entity(string name_i, double frameDuration_i, float x, float y, Vector2f coords);
 	vector<Texture> loadFrame(string folderPath);
 	void draw(RenderWindow* window, const Vector2f& size);
 	virtual void Begin() = 0;
 	virtual void Update(float deltaTime) = 0; 
 	virtual string getName();
 	virtual ~Entity() = default;
+	Vector2f getCoords();
 	void markDeleted();
 };
 
@@ -44,8 +46,8 @@ private:
 	float yPosition;
 	
 public:
-	Moveable(string name_i, double frameDuration_i, float speed_i, float start, float end, float y) :
-		Entity(name_i, frameDuration_i, start, y), yPosition(y), speed(speed_i)
+	Moveable(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f coords) :
+		Entity(name_i, frameDuration_i, start, y, coords), yPosition(y), speed(speed_i)
 	{
 		xBound = make_pair(start, end);
 	};
@@ -61,16 +63,16 @@ public:
 class Unmoveable : public Entity
 {
 public:
-	Unmoveable(string name_i, double frameDuration_i, float x, float y) :
-		Entity(name_i, frameDuration_i, x, y) {}
+	Unmoveable(string name_i, double frameDuration_i, float x, float y, Vector2f coords) :
+		Entity(name_i, frameDuration_i, x, y, coords) {}
 	void Begin() override {};
 	void Update(float deltaTime) override;	
 };
 
 class Coin : public Unmoveable {
 public: 
-	Coin(string name_i, double frameDuration_i, float x, float y, Vector2f size):
-		Unmoveable(name_i, frameDuration_i, x, y) {
+	Coin(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords):
+		Unmoveable(name_i, frameDuration_i, x, y, coords) {
 		this->size = size;
 	}
 	void Begin() override;
@@ -79,8 +81,8 @@ public:
 
 class Block : public Unmoveable {
 public:
-	Block(string name_i, double frameDuration_i, float x, float y, Vector2f size) :
-		Unmoveable(name_i, frameDuration_i, x, y) {
+	Block(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords) :
+		Unmoveable(name_i, frameDuration_i, x, y, coords) {
 		this->size = size;
 	}
 	void Begin() override;
@@ -90,8 +92,8 @@ public:
 class Enemy : public Moveable {
 public:
 	
-	Enemy(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size) :
-		Moveable(name_i, frameDuration_i, speed_i, start, end, y) {
+	Enemy(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size, Vector2f coords) :
+		Moveable(name_i, frameDuration_i, speed_i, start, end, y, coords) {
 		this->size = size;
 	}
 	void Begin() override;
