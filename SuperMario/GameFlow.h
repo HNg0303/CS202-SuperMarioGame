@@ -1,9 +1,6 @@
 ﻿#pragma once
-#include "INCLUDE.h"
 #include "Menu.h"
-#include "entity.h"
 #include "Game.h"
-#include "Resources.h"
 
 
 
@@ -14,7 +11,43 @@
 class GameFlow
 {
 private:
+	inline static GameFlow* instance = nullptr;
 	int curState = 0;
+	Map* map = nullptr;
+	Camera* camera = nullptr;
+	Character* character = nullptr;
+	//main game
+	Game* game = nullptr;
+	bool isRestarted = false;
+	//Constructor Private for singleton.
+	GameFlow() : mainMenu(5, { "START GAME", "RESTART", "SCOREBOARD", "HELP", "EXIT" }),
+		chooseCharacterMenu(2, { "MARIO", "LUIGI" }),
+		chooseLevel(3, { "EASY","MEDIUM","HARD" }),
+		pauseMenu(3, { "CONTINUE", "RESTART","BACK TO MAIN MENU" }),
+		askRestart(2, { "YES","NO" }),
+		sfEvent()
+	{
+		loadPausedTimeToFile();
+		//loadMobs();
+		mainMenu.loadResultsToArray();
+		//game->loadEntities(entities);
+		string name;
+		map = new Map(1.0f);
+		camera = new Camera(30.0f);
+		cout << "Enter your Hero Name(Luigi or Mario): "; getline(cin, name);
+		if (name == "Luigi")
+			character = CharacterFactory::createCharacter(LUIGI);
+		else if (name == "Mario")
+			character = CharacterFactory::createCharacter(MARIO);
+
+		this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Mario");
+		this->window->setFramerateLimit(60);
+		this->renderer = new Renderer(*this->window);
+		//view.reset(sf::FloatRect(0.f, 0.f, WINDOW_WIDTH, WINDOW_HEIGHT));
+		UIView = sf::View(sf::FloatRect(0, 0, window->getSize().x, window->getSize().y));
+		resources.loadResource();
+	}
+
 public:
 	enum class GameState
 	{
@@ -29,23 +62,29 @@ public:
 		PlayingGame
 	};
 	
+	static GameFlow* getInstance();
 	//clock 
 
 	/*static sf::Clock clock;
 	static sf::Time pausedTime;
 	static bool isPaused;
 	*/
+	
+
 
 	sf::Clock gameClock;
 	sf::Clock clock;
 	sf::Time pausedTime;
+	int coins = 0;
 	bool isPaused = true;
+	bool alreadyPlayed = false;
 
 	//std::string entityName[11] = { "cheep","coin","flame","goombas","koopas","levelUp","plant1","plant2","plant3","qblock","star" };
 	std::string entityName[2] = { "goombas","koopas" };
 
 	sf::RenderWindow* window;
 	sf::View view;
+	sf::View UIView;
 
 	//Menu
 	MainMenu mainMenu;
@@ -58,9 +97,6 @@ public:
 	//Mobs
 	std::vector<std::unique_ptr<Entity>> entities;
 
-	//Main Game:
-	Game* game = nullptr;
-
 	//Resource
 	Resources resources;
 
@@ -68,24 +104,7 @@ public:
 	Renderer* renderer;
 	
 
-	GameFlow(Game* game) : mainMenu(5, { "START GAME", "RESTART", "SCOREBOARD", "HELP", "EXIT" }),
-		chooseCharacterMenu(2, { "MARIO", "LUGI" }),
-		chooseLevel(3, { "EASY","MEDIUM","HARD" }),
-		pauseMenu(3, { "CONTINUE", "RESTART","BACK TO MAIN MENU" }),
-		askRestart(2, { "YES","NO" }),
-		sfEvent(),
-		game(game)
-	{
-		loadPausedTimeToFile();
-		loadMobs();
-		mainMenu.loadResultsToArray();
-		game->loadEntities(entities);
-		this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Mario");
-		this->window->setFramerateLimit(60);
-		this->renderer = new Renderer(*this->window);
-		view.reset(sf::FloatRect(0.f, 0.f, WINDOW_WIDTH, WINDOW_HEIGHT));
-		resources.loadResource();
-	}
+	
 
 	virtual ~GameFlow();
 	void run();
@@ -102,7 +121,7 @@ public:
 	void handleClosed();
 
 	//Mobs
-	void loadMobs();
+	//void loadMobs();
 	//void drawMobs();
 
 	std::vector<sf::Texture>  loadFrame(std::string folderPath);
@@ -115,5 +134,8 @@ public:
 	void handleClock();
 	void savePausedTimeToFile();
 	void loadPausedTimeToFile();
+
+	//void restart
+	void Restart();
 
 };

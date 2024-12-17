@@ -1,11 +1,19 @@
 ﻿#include "GameFlow.h"
 
+GameFlow* GameFlow::getInstance() {
+	if (instance == nullptr) {
+		instance = new GameFlow();
+	}
+	return instance;
+}
+
 GameFlow::~GameFlow()
 {
 	savePausedTimeToFile();
 	delete this->window;
 }
 
+/*
 void GameFlow::loadMobs()
 {
 	std::string line;
@@ -78,7 +86,7 @@ void GameFlow::loadMobs()
 	}
 
 	infile.close();
-}
+}*/
 
 void GameFlow::handleClock()
 {
@@ -94,32 +102,77 @@ void GameFlow::handleClock()
 		std::cout << "Error: Cannot load menu font.";
 		exit(1);
 	}
-	// Text for the label "Time"
-	sf::Text labelText;
-	labelText.setFont(font);
-	labelText.setPosition({ 50, 50 });
-	labelText.setCharacterSize(25);
-	labelText.setFillColor(sf::Color::Yellow); // Set the color for the label
+	
 
-	// Text for the elapsed time
+	sf::Text labelText;
 	sf::Text timeText;
+	sf::Text labelCoinText;
+	sf::Text coinText;
+
+
+	sf::Vector2f viewCenter = UIView.getCenter();
+	sf::Vector2f viewSize = UIView.getSize();
+
+	// Calculate the top-right corner of the view
+	float viewRight = viewCenter.x + (viewSize.x / 2.0f);
+	float viewLeft = viewCenter.x - (viewSize.x / 2.0f);
+	float viewTop = viewCenter.y - (viewSize.y / 2.0f);
+	// Padding from the right and top
+	float padding = 25.0f;
+
+	//Text for Coin Label:
+	labelCoinText.setFont(font);
+	labelCoinText.setString("COIN:");
+	labelCoinText.setCharacterSize(25);
+	labelCoinText.setFillColor(sf::Color::Yellow); // Set the color for the label
+	sf::FloatRect labelCoinBounds = labelText.getLocalBounds();
+
+
+	//Text for coin:
+	coinText.setFont(font);
+	coinText.setCharacterSize(24);
+	coinText.setFillColor(sf::Color::Yellow); // Set the color for the elapsed time
+	std::ostringstream oss;
+	oss << "    " << coins;
+	std::string coinsString = oss.str();
+	coinText.setString(coinsString);
+	sf::FloatRect CoinBounds = coinText.getLocalBounds();
+
+	labelCoinText.setPosition(viewLeft + padding + labelCoinBounds.width, viewTop + padding); // Align label and time
+	coinText.setPosition(viewLeft + padding + labelCoinBounds.width + CoinBounds.width, viewTop + padding); // Position next to the label
+
+
+	// Text for the label "Time"
+	labelText.setFont(font);
+	labelText.setString("TIME:");
+	labelText.setCharacterSize(25);
+	sf::FloatRect labelBounds = labelText.getLocalBounds();
+	labelText.setOutlineColor(sf::Color::Yellow); // Set the color for the label
+	
+	// Text for the elapsed time
 	timeText.setFont(font);
-	timeText.setPosition({ 125, 50 }); // Adjust the position to be next to the label
 	timeText.setCharacterSize(24);
 	timeText.setFillColor(sf::Color::White); // Set the color for the elapsed time
-
 	sf::Time elapsed = pausedTime + clock.getElapsedTime();
-	std::ostringstream oss;
-	oss << std::fixed << std::setprecision(0) << elapsed.asSeconds();
-	std::string elapsedString = oss.str();
-
-	// Update the text
-	labelText.setString("TIME:");
+	std::ostringstream oss2;
+	oss2<< std::fixed << std::setprecision(0) << elapsed.asSeconds();
+	std::string elapsedString = oss2.str();
 	timeText.setString("  " + elapsedString + "s");
 
+
+	sf::FloatRect timeBounds = timeText.getLocalBounds();
+
+
+	// Update the text position
+	labelText.setPosition(viewRight - padding - labelBounds.width - timeBounds.width, viewTop + padding); // Align label and time
+	timeText.setPosition(viewRight - padding - timeBounds.width, viewTop + padding); // Position next to the label
+
 	// Draw the texts
-	window->draw(labelText);
-	window->draw(timeText);
+	window->setView(UIView);
+	this->window->draw(labelText);
+	this->window->draw(timeText);
+	this->window->draw(labelCoinText);
+	this->window->draw(coinText);
 }
 
 void GameFlow::savePausedTimeToFile()
@@ -232,8 +285,20 @@ void GameFlow::handleMainMenu() //handles controls in menu
 
 void GameFlow::handlePlayingGame()
 {
-	sf::Clock deltaTime;
-	game->Begin(*window);
+	clock.restart();
+	if (isRestarted) {
+		Restart();
+		this->game = new Game(this->map, this->character, this->camera);
+		cout << "Restart successfully !" << endl;
+		this->game->Begin(*window);
+		isRestarted = false;
+	}
+	if (!game) {
+		this->game = new Game(this->map, this->character, this->camera);
+		this->game->Begin(*window);
+		
+	}
+	
 	while (window->isOpen())
 	{
 		if (isPaused == true)
@@ -281,10 +346,13 @@ void GameFlow::handlePlayingGame()
 		
 		// Render
 		window->clear();
-		handleClock();
 		float deltaTime = gameClock.restart().asSeconds();
+		
+		//this->view = game->view;
 		game->Update(deltaTime, *window);
 		game->Render(*renderer, resources);
+		coins = game->getCoin();
+		handleClock();
 		//handleEntity();
 		
 		
@@ -417,8 +485,6 @@ void GameFlow::handlePauseMenu()
 						curState = static_cast<int>(GameState::MainMenu);
 						return;
 					}
-
-
 				}
 
 				if (sfEvent.key.code == sf::Keyboard::Escape)
@@ -452,6 +518,7 @@ void GameFlow::handleAskRestart()
 					if (askRestart.GetPressedItem() == 0) //restart
 					{
 						resumeClock();
+						isRestarted = true;
 						curState = static_cast<int>(GameState::PlayingGame);
 						return;
 					}
@@ -667,3 +734,32 @@ std::vector<sf::Texture> GameFlow::loadFrame(std::string folderPath)
 	return textures;
 }
 
+
+void GameFlow::Restart() {
+	clearEntities();
+	// Delete and recreate Map, Character, and Camera
+	if (map) {
+		delete map;
+		map = nullptr;
+		cout << "GameFlow :: Map deleted" << endl;
+	}
+	if (character) {
+		delete character;
+		character = nullptr;
+		cout << "GameFlow :: Character deleted" << endl;
+	}
+	if (camera) {
+		delete camera;
+		camera = nullptr;
+		cout << "GameFlow :: Camera deleted" << endl;
+	}
+	if (game) {
+		delete game;
+		game = nullptr;
+	}
+	map = new Map(1.0f);
+	character = CharacterFactory::createCharacter(LUIGI);
+	camera = new Camera(30.0f);
+	isRestarted = true;
+	coins = 0;
+}

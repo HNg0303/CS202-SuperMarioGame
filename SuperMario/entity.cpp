@@ -78,10 +78,10 @@ void Moveable::Update(float deltaTime)
 		if (body) {
 			Physics::world.DestroyBody(this->body);
 			this->body = nullptr;
-			destroyingTimer += deltaTime;
-			if (destroyingTimer >= 3.0f) 
-				deleteEntity(this);
 		}
+		destroyingTimer += deltaTime;
+		if (destroyingTimer >= 2.0f)
+			deleteEntity(this);
 		return;
 	}
 	if (body) {
@@ -207,6 +207,38 @@ Block::~Block(){
 	body = nullptr;
 }
 
+
+void PowerUp::Begin() {
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_staticBody;
+	bodyDef.position.Set(position.x, position.y);
+
+	body = Physics::world.CreateBody(&bodyDef);
+
+	b2PolygonShape shape{};
+	shape.SetAsBox(0.4f, 0.4f);
+
+	fixtureData = new FixtureData();
+	fixtureData->type = FixtureDataType::Entity;
+	fixtureData->entity = this;
+
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &shape;
+	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
+	fixtureDef.isSensor = true;
+	fixtureDef.density = 0.0f;
+
+	body->CreateFixture(&fixtureDef);
+}
+
+PowerUp :: ~PowerUp() {
+	delete fixtureData;
+	fixtureData = nullptr;
+	Physics::world.DestroyBody(body);
+	body = nullptr;
+	cout << "Successfully Destroyed Level Up !" << endl;
+}
+
 void Enemy::Begin() {
 	fixtureData = new FixtureData();
 	fixtureData->entity = this;
@@ -232,6 +264,10 @@ void Enemy::Begin() {
 }
 
 Enemy :: ~Enemy() {
+	if (body) {
+		Physics::world.DestroyBody(body);
+		body = nullptr;
+	}
 	delete fixtureData;
 	fixtureData = nullptr;
 	cout << "Successfully Destroyed Enemy !" << endl;
@@ -239,13 +275,24 @@ Enemy :: ~Enemy() {
 
 void Enemy::Die() {
 	isDead = true;
+	deleted = true;
 	size.y = size.y / 5.0f;
 	position.y += size.y / 5.0f;
 }
+
+
 void deleteEntity(Entity* entity) {
 	const auto& it = find(onEntities.begin(), onEntities.end(), entity);
 	if (it != onEntities.end()) {
 		onEntities.erase(it);
 		delete entity;
 	}
+}
+
+void clearEntities() {
+	for (Entity* entity : onEntities) {
+		delete entity;
+		entity = nullptr;
+	}
+	onEntities.clear();
 }

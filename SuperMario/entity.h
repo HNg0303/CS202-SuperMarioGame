@@ -6,6 +6,7 @@ using namespace sf;
 
 extern vector<Entity*> onEntities; //For using on-screen entities
 void deleteEntity(Entity* entity);
+void clearEntities();
 
 class Entity // Drawable makes possible to use window.draw(object)
 {
@@ -89,6 +90,16 @@ public:
 	~Block();
 };
 
+class PowerUp : public Unmoveable {
+public:
+	PowerUp(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords):
+		Unmoveable(name_i, frameDuration_i, x, y, coords) {
+		this->size = size;
+	}
+	void Begin() override;
+	~PowerUp();
+};
+
 class Enemy : public Moveable {
 public:
 	
@@ -99,6 +110,10 @@ public:
 	void Begin() override;
 	void Die();
 	~Enemy();
+};
+
+class Flame : public Moveable {
+
 };
 
 
