@@ -138,4 +138,6 @@ public:
 	//void restart
 	void Restart();
 
+	//void startGame
+	void Start();
 };

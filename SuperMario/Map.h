@@ -29,13 +29,16 @@ private:
 	vector<string> objName;
 	map<string, sf::Color> objectMap;
 	pair<int, int> startingPos;
+	int index;
 public:
-	Map(float c = 0.015f) : cellSize(c), grid() {
+	Map(float c = 0.015f, int index = 1) : cellSize(c), grid(), index(index) {
 		this->readObj("colorSheet.csv");
 	}
 	void CreateCheckerBoard(int width, int height);
 	void Draw(Renderer& renderer, Resources& resource);
 	sf::Vector2f CreateFromImage(const sf::Image& image, vector<Entity*>& entites);
+	void setMapIndex(int index);
+	int getIndex();
 	std::vector<std::vector<int>> grid;
 	float cellSize;
 	void Update();
@@ -44,5 +47,6 @@ public:
 	void readObj(string filename);
 	Entity* createEntityFromMap(int z, int x, int y);
 	void readMapState(string filename);
+	~Map();
 };
 

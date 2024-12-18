@@ -14,7 +14,9 @@ private:
 	Map* map = nullptr;
 	Character* character = nullptr;
 	Camera* camera = nullptr;
-	
+	Vector2f startPos{};
+	sf::Image map_image;
+	vector<string> mapPaths{ "/Resource/map1ColorProcessed.png", "/Resource/map2ColorProcessed.png", "/Resource/map3ColorProcessed.png" };
 	//vector<Entity*> entities;
 	//On screen
 	
@@ -22,6 +24,7 @@ public:
 	Game(Map* map, Character* character, Camera* camera);
 	~Game();
 	sf::View view;
+	bool ended = false;
 	//static vector<Entity*> onEntities;
 	//static void deleteEntities(Entity* entity);
 	Entity* getEntity(string name);

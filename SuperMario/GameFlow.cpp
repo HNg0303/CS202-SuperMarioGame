@@ -736,7 +736,6 @@ std::vector<sf::Texture> GameFlow::loadFrame(std::string folderPath)
 
 
 void GameFlow::Restart() {
-	clearEntities();
 	// Delete and recreate Map, Character, and Camera
 	if (map) {
 		delete map;
@@ -757,9 +756,14 @@ void GameFlow::Restart() {
 		delete game;
 		game = nullptr;
 	}
-	map = new Map(1.0f);
+	map = new Map(1.0f, 0);
 	character = CharacterFactory::createCharacter(LUIGI);
 	camera = new Camera(30.0f);
 	isRestarted = true;
 	coins = 0;
+}
+
+void GameFlow::Start() {
+	this->game = new Game(this->map, this->character, this->camera);
+	this->game->Begin(*window);
 }

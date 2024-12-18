@@ -66,7 +66,7 @@ void Map::Draw(Renderer& renderer, Resources& resource)
 
 sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entities)
 {
-	entities.clear();
+	//entities.clear();
 	/*grid.clear();
 	grid = vector<vector<int>> (image.getSize().x, vector<int> (image.getSize().y, 0));*/
 	this->setGrid(image);
@@ -98,7 +98,7 @@ sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entit
 				startingPos.second = y;
 				marioPos = sf::Vector2f(cellSize * x, cellSize * y);
 			}
-			else {
+			else  {
 				entity = this->createEntityFromMap(z, x, y);
 				if (entity != nullptr)
 					entities.push_back(entity);
@@ -219,6 +219,16 @@ void Map::readMapState(string filename)
 		grid.push_back(col);
 	}
 	fin.close();
+}
+
+void Map::setMapIndex(int index) {
+	this->index = index;
+}
+
+int Map::getIndex() { return this->index; }
+
+Map :: ~Map() {
+	clearEntities();
 }
 
 /*

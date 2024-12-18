@@ -49,11 +49,10 @@ void Game :: Begin(sf::RenderWindow& window)
 	//map.CreateCheckerBoard(4, 2);
 	
 	Physics::Init();
-
-	sf::Image map_image;
-	string mapPath = convertToUnixPath(fs::current_path().string()) + "/Resource/map2ColorProcessed.png";
+	string mapPath = convertToUnixPath(fs::current_path().string()) + mapPaths[map->getIndex()];
 	map_image.loadFromFile(mapPath);
 	character->position = map->CreateFromImage(map_image, onEntities);
+	startPos = character->getPos();
 	character->Begin();
 	for (auto& entity : onEntities)
 		entity->Begin();
@@ -68,6 +67,13 @@ void Game :: Begin(sf::RenderWindow& window)
 
 void Game :: Update(float& deltaTime, RenderWindow& window) {
 	Physics::Update(deltaTime);
+	if (character->isDead) {
+		if (!character->lives) {
+			ended = true;
+			return;
+		}
+		character->position = startPos;
+	}
 	character->Update(deltaTime);
 	camera->position = character->getPos();
 	map->Update();
