@@ -242,9 +242,9 @@ void GameFlow::handleMainMenu() //handles controls in menu
 			{
 				if (mainMenu.GetPressedItem() == 0)
 				{
-					if (pausedTime == sf::Time::Zero)
-						curState = static_cast<int>(GameState::ChooseCharacter);
-					else curState = static_cast<int>(GameState::PlayingGame);
+					//if (pausedTime == sf::Time::Zero)
+					curState = static_cast<int>(GameState::ChooseCharacter);
+					//else curState = static_cast<int>(GameState::PlayingGame);
 				}
 
 				if (mainMenu.GetPressedItem() == 1)
@@ -349,7 +349,20 @@ void GameFlow::handlePlayingGame()
 		float deltaTime = gameClock.restart().asSeconds();
 		
 		//this->view = game->view;
+		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
+		if (game->win) {
+			curState = static_cast <int>(GameState::PlayingGame);
+			chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+			isRestarted = true;
+			return;
+		}
+		
+		else if (game->lose) {
+			curState = static_cast <int>(GameState::MainMenu);
+			return;
+		}
+		//cout << "Error in render" << endl;
 		game->Render(*renderer, resources);
 		coins = game->getCoin();
 		handleClock();
@@ -757,6 +770,7 @@ void GameFlow::Restart() {
 	if (game) {
 		delete game;
 		game = nullptr;
+		cout << "GameFlow :: Game deleted in gameFlow" << endl;
 	}
 	
 	map = new Map(1.0f, chooseLevel.GetPressedItem());

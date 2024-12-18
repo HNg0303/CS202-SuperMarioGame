@@ -57,7 +57,9 @@ void Entity::draw(sf::RenderWindow* window, const Vector2f& size)
 		sprite.setTexture(frames[currentFrame], true);
 		sf::Vector2f origin(frames[currentFrame].getSize().x / 2.0f, frames[currentFrame].getSize().y / 2.0f);
 		sprite.setOrigin(origin);
-		sf::Vector2f scale(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
+		Vector2f scale;
+		if (name == "goal") scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y*10.0f / frames[currentFrame].getSize().y);
+		else scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
 		sprite.setScale(scale);
 		//sprite.setScale(2.f * direction, 2.f);
 		sprite.setPosition(position);
@@ -102,7 +104,7 @@ void Moveable::Update(float deltaTime)
 
 void Moveable::move()
 {
-	cout << "Im moving !!" << endl;
+	//cout << "Im moving !!" << endl;
 	//position.x += speed * direction;
 	b2Vec2 velocity = body->GetLinearVelocity();
 	velocity.x += speed * direction;
@@ -190,6 +192,7 @@ void Block::Begin() {
 	//Set Fixture Data for handle collision
 	fixtureData = new FixtureData();
 	fixtureData->type = FixtureDataType::MapTile;
+	fixtureData->entity = this;
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);

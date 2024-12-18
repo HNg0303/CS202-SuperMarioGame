@@ -13,6 +13,7 @@ class GameFlow
 private:
 	inline static GameFlow* instance = nullptr;
 	int curState = 0;
+	int mapState = 0;
 	Map* map = nullptr;
 	Camera* camera = nullptr;
 	Character* character = nullptr;

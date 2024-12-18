@@ -16,21 +16,17 @@ private:
 	Camera* camera = nullptr;
 	Vector2f startPos{};
 	sf::Image map_image;
-	vector<string> mapPaths{ "/Resource/map1ColorProcessed.png", "/Resource/map2ColorProcessed.png", "/Resource/map3ColorProcessed.png" };
-	//vector<Entity*> entities;
+	vector<string> mapPaths{ "/Resource/Map1-3/map1ColorProcessed.png", "/Resource/Map1-3/map2ColorProcessed.png", "/Resource/Map1-3/map3ColorProcessed.png" };
 	//On screen
 	
 public:
 	Game(Map* map, Character* character, Camera* camera);
 	~Game();
 	sf::View view;
-	bool ended = false;
-	//static vector<Entity*> onEntities;
-	//static void deleteEntities(Entity* entity);
+	bool win = false;
+	bool lose = false;
 	Entity* getEntity(string name);
-	//void loadEntities(vector<unique_ptr<Entity>> &entities);
 	void chooseCharacter(CharacterType type);
-	//static Game* getInstance(Map* map, Character* character, Camera* camera, bool isRestart = false);
 	void Begin(sf::RenderWindow& window);
 	void Update(float& deltaTime, RenderWindow& window);
 	void Render(Renderer& renderer, Resources& resource);

@@ -52,8 +52,8 @@ void Game :: Begin(sf::RenderWindow& window)
 	string mapPath = convertToUnixPath(fs::current_path().string()) + mapPaths[map->getIndex()];
 	
 	map_image.loadFromFile(mapPath);
-	character->position = map->CreateFromImage(map_image, onEntities);
-	startPos = character->getPos();
+	startPos = map->CreateFromImage(map_image, onEntities);
+	character->setPos(startPos);
 	character->Begin();
 	for (auto& entity : onEntities)
 		entity->Begin();
@@ -68,17 +68,29 @@ void Game :: Begin(sf::RenderWindow& window)
 
 void Game :: Update(float& deltaTime, RenderWindow& window) {
 	Physics::Update(deltaTime);
+	//cout << "Physic Update is okay" << endl;
+	if (character->win) {
+		this->win = true;
+		return;
+	}
 	if (character->isDead) {
 		if (!character->lives) {
-			ended = true;
+			this->lose = true;
 			return;
 		}
-		character->position = startPos;
+		character->Update(deltaTime);
+		camera->position = character->getPos();
+		view = camera->GetView(window.getSize());
+		window.setView(view);
+		return;
 	}
+	//cout << "Check Character dead is Okay !" << endl;
 	character->Update(deltaTime);
+	//cout << "Character Update is okay" << endl;
 	camera->position = character->getPos();
+	//cout << "Camera Update is okay" << endl;
 	map->Update();
-	
+	//cout << "Map Update is okay" << endl;
 	for (auto& entity : onEntities)
 		entity->Update(deltaTime);
 	view = camera->GetView(window.getSize());

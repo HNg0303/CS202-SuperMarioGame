@@ -18,8 +18,14 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
     }
     FixtureData* data = reinterpret_cast<FixtureData*> (other->GetUserData().pointer);
     if (!data) return;
-    if (groundFixture == self && data->type == FixtureDataType::MapTile)
-        onGround++;
+    if (data->type == FixtureDataType::MapTile && data->entity->getName() == "goal") {
+        win = true;
+        return;
+    }
+
+    if (groundFixture == self && data->type == FixtureDataType::MapTile) {
+            onGround++;
+    }
     else if (data->type == FixtureDataType::Entity && data->entity && data->entity->getName() == "coin") {
         //deleteEntity(data->entity);
         data->entity->markDeleted();
@@ -38,8 +44,19 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
                 changeStateCounter -= 1;
                 transform = true;
             }
-            else
-                this->isDead = true;
+            else {
+                if (lives)
+                {
+                    isDead = true;
+                    lives--;
+                    cout << "You have " << lives << " left!" << endl;
+                }
+                else
+                {
+                    isDead = true;
+                    cout << "YOU DIED !!!!!!!!!!!" << endl;
+                }
+            }
         }
     }
     else if (data->entity && data->type == FixtureDataType::Entity && data->entity->getName() == "levelUp") {
@@ -72,6 +89,10 @@ void Character::setPosition(float x, float y) {
     position.y = y;
 }
 
+void Character::setPos(Vector2f position) {
+    this->startPos = position;
+    this->position = position;
+}
 
 Vector2f Character::getPos() {
     return position;
@@ -95,6 +116,7 @@ Mario::Mario(float x, float y) {
     //groundFixture = new b2Fixture();
     cout << "Initialize Mario successfully !\n";
 }
+
 
 
 void Mario :: Draw(Renderer& renderer, Resources& resource) {
@@ -199,14 +221,23 @@ void Mario::Begin() {
         fixtureDef.isSensor = true;
         groundFixture = dynamicBody->CreateFixture(&fixtureDef);
     }
+    cout << "Initialize Mario Body successfully !!!!!" << endl;
 }
 
 void Mario::Update(float& deltaTime)
 {
     if (isDead || transform) {
-        Physics::world.DestroyBody(dynamicBody);
-        dynamicBody = nullptr;
-        Begin();
+        if (dynamicBody) {
+            Physics::world.DestroyBody(dynamicBody);
+            dynamicBody = nullptr;
+        }
+        transformTimer += deltaTime;
+        if (transformTimer > 1.0f) {
+            position = startPos;
+            Begin();
+            transformTimer = 0.0f;
+        }
+        return;
     }
     drawingTexture = Resources::textures["mario1.png"];
     if (isDead) {

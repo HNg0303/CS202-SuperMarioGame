@@ -17,11 +17,13 @@ public:
     bool faceLeft = 0;
     int onGround = 0;
     bool transform = false;
+    bool win = false;
     //Testing collecting coin
     int lives = 3;
     int coin = 0;
+    float transformTimer = 0.0f;
 
-
+    void setPos(Vector2f position);
     virtual void OnBeginContact(b2Fixture* self, b2Fixture *other) override;
     virtual void OnEndContact(b2Fixture* self, b2Fixture * other) override;
     virtual void setPosition(float x, float y);
@@ -30,11 +32,11 @@ public:
     virtual void Begin() = 0;
     virtual void Update(float& deltaTime) = 0;
     virtual void Draw(Renderer& renderer, Resources& resource) = 0;
-    bool isDead;
+    bool isDead = false;
 protected:
     b2Body* dynamicBody = nullptr;
     int changeStateCounter = 0; //3 states (Small, Big, Super) => we will need 3 bodies for each state.
-    
+    sf::Vector2f startPos{};
     FixtureData* fixtureData = nullptr;
     b2Fixture* groundFixture;
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.
