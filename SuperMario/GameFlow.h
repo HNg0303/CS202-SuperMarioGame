@@ -31,14 +31,17 @@ private:
 		//loadMobs();
 		mainMenu.loadResultsToArray();
 		//game->loadEntities(entities);
-		string name;
-		map = new Map(1.0f);
+		
+		//map = new Map(1.0f);
+		
 		camera = new Camera(30.0f);
+		/*
 		cout << "Enter your Hero Name(Luigi or Mario): "; getline(cin, name);
 		if (name == "Luigi")
 			character = CharacterFactory::createCharacter(LUIGI);
 		else if (name == "Mario")
 			character = CharacterFactory::createCharacter(MARIO);
+		*/
 
 		this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Mario");
 		this->window->setFramerateLimit(60);

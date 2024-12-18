@@ -50,6 +50,7 @@ void Game :: Begin(sf::RenderWindow& window)
 	
 	Physics::Init();
 	string mapPath = convertToUnixPath(fs::current_path().string()) + mapPaths[map->getIndex()];
+	
 	map_image.loadFromFile(mapPath);
 	character->position = map->CreateFromImage(map_image, onEntities);
 	startPos = character->getPos();
@@ -77,6 +78,7 @@ void Game :: Update(float& deltaTime, RenderWindow& window) {
 	character->Update(deltaTime);
 	camera->position = character->getPos();
 	map->Update();
+	
 	for (auto& entity : onEntities)
 		entity->Update(deltaTime);
 	view = camera->GetView(window.getSize());
@@ -84,7 +86,7 @@ void Game :: Update(float& deltaTime, RenderWindow& window) {
 }
 
 void Game :: Render(Renderer& renderer, Resources& resource) {
-	//map.Draw(renderer, resource);
+	//map->Draw(renderer, resource);
 	for (auto& entity : onEntities)
 		entity->draw(renderer.getRenderWindow(), Vector2f(map->cellSize, map->cellSize));
 	character->Draw(renderer, resource);

@@ -294,7 +294,7 @@ void GameFlow::handlePlayingGame()
 		isRestarted = false;
 	}
 	if (!game) {
-		this->game = new Game(this->map, this->character, this->camera);
+	this->game = new Game(this->map, this->character, this->camera);
 		this->game->Begin(*window);
 		
 	}
@@ -434,7 +434,9 @@ void GameFlow::handleChooseLevel()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+
 					resumeClock();
+					isRestarted = true;
 					curState = static_cast<int>(GameState::PlayingGame);
 					return;
 				}
@@ -756,8 +758,12 @@ void GameFlow::Restart() {
 		delete game;
 		game = nullptr;
 	}
-	map = new Map(1.0f, 0);
-	character = CharacterFactory::createCharacter(LUIGI);
+	
+	map = new Map(1.0f, chooseLevel.GetPressedItem());
+	if (chooseCharacterMenu.GetPressedItem() == 1)
+		character = CharacterFactory::createCharacter(LUIGI);
+	else character = CharacterFactory::createCharacter(MARIO);
+
 	camera = new Camera(30.0f);
 	isRestarted = true;
 	coins = 0;

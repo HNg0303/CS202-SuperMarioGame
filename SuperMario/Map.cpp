@@ -192,9 +192,9 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x,y));
 	if (z == GridColor::coin)
 		entity = new Coin("coin", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
-	if (z == GridColor::shell)
-		//entity = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
-		entity = new PowerUp("levelUp", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::question)
+		entity = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+		//entity = new PowerUp("levelUp", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::powerup_red)
 		entity = new PowerUp("levelUp", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	return entity;
