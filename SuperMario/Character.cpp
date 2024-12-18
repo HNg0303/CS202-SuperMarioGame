@@ -90,14 +90,15 @@ Mario::Mario(float x, float y) {
     movementVelocity = 7.0f;
     jumpVelocity = 5.0f;
     angle = 0.0f;
-    fixtureData = new FixtureData();
+    if (!fixtureData)
+        fixtureData = new FixtureData();
     //groundFixture = new b2Fixture();
     cout << "Initialize Mario successfully !\n";
 }
 
 
 void Mario :: Draw(Renderer& renderer, Resources& resource) {
-    if (changeStateCounter == 0) //Small Mario.
+    if (changeStateCounter == 0 || changeStateCounter == 2) //Small Mario.
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
     if (changeStateCounter == 1) //Big Mario
         renderer.Draw(drawingTexture, position, Vector2f(1.5f, 3.0f), 0, faceLeft);
@@ -118,7 +119,10 @@ void Mario::Begin() {
     fixtureData->type = FixtureDataType::Character;
     fixtureData->listener = this;
 
-    if (changeStateCounter == 0) {
+    isDead = false;
+    transform = false;
+
+    if (changeStateCounter == 0 || changeStateCounter == 2) {
         //Initialize a body of Character in the b2World.
         b2BodyDef bodyDef;
         bodyDef.type = b2_dynamicBody; // specify type of body
@@ -199,11 +203,10 @@ void Mario::Begin() {
 
 void Mario::Update(float& deltaTime)
 {
-    if (transform) {
+    if (isDead || transform) {
         Physics::world.DestroyBody(dynamicBody);
         dynamicBody = nullptr;
         Begin();
-        transform = false;
     }
     drawingTexture = Resources::textures["mario1.png"];
     if (isDead) {
@@ -225,6 +228,13 @@ void Mario::Update(float& deltaTime)
         move *= 2;
     b2Vec2 velocity = dynamicBody->GetLinearVelocity();
     velocity.x = 0;
+    if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
+        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x + 3.0f, position.x + 150.0f, position.y, Vector2f(2.0f, 1.0f), position);
+        flame->Begin();
+        onEntities.push_back(flame);
+        changeStateCounter = 0;
+        //transform = true;
+    }
     if (Keyboard::isKeyPressed(Keyboard::Right))
     {
         runAnimation.Update(deltaTime);

@@ -4,7 +4,7 @@
 vector<Entity*> onEntities;
 
 Entity :: Entity(string name_i, double frameDuration_i, float x, float y, Vector2f coords) :
-	name(name_i), frameDuration(frameDuration_i), currentFrame(0), direction(1.0), coords(coords)
+	name(name_i), frameDuration(frameDuration_i), currentFrame(0), direction(1.0f), coords(coords)
 {
 	position.x = x;
 	position.y = y;
@@ -102,6 +102,7 @@ void Moveable::Update(float deltaTime)
 
 void Moveable::move()
 {
+	cout << "Im moving !!" << endl;
 	//position.x += speed * direction;
 	b2Vec2 velocity = body->GetLinearVelocity();
 	velocity.x += speed * direction;
@@ -119,7 +120,7 @@ void Moveable::checkAndChangeDirection()
 	//const b2Vec2& currentPos = body->GetPosition();
 
 	// Reverse direction if bounds are exceeded
-	if (body->GetPosition().x <= xBound.first || body->GetPosition().x >= xBound.second) {
+	if (body->GetPosition().x < xBound.first || body->GetPosition().x > xBound.second) {
 		direction = -direction;
 
 		// Adjust velocity to match the new direction
@@ -280,6 +281,63 @@ void Enemy::Die() {
 	position.y += size.y / 5.0f;
 }
 
+void Flame::Begin() {
+	fixtureData = new FixtureData();
+	//fixtureData->entity = this;
+	fixtureData->listener = this;
+	fixtureData->type = FixtureDataType::Entity;
+
+
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(position.x, position.y);
+	bodyDef.fixedRotation = true;
+	body = Physics::world.CreateBody(&bodyDef);
+
+	b2PolygonShape shape;
+	shape.SetAsBox(size.x / 2, size.y / 2);
+
+	b2FixtureDef fixtureDef;
+	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
+	fixtureDef.shape = &shape;
+	fixtureDef.friction = 0.0f;
+	fixtureDef.density = 0.0f;
+	fixture = body->CreateFixture(&fixtureDef);
+}
+
+void Flame::OnBeginContact(b2Fixture* self, b2Fixture* other) {
+	if (!self) {
+		std::cerr << "Warning: Null fixture detected in OnBeginContact!" << std::endl;
+		return;  // Exit the function if fixture is invalid
+	}
+	FixtureData* otherData = reinterpret_cast<FixtureData*> (other->GetUserData().pointer);
+	FixtureData* selfData = reinterpret_cast<FixtureData*> (self->GetUserData().pointer);
+	if (!otherData) return;
+	if (fixture == self) {
+		if (otherData->type == FixtureDataType::Enemy) {
+			Enemy* enemy = dynamic_cast<Enemy*> (otherData->entity);
+			if (enemy) {
+				enemy->Die();
+				cout << "Kill " << enemy->getName() << endl;
+			}
+		}
+		else if (otherData->type == FixtureDataType::MapTile || otherData->type == FixtureDataType::Character) {
+			isDead = true;
+			deleted = true;
+			cout << "Your flame is extinguished !" << endl;
+		}
+	}
+}
+
+Flame :: ~Flame() {
+	if (body) {
+		Physics::world.DestroyBody(body);
+		body = nullptr;
+	}
+	delete fixtureData;
+	fixtureData = nullptr;
+	cout << "Successfully Destroyed Flame !" << endl;
+}
 
 void deleteEntity(Entity* entity) {
 	const auto& it = find(onEntities.begin(), onEntities.end(), entity);

@@ -112,8 +112,18 @@ public:
 	~Enemy();
 };
 
-class Flame : public Moveable {
+class Flame : public Moveable, public ContactListener {
+public:
+	Flame(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size, Vector2f coords) :
+		Moveable(name_i, frameDuration_i, speed_i, start, end, y, coords) {
+		this->size = size;
+	}
+	b2Fixture* fixture;
+	void Begin() override;
+	void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
+	void OnEndContact(b2Fixture* self, b2Fixture* other) override {};
 
+	~Flame();
 };
 
 
