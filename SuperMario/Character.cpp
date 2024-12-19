@@ -135,6 +135,17 @@ void Mario::Begin() {
             Frame(0.3f, Resources::textures["run2.png"]),
             Frame(0.45f, Resources::textures["run3.png"])
         });
+    deathAnimation = Animation(0.8f,
+        {
+            Frame(0.1f, Resources::textures["death1.png"]),
+            Frame(0.2f, Texture{}),
+            Frame(0.3f, Resources::textures["death1.png"]),
+            Frame(0.4f, Texture{}),
+            Frame(0.5f, Resources::textures["death1.png"]),
+            Frame(0.6f, Texture{}),
+            Frame(0.7f, Resources::textures["death1.png"]),
+            Frame(0.8f, Texture{}),
+        });
     jumpSFX.setBuffer(Resources::sfx["jump.wav"]);
     jumpSFX.setVolume(7);
     //Set up Fixture Data for handle collision
@@ -145,6 +156,8 @@ void Mario::Begin() {
     transform = false;
 
     if (changeStateCounter == 0 || changeStateCounter == 2) {
+        standAnimation = Resources::textures["mario1.png"];
+        jumpAnimation = Resources::textures["jump.png"];
         //Initialize a body of Character in the b2World.
         b2BodyDef bodyDef;
         bodyDef.type = b2_dynamicBody; // specify type of body
@@ -232,6 +245,11 @@ void Mario::Update(float& deltaTime)
             dynamicBody = nullptr;
         }
         transformTimer += deltaTime;
+        if (isDead)
+        {
+            deathAnimation.Update(deltaTime);
+            drawingTexture = deathAnimation.getTexture();
+        }
         if (transformTimer > 1.0f) {
             position = startPos;
             Begin();

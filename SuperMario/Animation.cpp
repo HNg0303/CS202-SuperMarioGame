@@ -10,16 +10,14 @@ void Animation::Update(float deltaTime)
 
 Texture Animation::getTexture()
 {
-	if (currentTime > endTime)
+	if (currentTime >= endTime)
 	{
 		currentTime -= endTime;
+		currentFrame = 0;
 	}
-	for (auto& frame : frames)
-	{
-		if (currentTime < frame.endTime)
-			return frame.texture;
-	}
-	return Resources::textures["run1.png"];
+	if (currentTime >= frames[currentFrame].endTime)
+		currentFrame++;
+	return frames[currentFrame].texture;
 }
 
 Animation& Animation::operator=(const Animation& other)

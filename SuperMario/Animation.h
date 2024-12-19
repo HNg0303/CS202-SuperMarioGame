@@ -18,5 +18,6 @@ public:
 private:
 	float currentTime = 0.0f;
 	float endTime;
+	int currentFrame = 0;
 	vector<Frame> frames;
 };

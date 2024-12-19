@@ -53,7 +53,8 @@ public:
 class Mario : public Character {
 protected:
     Texture drawingTexture{};
-    Animation runAnimation;
+    Texture standAnimation{}, jumpAnimation{};
+    Animation runAnimation, deathAnimation;
     Sound jumpSFX{};
 public:
     Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
