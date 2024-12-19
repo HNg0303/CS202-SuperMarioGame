@@ -36,13 +36,7 @@ private:
 		//map = new Map(1.0f);
 		
 		camera = new Camera(30.0f);
-		/*
-		cout << "Enter your Hero Name(Luigi or Mario): "; getline(cin, name);
-		if (name == "Luigi")
-			character = CharacterFactory::createCharacter(LUIGI);
-		else if (name == "Mario")
-			character = CharacterFactory::createCharacter(MARIO);
-		*/
+		
 
 		this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Mario");
 		this->window->setFramerateLimit(60);
@@ -63,17 +57,13 @@ public:
 		ChooseLevel,
 		PauseMenu,
 		AskRestart,
-		PlayingGame
+		PlayingGame,
+		LooseGame,
+		WinGame
 	};
 	
 	static GameFlow* getInstance();
 	//clock 
-
-	/*static sf::Clock clock;
-	static sf::Time pausedTime;
-	static bool isPaused;
-	*/
-	
 
 
 	sf::Clock gameClock;
@@ -83,8 +73,6 @@ public:
 	bool isPaused = true;
 	bool alreadyPlayed = false;
 
-	//std::string entityName[11] = { "cheep","coin","flame","goombas","koopas","levelUp","plant1","plant2","plant3","qblock","star" };
-	std::string entityName[2] = { "goombas","koopas" };
 
 	sf::RenderWindow* window;
 	sf::View view;
@@ -96,6 +84,7 @@ public:
 	ChooseLevelMenu chooseLevel;
 	PauseMenu pauseMenu;
 	AskRestart askRestart;
+	
 	sf::Event sfEvent;
 
 	//Mobs
@@ -121,8 +110,21 @@ public:
 	void handlePlayingGame();
 	void handleChooseLevel();
 	void handleAskRestart();
+	void handleLooseGame();
+	void handleWinGame();
 	void handleEntity();
 	void handleClosed();
+	void handleGameInfo();
+
+
+	//Game Info
+	void loadFont(sf::Font& font);
+	void setupText(sf::Text& text, const sf::Font& font, const std::string& string, unsigned int size, const sf::Color& color);
+	void setupHorizontalPosition(sf::Text& labelText, sf::Text& valueText, float& x, float y, float padding1, float padding2);
+	void setupVerticalPosition(sf::Text& labelText, sf::Text& valueText, float x, float &y, float padding1, float padding2);
+	std::string formatTime(const sf::Time& time);
+	std::string formatValue(int value);
+	void drawText(sf::Text& labelText, sf::Text& valueText);
 
 	//Mobs
 	//void loadMobs();
@@ -135,7 +137,6 @@ public:
 	//Clock
 	void pauseClock();
 	void resumeClock();
-	void handleClock();
 	void savePausedTimeToFile();
 	void loadPausedTimeToFile();
 

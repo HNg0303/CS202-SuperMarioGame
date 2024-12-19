@@ -88,10 +88,10 @@ void GameFlow::loadMobs()
 	infile.close();
 }*/
 
-void GameFlow::handleClock()
+void GameFlow::loadFont(sf::Font& font)
 {
-	sf::Font font;
-	try {
+	try
+	{
 		if (!font.loadFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/asset/font/PixeloidSans.ttf")))
 		{
 			throw - 1;
@@ -102,78 +102,91 @@ void GameFlow::handleClock()
 		std::cout << "Error: Cannot load menu font.";
 		exit(1);
 	}
-	
+}
 
-	sf::Text labelText;
-	sf::Text timeText;
-	sf::Text labelCoinText;
-	sf::Text coinText;
+void GameFlow::setupText(sf::Text& text, const sf::Font& font, const std::string& string, unsigned int size, const sf::Color& color)
+{
+	text.setFont(font);
+	text.setString(string);
+	text.setCharacterSize(size);
+	text.setFillColor(color);
+}
+
+void GameFlow::setupHorizontalPosition(sf::Text& labelText, sf::Text& valueText, float& x, float y, float padding1, float padding2)
+{
+	labelText.setPosition(x, y);
+	x += labelText.getLocalBounds().width + padding1;
+	valueText.setPosition(x, y);
+	x += valueText.getLocalBounds().width + padding2;
+}
 
 
+void GameFlow::setupVerticalPosition(sf::Text& labelText, sf::Text& valueText, float x, float &y, float padding1, float padding2)
+{
+	labelText.setPosition(x, y);
+	valueText.setPosition(x + labelText.getLocalBounds().width + padding1, y);
+	y += valueText.getLocalBounds().height + padding2;
+}
+
+std::string GameFlow::formatTime(const sf::Time& time)
+{
+	std::ostringstream oss;
+	oss << std::fixed << std::setprecision(0) << time.asSeconds();
+	return oss.str() + "s";
+}
+
+std::string GameFlow::formatValue(int value)
+{
+	std::ostringstream oss;
+	oss << "    " << value;
+	return oss.str();
+}
+
+void GameFlow::drawText(sf::Text& labelText, sf::Text& valueText)
+{
+	this->window->draw(labelText);
+	this->window->draw(valueText);
+}
+
+void GameFlow::handleGameInfo()
+{
+	sf::Font font;
+	loadFont(font);
+
+	sf::Text labelText, timeText, labelCoinText, coinText, labelLivesText, livesText;
 	sf::Vector2f viewCenter = UIView.getCenter();
 	sf::Vector2f viewSize = UIView.getSize();
 
-	// Calculate the top-right corner of the view
-	float viewRight = viewCenter.x + (viewSize.x / 2.0f);
 	float viewLeft = viewCenter.x - (viewSize.x / 2.0f);
 	float viewTop = viewCenter.y - (viewSize.y / 2.0f);
-	// Padding from the right and top
-	float padding = 25.0f;
-
-	//Text for Coin Label:
-	labelCoinText.setFont(font);
-	labelCoinText.setString("COIN:");
-	labelCoinText.setCharacterSize(25);
-	labelCoinText.setFillColor(sf::Color::Yellow); // Set the color for the label
-	sf::FloatRect labelCoinBounds = labelText.getLocalBounds();
-
-
-	//Text for coin:
-	coinText.setFont(font);
-	coinText.setCharacterSize(24);
-	coinText.setFillColor(sf::Color::Yellow); // Set the color for the elapsed time
-	std::ostringstream oss;
-	oss << "    " << coins;
-	std::string coinsString = oss.str();
-	coinText.setString(coinsString);
-	sf::FloatRect CoinBounds = coinText.getLocalBounds();
-
-	labelCoinText.setPosition(viewLeft + padding + labelCoinBounds.width, viewTop + padding); // Align label and time
-	coinText.setPosition(viewLeft + padding + labelCoinBounds.width + CoinBounds.width, viewTop + padding); // Position next to the label
-
-
-	// Text for the label "Time"
-	labelText.setFont(font);
-	labelText.setString("TIME:");
-	labelText.setCharacterSize(25);
-	sf::FloatRect labelBounds = labelText.getLocalBounds();
-	labelText.setOutlineColor(sf::Color::Yellow); // Set the color for the label
+	float padding1 = 20.0f;
+	float padding2 = 40.0f;
 	
-	// Text for the elapsed time
-	timeText.setFont(font);
-	timeText.setCharacterSize(24);
-	timeText.setFillColor(sf::Color::White); // Set the color for the elapsed time
-	sf::Time elapsed = pausedTime + clock.getElapsedTime();
-	std::ostringstream oss2;
-	oss2<< std::fixed << std::setprecision(0) << elapsed.asSeconds();
-	std::string elapsedString = oss2.str();
-	timeText.setString("  " + elapsedString + "s");
+	// Setup texts
+	setupText(labelText, font, "TIME:", 25, sf::Color::White);
+	setupText(timeText, font, formatTime(pausedTime + clock.getElapsedTime()), 24, sf::Color::White);
 
+	setupText(labelCoinText, font, "COINS:", 25, sf::Color::Yellow);
+	setupText(coinText, font, formatValue(coins), 24, sf::Color::Yellow);
 
-	sf::FloatRect timeBounds = timeText.getLocalBounds();
+	setupText(labelLivesText, font, "LIVES:", 25, sf::Color::Red);
+	setupText(livesText, font, formatValue(character->lives), 24, sf::Color::Red);
 
-
-	// Update the text position
-	labelText.setPosition(viewRight - padding - labelBounds.width - timeBounds.width, viewTop + padding); // Align label and time
-	timeText.setPosition(viewRight - padding - timeBounds.width, viewTop + padding); // Position next to the label
-
-	// Draw the texts
+	
+	// Position texts
+	float currentX = viewLeft + padding1;
+	setupHorizontalPosition(labelLivesText, livesText, currentX, viewTop + padding1, 0, padding2);
+	setupHorizontalPosition(labelCoinText, coinText, currentX, viewTop + padding1, 0, padding2);
+	setupHorizontalPosition(labelText, timeText, currentX, viewTop + padding1, 30, padding2);
+	
+	//cout << timeText.getPosition().x << " " << coinText.getPosition().x << " " << livesText.getPosition().x << endl;
+	// Draw texts
 	window->setView(UIView);
-	this->window->draw(labelText);
-	this->window->draw(timeText);
-	this->window->draw(labelCoinText);
-	this->window->draw(coinText);
+	drawText(labelText, timeText);
+	drawText(labelCoinText, coinText);
+	drawText(labelLivesText, livesText);
 }
+
 
 void GameFlow::savePausedTimeToFile()
 {
@@ -352,20 +365,19 @@ void GameFlow::handlePlayingGame()
 		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
 		if (game->win) {
-			curState = static_cast <int>(GameState::PlayingGame);
-			chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+			curState = static_cast <int>(GameState::WinGame);
+			//chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
 			isRestarted = true;
 			return;
 		}
-		
 		else if (game->lose) {
-			curState = static_cast <int>(GameState::MainMenu);
+			curState = static_cast <int>(GameState::LooseGame);
 			return;
 		}
 		//cout << "Error in render" << endl;
 		game->Render(*renderer, resources);
 		coins = game->getCoin();
-		handleClock();
+		handleGameInfo();
 		//handleEntity();
 		
 		
@@ -601,6 +613,146 @@ void GameFlow::handleHelpMenu()
 	}
 }
 
+void GameFlow::handleLooseGame()
+{
+	string name = convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/GameOver.png");
+	sf::Texture texture;
+	try {
+		if (!texture.loadFromFile(name))
+		{
+			throw - 1;
+		}
+	}
+	catch (int)
+	{
+		std::cout << "Error: Cannot load " + name;
+		exit(1);
+	}
+
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+	sprite.setPosition({0,0 });
+	
+	while (true)
+	{
+		window->clear();
+		window->draw(sprite);
+		window->display();
+
+		while (window->pollEvent(sfEvent))
+		{
+			handleClosed();
+
+			if (sfEvent.type == sf::Event::KeyPressed)
+			{
+				if (sfEvent.key.code == sf::Keyboard::Enter)
+				{
+					curState = static_cast<int>(GameState::MainMenu);
+					return;
+				}
+			}
+		}
+	}
+}
+void GameFlow::handleWinGame()
+{
+	//Load background image
+	sf::Texture texture;
+	std::string bgPath = convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/gameWon.png");
+	if (!texture.loadFromFile(bgPath))
+	{
+		std::cerr << "Error: Cannot load background: " << bgPath << std::endl;
+		exit(1);
+	}
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+	sprite.setPosition(0, 0);
+
+	//Load font
+	sf::Font font;
+	loadFont(font);
+
+	// Setup text fields
+	sf::Text coinLabel, coinInfo, timeLabel, timeInfo, usernameLabel, usernameText;
+	setupText(coinLabel, font, "Coins:", 40, sf::Color::Yellow);
+	setupText(coinInfo, font, formatValue(coins), 40, sf::Color::White);
+
+	setupText(timeLabel, font, "Time:", 40, sf::Color::Yellow);
+	setupText(timeInfo, font, formatTime(pausedTime + clock.getElapsedTime()), 40, sf::Color::White);
+
+	setupText(usernameLabel, font, "Username:", 40, sf::Color::Yellow);
+	setupText(usernameText, font, "", 30, sf::Color::Black);
+
+	//Setup input box
+	sf::RectangleShape inputBox(sf::Vector2f(300, 50));
+	inputBox.setFillColor(sf::Color::White);
+	inputBox.setOutlineThickness(2);
+	inputBox.setOutlineColor(sf::Color::Black);
+
+	//Set Position
+	float centerX = WINDOW_WIDTH / 2 - 300;
+	float startY = WINDOW_HEIGHT / 2 - 50;
+	float padding1 = 200;
+	float padding2 = 50;
+
+	setupVerticalPosition(coinLabel, coinInfo, centerX, startY, padding1, padding2);
+	setupVerticalPosition(timeLabel, timeInfo, centerX, startY, padding1 + 40, padding2);
+	setupVerticalPosition(usernameLabel, usernameText, centerX, startY, padding1, padding2);
+
+	timeInfo.setPosition({ coinInfo.getPosition().x + 50,timeInfo.getPosition().y });
+	
+	//Position inputbox
+	inputBox.setPosition(usernameLabel.getPosition().x + usernameLabel.getLocalBounds().width + 20, usernameLabel.getPosition().y);
+	usernameText.setPosition(inputBox.getPosition().x + 20, inputBox.getPosition().y + 5);
+
+	//Handle username input
+	std::string username = "";
+	while (window->isOpen())
+	{
+		sf::Event event;
+		while (window->pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				window->close();
+				return;
+			}
+
+			if (event.type == sf::Event::TextEntered)
+			{
+				if (event.text.unicode == 8 && !username.empty()) //Backspace
+				{
+					username.pop_back();
+				}
+				else if (event.text.unicode < 128 && event.text.unicode >= 32 && username.size() < 10) //Normal characters
+				{
+					username += static_cast<char>(event.text.unicode);
+				}
+				usernameText.setString(username);
+			}
+
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
+			{
+				//saveScoreboard(username, coins, pausedTime, character->lives);
+				curState = static_cast<int>(GameState::MainMenu);
+				return;
+			}
+		}
+
+		//Render
+		window->clear();
+		window->draw(sprite);
+		window->draw(coinLabel);
+		window->draw(coinInfo);
+		window->draw(timeLabel);
+		window->draw(timeInfo);
+		window->draw(usernameLabel);
+		window->draw(inputBox);
+		window->draw(usernameText);
+		window->display();
+	}
+}
+
 void GameFlow::handleClosed()
 {
 	if (sfEvent.type == sf::Event::Closed)
@@ -660,6 +812,14 @@ void GameFlow::run()
 
 		case GameState::PlayingGame:
 			handlePlayingGame();
+			break;
+
+		case GameState::LooseGame:
+			handleLooseGame();
+			break;
+		
+		case GameState::WinGame:
+			handleWinGame();
 			break;
 
 		}
