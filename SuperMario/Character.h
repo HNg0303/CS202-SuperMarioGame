@@ -39,6 +39,10 @@ protected:
     sf::Vector2f startPos{};
     FixtureData* fixtureData = nullptr;
     b2Fixture* groundFixture;
+    Texture drawingTexture{};
+    Texture standAnimation{}, jumpAnimation{};
+    Animation runAnimation, deathAnimation;
+    Sound jumpSFX{};
     b2Fixture* headFixture;
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.
     //float angle{};// => Use velocity in b2_body.
@@ -52,11 +56,6 @@ public:
 
 
 class Mario : public Character {
-protected:
-    Texture drawingTexture{};
-    Texture standAnimation{}, jumpAnimation{};
-    Animation runAnimation, deathAnimation;
-    Sound jumpSFX{};
 public:
     Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
     void Draw(Renderer& renderer, Resources& resource) override;
@@ -66,7 +65,6 @@ public:
 
 
 class Luigi : public Character {
-protected:
 public:
     Luigi(float x = 1.0f, float y = 1.0f);
     void Draw(Renderer& renderer, Resources& resource) override;
