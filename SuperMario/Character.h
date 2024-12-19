@@ -39,11 +39,14 @@ protected:
     sf::Vector2f startPos{};
     FixtureData* fixtureData = nullptr;
     b2Fixture* groundFixture;
+    b2Fixture* headFixture;
+
+
     Texture drawingTexture{};
     Texture standAnimation{}, jumpAnimation{};
     Animation runAnimation, deathAnimation;
     Sound jumpSFX{};
-    b2Fixture* headFixture;
+    
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.
     //float angle{};// => Use velocity in b2_body.
 };

@@ -20,6 +20,7 @@ public:
 	b2Body* body = nullptr;
 	FixtureData* fixtureData = nullptr;
 
+	bool faceLeft = false;
 	bool deleted = false;
 	float direction; //left/right
 	Vector2f coords; //Coordinates in grid.
@@ -90,6 +91,15 @@ public:
 	~Block();
 };
 
+class QBlock : public Unmoveable {
+	QBlock(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords) :
+		Unmoveable(name_i, frameDuration_i, x, y, coords) {
+		this->size = size;
+	}
+	//void Begin() override;
+	//~QBlock();
+};
+
 class PowerUp : public Unmoveable {
 public:
 	PowerUp(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords):
@@ -97,6 +107,7 @@ public:
 		this->size = size;
 	}
 	void Begin() override;
+	//void Update(float deltaTime) override;
 	~PowerUp();
 };
 
@@ -114,11 +125,13 @@ public:
 
 class Flame : public Moveable, public ContactListener {
 public:
+	b2Fixture* fixture;
+
 	Flame(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size, Vector2f coords) :
 		Moveable(name_i, frameDuration_i, speed_i, start, end, y, coords) {
 		this->size = size;
 	}
-	b2Fixture* fixture;
+	
 	void Begin() override;
 	void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
 	void OnEndContact(b2Fixture* self, b2Fixture* other) override {};

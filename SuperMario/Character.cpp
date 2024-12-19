@@ -29,14 +29,18 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
     }
     if (headFixture == self && data->type == FixtureDataType::MapTile && data->entity->getName() == "qblock") {
         data->entity->markDeleted();
+        Entity* star = new PowerUp("star", 0.3, data->entity->position.x, data->entity->position.y - 1.0f, data->entity->size, Vector2f(data->entity->position.x, data->entity->position.y - 1.0f));
+        //star->Begin();
+        cout << "Initialize Star successfully" << endl;
+        onEntities.push_back(star);
         return;
     }
     if (groundFixture == self && data->type == FixtureDataType::MapTile) {
             onGround++;
     }
     else if (data->type == FixtureDataType::Entity && data->entity && data->entity->getName() == "coin") {
-        //deleteEntity(data->entity);
         data->entity->markDeleted();
+        //deleteEntity(data->entity);
         cout << "Coin: " << ++coin << endl;
     }
     else if (data->entity && data->type == FixtureDataType::Enemy && data->entity->getName() == "goombas") {
@@ -57,6 +61,12 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         changeStateCounter = 1;
         transform = true;
     }
+    else if (data->entity && data->type == FixtureDataType::Entity && data->entity->getName() == "star") {
+        data->entity->markDeleted();
+        cout << "FLAME HEHEE !!!!!!!!!!" << endl;
+        changeStateCounter = 2;
+        transform = true;
+    }
 }
 
 void Character::OnEndContact(b2Fixture* self, b2Fixture* other) {
@@ -68,17 +78,15 @@ void Character::OnEndContact(b2Fixture* self, b2Fixture* other) {
     if (!data) return;
     if (groundFixture == self && data->type == FixtureDataType::MapTile && onGround > 0)
         onGround--;
-    /*
-    groundContactCount--;
-    if (groundContactCount <= 0) {
-        onGround = false;  // Mario is on the ground
-    }
-    std::cout << "Begin Contact - Ground count: " << groundContactCount << std::endl;*/
 }
 
 void Character::handleDeath() {
     if (changeStateCounter == 1) {
         changeStateCounter -= 1;
+        transform = true;
+    }
+    else if (changeStateCounter == 2) {
+        changeStateCounter = 0;
         transform = true;
     }
     else {
@@ -123,10 +131,10 @@ Mario::Mario(float x, float y) {
 
 
 void Mario :: Draw(Renderer& renderer, Resources& resource) {
-    if (changeStateCounter == 0 || changeStateCounter == 2) //Small Mario.
+    if (changeStateCounter == 0) //Small Mario.
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
-    if (changeStateCounter == 1) //Big Mario
-        renderer.Draw(drawingTexture, position, Vector2f(1.5f, 3.0f), 0, faceLeft);
+    if (changeStateCounter == 1 || changeStateCounter == 2) //Big Mario
+        renderer.Draw(drawingTexture, position, Vector2f(1.2f, 2.4f), 0, faceLeft);
     else return;
 }
  
@@ -251,7 +259,7 @@ void Mario::Begin() {
                     Frame(0.9f, Resources::textures["mariolvdown2.png"])
                 });
         }
-        float scale = 1.5f;
+        float scale = 1.2f;
         //Initialize a body of Character in the b2World.
         b2BodyDef bodyDef;
         bodyDef.type = b2_dynamicBody; // specify type of body
@@ -283,7 +291,7 @@ void Mario::Begin() {
         fixtureDef.shape = &polygonShape;
         dynamicBody->CreateFixture(&fixtureDef);
 
-        polygonShape.SetAsBox(0.2f*(scale) , 0.1f*(scale - 0.1f), b2Vec2(0.0f, 1.5f), 0.0f);
+        polygonShape.SetAsBox(0.2f*(scale) , 0.1f*(scale), b2Vec2(0.0f, 1.5f), 0.0f);
         //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
         fixtureDef.shape = &polygonShape;
         fixtureDef.isSensor = true;
@@ -329,11 +337,13 @@ void Mario::Update(float& deltaTime)
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
         drawingTexture = Resources::textures["marioflamethrow.png"];
-        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x + 3.0f, position.x + 150.0f, position.y, Vector2f(2.0f, 1.0f), position);
+        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x - 150.0f, position.x + 150.0f, position.y, Vector2f(2.0f, 1.0f), position);
+        flame->faceLeft = this->faceLeft;
         flame->Begin();
         onEntities.push_back(flame);
         changeStateCounter = 0;
-        //transform = true;
+        transformTimer += 1.0f;
+        transform = true;
     }
     if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
     {
@@ -372,7 +382,8 @@ Luigi :: Luigi(float x, float y) {
     jumpVelocity = 8.0f;
     angle = 0.0f;
 
-    fixtureData = new FixtureData();
+    if (!fixtureData)
+        fixtureData = new FixtureData();
     cout << "Initializing Luigi successfully !";
 }
 
@@ -400,6 +411,9 @@ void Luigi :: Begin() {
     //Set up Fixture Data for handle collision
     fixtureData->type = FixtureDataType::Character;
     fixtureData->listener = this;
+
+    isDead = false;
+    transform = false;
 
     //Initialize a body of Character in the b2World.
     b2BodyDef bodyDef;
@@ -433,10 +447,14 @@ void Luigi :: Begin() {
     dynamicBody->CreateFixture(&fixtureDef);
 
     polygonShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, 1.0f), 0.0f);
-    //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
+
+    polygonShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, -0.8f), 0.0f);
+    fixtureDef.shape = &polygonShape;
+    fixtureDef.isSensor = true;
+    headFixture = dynamicBody->CreateFixture(&fixtureDef);
 }
 
 void Luigi::Update(float& deltaTime)
@@ -447,10 +465,20 @@ void Luigi::Update(float& deltaTime)
             dynamicBody = nullptr;
         }
         transformTimer += deltaTime;
-        deathAnimation.Update(deltaTime);
-        drawingTexture = deathAnimation.getTexture();
+        if (isDead) {
+            deathAnimation.Update(deltaTime);
+            drawingTexture = deathAnimation.getTexture();
+        }
         if (transformTimer > 1.0f) {
-            position = startPos;
+            if (isDead) {
+                if (lives > 1) lives -= 1;
+                else {
+                    lives -= 1;
+                    cout << "You're dead !" << endl;
+                    return;
+                }
+                position = startPos;
+            }
             Begin();
             transformTimer = 0.0f;
         }
@@ -500,8 +528,10 @@ void Luigi::Update(float& deltaTime)
 
 
 void Luigi::Draw(Renderer& renderer, Resources& resource) {
-    if (changeStateCounter == 0) //Small Luigi.
+    if (changeStateCounter == 0) //Small Mario.
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
+    if (changeStateCounter == 1 || changeStateCounter == 2) //Big Mario
+        renderer.Draw(drawingTexture, position, Vector2f(1.2f, 2.4f), 0, faceLeft);
     else return;
 }
 

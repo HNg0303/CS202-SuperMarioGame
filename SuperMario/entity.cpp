@@ -58,7 +58,7 @@ void Entity::draw(sf::RenderWindow* window, const Vector2f& size)
 		sf::Vector2f origin(frames[currentFrame].getSize().x / 2.0f, frames[currentFrame].getSize().y / 2.0f);
 		sprite.setOrigin(origin);
 		Vector2f scale;
-		if (name == "goal") scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y*10.0f / frames[currentFrame].getSize().y);
+		if (name == "goal") scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y*5.0f / frames[currentFrame].getSize().y);
 		else scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
 		sprite.setScale(scale);
 		//sprite.setScale(2.f * direction, 2.f);
@@ -82,7 +82,7 @@ void Moveable::Update(float deltaTime)
 			this->body = nullptr;
 		}
 		destroyingTimer += deltaTime;
-		if (destroyingTimer >= 2.0f)
+		if (destroyingTimer >= 1.5f)
 			deleteEntity(this);
 		return;
 	}
@@ -125,7 +125,12 @@ void Moveable::checkAndChangeDirection()
 	if (body->GetPosition().x < xBound.first || body->GetPosition().x > xBound.second) {
 		direction = -direction;
 
-		// Adjust velocity to match the new direction
+		// Adjust velocity to match the new directio
+
+		// Directly set the new velocity to match the reversed direction
+		b2Vec2 velocity = body->GetLinearVelocity();
+		velocity.x = speed * direction;  // Update the velocity along x-axis
+		body->SetLinearVelocity(velocity);
 		//body->SetLinearVelocity(b2Vec2(speed * direction, 0.0f));
 	}
 }
@@ -136,7 +141,9 @@ void Unmoveable::Update(float deltaTime)
 {
 	if (deleted) {
 		deleteEntity(this);
+		return;
 	}
+	if (!body) Begin();
 	if (body) {
 		//std::cout << "unmoveable" ;
 		//std::cout << position.x << " " << position.y;
@@ -214,7 +221,7 @@ Block::~Block(){
 
 void PowerUp::Begin() {
 	b2BodyDef bodyDef;
-	bodyDef.type = b2_staticBody;
+	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(position.x, position.y);
 
 	body = Physics::world.CreateBody(&bodyDef);
@@ -229,11 +236,14 @@ void PowerUp::Begin() {
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &shape;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
-	fixtureDef.isSensor = true;
-	fixtureDef.density = 0.0f;
+	//fixtureDef.isSensor = true;
+	fixtureDef.density = 1.0f;
+	fixtureDef.friction = 0.0f;
 
 	body->CreateFixture(&fixtureDef);
 }
+
+
 
 PowerUp :: ~PowerUp() {
 	delete fixtureData;
@@ -257,7 +267,7 @@ void Enemy::Begin() {
 
 	b2CircleShape circle;
 	circle.m_p.Set(0.0f, 0.2f);
-	circle.m_radius = 0.4f;
+	circle.m_radius = 0.3f;
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
@@ -290,10 +300,15 @@ void Flame::Begin() {
 	fixtureData->listener = this;
 	fixtureData->type = FixtureDataType::Entity;
 
+	
 
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(position.x, position.y);
+	if (faceLeft) {
+		direction = -direction;
+		bodyDef.position.Set(position.x + 148.0f, position.y);
+	}
+	else bodyDef.position.Set(position.x + 152.0f, position.y);
 	bodyDef.fixedRotation = true;
 	body = Physics::world.CreateBody(&bodyDef);
 
