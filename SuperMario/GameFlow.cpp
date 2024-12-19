@@ -673,7 +673,18 @@ void GameFlow::handleWinGame()
 	loadFont(font);
 
 	// Setup text fields
-	sf::Text coinLabel, coinInfo, timeLabel, timeInfo, usernameLabel, usernameText;
+	sf::Text coinLabel, coinInfo, timeLabel, timeInfo, usernameLabel, usernameText, levelLabel, levelInfo;
+	
+	string levelStr = "";
+	int level = chooseLevel.GetPressedItem();
+	if (level == 0)
+		levelStr = "EASY";
+	else if (level == 1)
+		levelStr = "MEDIUM";
+	else levelStr = "HARD";
+	setupText(levelLabel, font, "Level:", 40, sf::Color::Yellow);
+	setupText(levelInfo, font, levelStr, 40, sf::Color::White);
+
 	setupText(coinLabel, font, "Coins:", 40, sf::Color::Yellow);
 	setupText(coinInfo, font, formatValue(coins), 40, sf::Color::White);
 
@@ -695,11 +706,13 @@ void GameFlow::handleWinGame()
 	float padding1 = 200;
 	float padding2 = 50;
 
+	setupVerticalPosition(levelLabel, levelInfo, centerX, startY, padding1 + 10, padding2);
 	setupVerticalPosition(coinLabel, coinInfo, centerX, startY, padding1, padding2);
 	setupVerticalPosition(timeLabel, timeInfo, centerX, startY, padding1 + 40, padding2);
 	setupVerticalPosition(usernameLabel, usernameText, centerX, startY, padding1, padding2);
 
 	timeInfo.setPosition({ coinInfo.getPosition().x + 50,timeInfo.getPosition().y });
+	levelInfo.setPosition({ coinInfo.getPosition().x + 50 - levelInfo.getLocalBounds().width/2,levelInfo.getPosition().y});
 	
 	//Position inputbox
 	inputBox.setPosition(usernameLabel.getPosition().x + usernameLabel.getLocalBounds().width + 20, usernameLabel.getPosition().y);
@@ -742,6 +755,8 @@ void GameFlow::handleWinGame()
 		//Render
 		window->clear();
 		window->draw(sprite);
+		window->draw(levelLabel);
+		window->draw(levelInfo);
 		window->draw(coinLabel);
 		window->draw(coinInfo);
 		window->draw(timeLabel);
