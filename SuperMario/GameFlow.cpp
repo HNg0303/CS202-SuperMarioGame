@@ -138,7 +138,7 @@ std::string GameFlow::formatTime(const sf::Time& time)
 std::string GameFlow::formatValue(int value)
 {
 	std::ostringstream oss;
-	oss << "    " << value;
+	oss << value;
 	return oss.str();
 }
 
@@ -161,7 +161,7 @@ void GameFlow::handleGameInfo()
 	float viewTop = viewCenter.y - (viewSize.y / 2.0f);
 	float padding1 = 20.0f;
 	float padding2 = 40.0f;
-	
+
 	// Setup texts
 	setupText(labelText, font, "TIME:", 25, sf::Color::White);
 	setupText(timeText, font, formatTime(pausedTime + clock.getElapsedTime()), 24, sf::Color::White);
@@ -172,13 +172,13 @@ void GameFlow::handleGameInfo()
 	setupText(labelLivesText, font, "LIVES:", 25, sf::Color::Red);
 	setupText(livesText, font, formatValue(character->lives), 24, sf::Color::Red);
 
-	
+
 	// Position texts
 	float currentX = viewLeft + padding1;
-	setupHorizontalPosition(labelLivesText, livesText, currentX, viewTop + padding1, 0, padding2);
-	setupHorizontalPosition(labelCoinText, coinText, currentX, viewTop + padding1, 0, padding2);
-	setupHorizontalPosition(labelText, timeText, currentX, viewTop + padding1, 30, padding2);
-	
+	setupHorizontalPosition(labelLivesText, livesText, currentX, viewTop + padding1, padding1, padding2);
+	setupHorizontalPosition(labelCoinText, coinText, currentX, viewTop + padding1, padding1, padding2);
+	setupHorizontalPosition(labelText, timeText, currentX, viewTop + padding1, padding1, padding2);
+
 	//cout << timeText.getPosition().x << " " << coinText.getPosition().x << " " << livesText.getPosition().x << endl;
 	// Draw texts
 	window->setView(UIView);
@@ -634,8 +634,8 @@ void GameFlow::handleLooseGame()
 
 	sf::Sprite sprite;
 	sprite.setTexture(texture);
-	sprite.setPosition({0,0 });
-	
+	sprite.setPosition({ 0,0 });
+
 	while (true)
 	{
 		window->clear();
@@ -657,6 +657,7 @@ void GameFlow::handleLooseGame()
 		}
 	}
 }
+
 void GameFlow::handleWinGame()
 {
 	//Load background image
@@ -677,7 +678,7 @@ void GameFlow::handleWinGame()
 
 	// Setup text fields
 	sf::Text coinLabel, coinInfo, timeLabel, timeInfo, usernameLabel, usernameText, levelLabel, levelInfo;
-	
+
 	string levelStr = "";
 	int level = chooseLevel.GetPressedItem();
 	if (level == 0)
@@ -714,12 +715,15 @@ void GameFlow::handleWinGame()
 	setupVerticalPosition(timeLabel, timeInfo, centerX, startY, padding1 + 40, padding2);
 	setupVerticalPosition(usernameLabel, usernameText, centerX, startY, padding1, padding2);
 
-	timeInfo.setPosition({ coinInfo.getPosition().x + 50,timeInfo.getPosition().y });
-	levelInfo.setPosition({ coinInfo.getPosition().x + 50 - levelInfo.getLocalBounds().width/2,levelInfo.getPosition().y});
-	
+
 	//Position inputbox
 	inputBox.setPosition(usernameLabel.getPosition().x + usernameLabel.getLocalBounds().width + 20, usernameLabel.getPosition().y);
 	usernameText.setPosition(inputBox.getPosition().x + 20, inputBox.getPosition().y + 5);
+
+	centerX = inputBox.getPosition().x + inputBox.getGlobalBounds().width / 2;
+	timeInfo.setPosition({ centerX - timeInfo.getGlobalBounds().width / 2, timeInfo.getPosition().y });
+	levelInfo.setPosition({ centerX - levelInfo.getGlobalBounds().width / 2, levelInfo.getPosition().y });
+	coinInfo.setPosition({ centerX - coinInfo.getGlobalBounds().width / 2, coinInfo.getPosition().y });
 
 	//Handle username input
 	std::string username = "";
