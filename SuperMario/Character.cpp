@@ -1,4 +1,5 @@
 #include "Character.h"
+using namespace std;
 
 Character* CharacterFactory :: createCharacter(CharacterType type) {
     switch (type) {
@@ -40,8 +41,8 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
             }
         }
         else {
-            if (changeStateCounter == 1) {
-                changeStateCounter -= 1;
+            if (changeStateCounter >= 1) {
+                changeStateCounter = 0;
                 transform = true;
             }
             else {
@@ -129,23 +130,6 @@ void Mario :: Draw(Renderer& renderer, Resources& resource) {
  
 void Mario::Begin() {
     //Set up animation and SFX
-    runAnimation = Animation(0.45f,
-        {
-            Frame(0.15f, Resources::textures["run1.png"]),
-            Frame(0.3f, Resources::textures["run2.png"]),
-            Frame(0.45f, Resources::textures["run3.png"])
-        });
-    deathAnimation = Animation(0.8f,
-        {
-            Frame(0.1f, Resources::textures["death1.png"]),
-            Frame(0.2f, Texture{}),
-            Frame(0.3f, Resources::textures["death1.png"]),
-            Frame(0.4f, Texture{}),
-            Frame(0.5f, Resources::textures["death1.png"]),
-            Frame(0.6f, Texture{}),
-            Frame(0.7f, Resources::textures["death1.png"]),
-            Frame(0.8f, Texture{}),
-        });
     jumpSFX.setBuffer(Resources::sfx["jump.wav"]);
     jumpSFX.setVolume(7);
     //Set up Fixture Data for handle collision
@@ -155,9 +139,27 @@ void Mario::Begin() {
     isDead = false;
     transform = false;
 
-    if (changeStateCounter == 0 || changeStateCounter == 2) {
+    if (changeStateCounter == 0) {
         standAnimation = Resources::textures["mario1.png"];
-        jumpAnimation = Resources::textures["jump.png"];
+        jumpAnimation = Resources::textures["mariojump.png"];
+        runAnimation = Animation(0.45f,
+            {
+                Frame(0.15f, Resources::textures["mariorun1.png"]),
+                Frame(0.3f, Resources::textures["mariorun2.png"]),
+                Frame(0.45f, Resources::textures["mariorun3.png"])
+            });
+        deathAnimation = Animation(0.9f,
+            {
+                Frame(0.1f, Resources::textures["mariodeath.png"]),
+                Frame(0.2f, Texture{}),
+                Frame(0.3f, Resources::textures["mariodeath.png"]),
+                Frame(0.4f, Texture{}),
+                Frame(0.5f, Resources::textures["mariodeath.png"]),
+                Frame(0.6f, Texture{}),
+                Frame(0.7f, Resources::textures["mariodeath.png"]),
+                Frame(0.8f, Texture{}),
+                Frame(0.9f, Resources::textures["mariodeath.png"])
+            });
         //Initialize a body of Character in the b2World.
         b2BodyDef bodyDef;
         bodyDef.type = b2_dynamicBody; // specify type of body
@@ -195,7 +197,53 @@ void Mario::Begin() {
         fixtureDef.isSensor = true;
         groundFixture = dynamicBody->CreateFixture(&fixtureDef);
     }
-    else if (changeStateCounter == 1) {
+    else if (changeStateCounter == 1 || changeStateCounter == 2) {
+        if (changeStateCounter == 1)
+        {
+            standAnimation = Resources::textures["mario2.png"];
+            jumpAnimation = Resources::textures["mariojump1.png"];
+            runAnimation = Animation(0.45f,
+                {
+                    Frame(0.15f, Resources::textures["mariorun4.png"]),
+                    Frame(0.3f, Resources::textures["mariorun5.png"]),
+                    Frame(0.45f, Resources::textures["mariorun6.png"])
+                });
+            deathAnimation = Animation(0.9f,
+                {
+                    Frame(0.1f, Resources::textures["mariolvdown1.png"]),
+                    Frame(0.2f, Resources::textures["mario1.png"]),
+                    Frame(0.3f, Resources::textures["mariolvdown1.png"]),
+                    Frame(0.4f, Resources::textures["mario1.png"]), 
+                    Frame(0.5f, Resources::textures["mariolvdown1.png"]),
+                    Frame(0.6f, Resources::textures["mario1.png"]), 
+                    Frame(0.7f, Resources::textures["mariolvdown1.png"]),
+                    Frame(0.8f, Resources::textures["mario1.png"]), 
+                    Frame(0.9f, Resources::textures["mariolvdown1.png"])
+                });
+        }
+        else
+        {
+            standAnimation = Resources::textures["mario3.png"];
+            jumpAnimation = Resources::textures["mariojump2.png"];
+            runAnimation = Animation(0.45f,
+                {
+                    Frame(0.15f, Resources::textures["mariorun7.png"]),
+                    Frame(0.3f, Resources::textures["mariorun8.png"]),
+                    Frame(0.45f, Resources::textures["mariorun9.png"])
+                });
+            deathAnimation = Animation(0.9f,
+                {
+                    Frame(0.1f, Resources::textures["mariolvdown2.png"]),
+                    Frame(0.2f, Resources::textures["mario1.png"]),
+                    Frame(0.3f, Resources::textures["mariolvdown2.png"]),
+                    Frame(0.4f, Resources::textures["mario1.png"]),
+                    Frame(0.5f, Resources::textures["mariolvdown2.png"]),
+                    Frame(0.6f, Resources::textures["mario1.png"]),
+                    Frame(0.7f, Resources::textures["mariolvdown2.png"]),
+                    Frame(0.8f, Resources::textures["mario1.png"]),
+                    Frame(0.9f, Resources::textures["mariolvdown2.png"])
+                });
+        }
         float scale = 1.5f;
         //Initialize a body of Character in the b2World.
         b2BodyDef bodyDef;
@@ -245,31 +293,14 @@ void Mario::Update(float& deltaTime)
             dynamicBody = nullptr;
         }
         transformTimer += deltaTime;
-        if (isDead)
-        {
-            deathAnimation.Update(deltaTime);
-            drawingTexture = deathAnimation.getTexture();
-        }
+        deathAnimation.Update(deltaTime);
+        drawingTexture = deathAnimation.getTexture();
         if (transformTimer > 1.0f) {
             position = startPos;
             Begin();
             transformTimer = 0.0f;
         }
         return;
-    }
-    drawingTexture = Resources::textures["mario1.png"];
-    if (isDead) {
-        if (lives)
-        {
-            isDead = false;
-            lives--;
-            cout << "You have " << lives << " left!" << endl;
-        }
-        else
-        {
-            isDead = false;
-            cout << "YOU DIED !!!!!!!!!!!" << endl;
-        }
     }
     float move = movementVelocity;
     float jump = jumpVelocity;
@@ -278,6 +309,7 @@ void Mario::Update(float& deltaTime)
     b2Vec2 velocity = dynamicBody->GetLinearVelocity();
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
+        drawingTexture = Resources::textures["marioflamethrow.png"];
         Entity* flame = new Flame("flame", 0.5, 0.3f, position.x + 3.0f, position.x + 150.0f, position.y, Vector2f(2.0f, 1.0f), position);
         flame->Begin();
         onEntities.push_back(flame);
@@ -302,8 +334,10 @@ void Mario::Update(float& deltaTime)
         velocity.y -= jump;
         jumpSFX.play();
     }
+    if (velocity.x == 0)
+        drawingTexture = standAnimation;
     if (!onGround)
-        drawingTexture = Resources::textures["jump.png"];
+        drawingTexture = jumpAnimation;
     dynamicBody->SetLinearVelocity(velocity);
     //Update position and angle
 
