@@ -62,7 +62,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
     }
     else if (data->entity && data->type == FixtureDataType::Entity && data->entity->getName() == "levelUp") {
         data->entity->markDeleted();
-        cout << "BIG MARIO HEHEE !!!!!!!!!!" << endl;
+        cout << "LEVEL UP HEHEE !!!!!!!!!!" << endl;
         changeStateCounter = 1;
         transform = true;
     }
@@ -358,6 +358,26 @@ Luigi :: Luigi(float x, float y) {
 }
 
 void Luigi :: Begin() { 
+    standAnimation = Resources::textures["luigi.png"];
+    jumpAnimation = Resources::textures["luigijump.png"];
+    runAnimation = Animation(0.45f,
+        {
+            Frame(0.15f, Resources::textures["luigirun1.png"]),
+            Frame(0.3f, Resources::textures["luigirun2.png"]),
+            Frame(0.45f, Resources::textures["luigirun3.png"])
+        });
+    deathAnimation = Animation(0.9f,
+        {
+            Frame(0.1f, Resources::textures["mariodeath.png"]),
+            Frame(0.2f, Texture{}),
+            Frame(0.3f, Resources::textures["mariodeath.png"]),
+            Frame(0.4f, Texture{}),
+            Frame(0.5f, Resources::textures["mariodeath.png"]),
+            Frame(0.6f, Texture{}),
+            Frame(0.7f, Resources::textures["mariodeath.png"]),
+            Frame(0.8f, Texture{}),
+            Frame(0.9f, Resources::textures["mariodeath.png"])
+        });
     //Set up Fixture Data for handle collision
     fixtureData->type = FixtureDataType::Character;
     fixtureData->listener = this;
@@ -402,14 +422,20 @@ void Luigi :: Begin() {
 
 void Luigi::Update(float& deltaTime)
 {
-    if (isDead && lives) {
-        isDead = false;
-        lives--;
-        cout << "You have " << lives << " left !" << endl;
-    }
-    else if (isDead && !lives) {
-        isDead = false;
-        cout << "YOU DIED !!!!!!!!!!!" << endl;
+    if (isDead || transform) {
+        if (dynamicBody) {
+            Physics::world.DestroyBody(dynamicBody);
+            dynamicBody = nullptr;
+        }
+        transformTimer += deltaTime;
+        deathAnimation.Update(deltaTime);
+        drawingTexture = deathAnimation.getTexture();
+        if (transformTimer > 1.0f) {
+            position = startPos;
+            Begin();
+            transformTimer = 0.0f;
+        }
+        return;
     }
     float move = movementVelocity;
     float jump = jumpVelocity;
@@ -417,13 +443,35 @@ void Luigi::Update(float& deltaTime)
         move *= 2;
     b2Vec2 velocity = dynamicBody->GetLinearVelocity();
     velocity.x = 0;
+    if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
+        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x + 3.0f, position.x + 150.0f, position.y, Vector2f(2.0f, 1.0f), position);
+        flame->Begin();
+        onEntities.push_back(flame);
+        changeStateCounter = 0;
+        //transform = true;
+    }
     if (Keyboard::isKeyPressed(Keyboard::Right))
+    {
+        runAnimation.Update(deltaTime);
+        drawingTexture = runAnimation.getTexture();
+        faceLeft = false;
         velocity.x += move;
+    }
     if (Keyboard::isKeyPressed(Keyboard::Left))
+    {
+        runAnimation.Update(deltaTime);
+        drawingTexture = runAnimation.getTexture();
+        faceLeft = true;
         velocity.x -= move;
+    }
     if (Keyboard::isKeyPressed(Keyboard::Up) && onGround) {
         velocity.y -= jump;
+        jumpSFX.play();
     }
+    if (velocity.x == 0)
+        drawingTexture = standAnimation;
+    if (!onGround)
+        drawingTexture = jumpAnimation;
     dynamicBody->SetLinearVelocity(velocity);
     //Update position and angle
 
@@ -434,7 +482,7 @@ void Luigi::Update(float& deltaTime)
 
 void Luigi::Draw(Renderer& renderer, Resources& resource) {
     if (changeStateCounter == 0) //Small Luigi.
-        renderer.Draw(resource.getTexture("luigi.png"), position, Vector2f(1.0f, 2.0f), 0, 0);
+        renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
     else return;
 }
 
