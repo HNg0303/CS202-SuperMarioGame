@@ -20,12 +20,13 @@ void Map::CreateCheckerBoard(int width, int height)
 	}
 }
 
-void Map::Update() {
+void Map::Update(Vector2f pos) {
 	for (auto& entity : onEntities) {
 		if (entity->deleted) {
 			this->grid[entity->getCoords().x][entity->getCoords().y] = GridColor::nothing;
 		}
 	}
+	this->saveMapState("GameState.csv", pos);
 }
 
 void Map::Draw(Renderer& renderer, Resources& resource)
@@ -192,13 +193,22 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x,y));
 	if (z == GridColor::coin)
 		entity = new Coin("coin", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
-	if (z == GridColor::question)
+	if (z == GridColor::shell)
 		entity = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
-		//entity = new PowerUp("levelUp", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::question)
+		entity = new Block("qblock", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::powerup_red)
 		entity = new PowerUp("levelUp", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::goal)
 		entity = new Block("goal", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::tileMap3)
+		entity = new Block("tileMap3", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::spike)
+		entity = new Block("spike", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::pipe)
+		entity = new Block("pipe", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize*2.0f, cellSize*4.0f), Vector2f(x, y));
+	if (z == GridColor::fireBar)
+		entity = new Block("fireBar", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize * 3.0f), Vector2f(x, y));
 	return entity;
 }
 

@@ -375,6 +375,7 @@ void GameFlow::handlePlayingGame()
 		}
 		else if (game->lose) {
 			curState = static_cast <int>(GameState::LooseGame);
+			cout << "Loose Menu ! " << endl;
 			return;
 		}
 		//cout << "Error in render" << endl;
@@ -618,7 +619,7 @@ void GameFlow::handleHelpMenu()
 
 void GameFlow::handleLooseGame()
 {
-	string name = convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/GameOver.png");
+	string name = convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/gameOver.png");
 	sf::Texture texture;
 	try {
 		if (!texture.loadFromFile(name))
@@ -639,6 +640,7 @@ void GameFlow::handleLooseGame()
 	while (true)
 	{
 		window->clear();
+		//cout << "Draw Loose Window !" << endl;
 		window->draw(sprite);
 		window->display();
 

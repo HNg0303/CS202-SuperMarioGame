@@ -22,7 +22,7 @@ public:
     int lives = 3;
     int coin = 0;
     float transformTimer = 0.0f;
-
+    void handleDeath();
     void setPos(Vector2f position);
     virtual void OnBeginContact(b2Fixture* self, b2Fixture *other) override;
     virtual void OnEndContact(b2Fixture* self, b2Fixture * other) override;
@@ -39,6 +39,7 @@ protected:
     sf::Vector2f startPos{};
     FixtureData* fixtureData = nullptr;
     b2Fixture* groundFixture;
+    b2Fixture* headFixture;
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.
     //float angle{};// => Use velocity in b2_body.
 };

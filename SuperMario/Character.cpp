@@ -22,7 +22,14 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         win = true;
         return;
     }
-
+    if (data->type == FixtureDataType::MapTile && data->entity->getName() == "spike") {
+        handleDeath();
+        return;
+    }
+    if (headFixture == self && data->type == FixtureDataType::MapTile && data->entity->getName() == "qblock") {
+        data->entity->markDeleted();
+        return;
+    }
     if (groundFixture == self && data->type == FixtureDataType::MapTile) {
             onGround++;
     }
@@ -40,23 +47,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
             }
         }
         else {
-            if (changeStateCounter == 1) {
-                changeStateCounter -= 1;
-                transform = true;
-            }
-            else {
-                if (lives)
-                {
-                    isDead = true;
-                    lives--;
-                    cout << "You have " << lives << " left!" << endl;
-                }
-                else
-                {
-                    isDead = true;
-                    cout << "YOU DIED !!!!!!!!!!!" << endl;
-                }
-            }
+            handleDeath();
         }
     }
     else if (data->entity && data->type == FixtureDataType::Entity && data->entity->getName() == "levelUp") {
@@ -84,6 +75,15 @@ void Character::OnEndContact(b2Fixture* self, b2Fixture* other) {
     std::cout << "Begin Contact - Ground count: " << groundContactCount << std::endl;*/
 }
 
+void Character::handleDeath() {
+    if (changeStateCounter == 1) {
+        changeStateCounter -= 1;
+        transform = true;
+    }
+    else {
+        isDead = true;
+    }
+}
 void Character::setPosition(float x, float y) {
     position.x = x;
     position.y = y;
@@ -99,8 +99,10 @@ Vector2f Character::getPos() {
 }
 
 Character::~Character() {
-    Physics::world.DestroyBody(dynamicBody);
-    dynamicBody = nullptr;
+    if (dynamicBody) {
+        Physics::world.DestroyBody(dynamicBody);
+        dynamicBody = nullptr;
+    }
     delete fixtureData;
     fixtureData = nullptr;
 }
@@ -194,8 +196,15 @@ void Mario::Begin() {
         fixtureDef.shape = &polygonShape;
         fixtureDef.isSensor = true;
         groundFixture = dynamicBody->CreateFixture(&fixtureDef);
+
+        polygonShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, -0.8f), 0.0f);
+        fixtureDef.shape = &polygonShape;
+        fixtureDef.isSensor = true;
+        headFixture = dynamicBody->CreateFixture(&fixtureDef);
     }
     else if (changeStateCounter == 1) {
+        movementVelocity = 3.0f;
+        jumpVelocity = 3.0f;
         float scale = 1.5f;
         //Initialize a body of Character in the b2World.
         b2BodyDef bodyDef;
@@ -244,33 +253,28 @@ void Mario::Update(float& deltaTime)
             Physics::world.DestroyBody(dynamicBody);
             dynamicBody = nullptr;
         }
-        transformTimer += deltaTime;
         if (isDead)
         {
             deathAnimation.Update(deltaTime);
             drawingTexture = deathAnimation.getTexture();
         }
+        transformTimer += deltaTime;
         if (transformTimer > 1.0f) {
-            position = startPos;
+            if (isDead) {
+                if (lives > 1) lives-=1;
+                else {
+                    lives -= 1;
+                    cout << "You're dead !" << endl;
+                    return;
+                }
+                position = startPos;
+            }
             Begin();
             transformTimer = 0.0f;
         }
         return;
     }
     drawingTexture = Resources::textures["mario1.png"];
-    if (isDead) {
-        if (lives)
-        {
-            isDead = false;
-            lives--;
-            cout << "You have " << lives << " left!" << endl;
-        }
-        else
-        {
-            isDead = false;
-            cout << "YOU DIED !!!!!!!!!!!" << endl;
-        }
-    }
     float move = movementVelocity;
     float jump = jumpVelocity;
     if (Keyboard::isKeyPressed(Keyboard::LShift))
@@ -284,21 +288,21 @@ void Mario::Update(float& deltaTime)
         changeStateCounter = 0;
         //transform = true;
     }
-    if (Keyboard::isKeyPressed(Keyboard::Right))
+    if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
     {
         runAnimation.Update(deltaTime);
         drawingTexture = runAnimation.getTexture();
         faceLeft = false;
         velocity.x += move;
     }
-    if (Keyboard::isKeyPressed(Keyboard::Left))
+    if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
     {
         runAnimation.Update(deltaTime);
         drawingTexture = runAnimation.getTexture();
         faceLeft = true;
         velocity.x -= move;
     }
-    if (Keyboard::isKeyPressed(Keyboard::Up) && onGround) {
+    if ((Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) && onGround) {
         velocity.y -= jump;
         jumpSFX.play();
     }

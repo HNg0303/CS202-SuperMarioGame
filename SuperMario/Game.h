@@ -16,7 +16,7 @@ private:
 	Camera* camera = nullptr;
 	Vector2f startPos{};
 	sf::Image map_image;
-	vector<string> mapPaths{ "/Resource/Map1-3/map1ColorProcessed.png", "/Resource/Map1-3/map2ColorProcessed.png", "/Resource/map3ColorProcessed.png" };
+	vector<string> mapPaths{ "/Resource/Map1-3/map1ColorProcessed.png", "/Resource/Map1-3/map2ColorProcessed.png", "/Resource/Map1-3/map3ColorProcessed.png" };
 	//On screen
 	
 public:

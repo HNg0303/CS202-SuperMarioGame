@@ -31,7 +31,7 @@ private:
 	pair<int, int> startingPos;
 	int index;
 public:
-	Map(float c = 0.015f, int index = 1) : cellSize(c), grid(), index(index) {
+	Map(float c = 0.015f, int index = 0) : cellSize(c), grid(), index(index) {
 		this->readObj("colorSheet.csv");
 	}
 	void CreateCheckerBoard(int width, int height);
@@ -41,7 +41,7 @@ public:
 	int getIndex();
 	std::vector<std::vector<int>> grid;
 	float cellSize;
-	void Update();
+	void Update(Vector2f pos);
 	void setGrid(const sf::Image& image);
 	void saveMapState(string filename, Vector2f& CharPos);
 	void readObj(string filename);

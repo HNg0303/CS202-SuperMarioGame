@@ -74,11 +74,12 @@ void Game :: Update(float& deltaTime, RenderWindow& window) {
 		return;
 	}
 	if (character->isDead) {
+		character->Update(deltaTime);
 		if (!character->lives) {
 			this->lose = true;
+			cout << "You Lose !" << endl;
 			return;
 		}
-		character->Update(deltaTime);
 		camera->position = character->getPos();
 		view = camera->GetView(window.getSize());
 		window.setView(view);
@@ -89,7 +90,7 @@ void Game :: Update(float& deltaTime, RenderWindow& window) {
 	//cout << "Character Update is okay" << endl;
 	camera->position = character->getPos();
 	//cout << "Camera Update is okay" << endl;
-	map->Update();
+	map->Update(character->getPos());
 	//cout << "Map Update is okay" << endl;
 	for (auto& entity : onEntities)
 		entity->Update(deltaTime);

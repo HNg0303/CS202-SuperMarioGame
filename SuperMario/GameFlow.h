@@ -115,7 +115,7 @@ public:
 	void handleEntity();
 	void handleClosed();
 	void handleGameInfo();
-
+	//void handleContinue();
 
 	//Game Info
 	void loadFont(sf::Font& font);
@@ -130,7 +130,7 @@ public:
 	//void loadMobs();
 	//void drawMobs();
 
-	std::vector<sf::Texture>  loadFrame(std::string folderPath);
+	std::vector<sf::Texture> loadFrame(std::string folderPath);
 	//void loadFrame(std::string folderPath, sf::RenderWindow& window);
 
 
