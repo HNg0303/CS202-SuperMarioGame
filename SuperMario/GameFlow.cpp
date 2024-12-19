@@ -365,8 +365,11 @@ void GameFlow::handlePlayingGame()
 		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
 		if (game->win) {
-			curState = static_cast <int>(GameState::WinGame);
-			//chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+			if (chooseLevel.GetPressedItem() == 1) {
+				curState = static_cast <int>(GameState::WinGame);
+				return;
+			}
+			else chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
 			isRestarted = true;
 			return;
 		}
