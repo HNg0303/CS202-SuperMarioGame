@@ -2,7 +2,9 @@
 
 Music music{};
 
-Game::Game(Map* map, Character* character, Camera* camera) : map(map), character(character), camera(camera) {};
+Game::Game(Map* map, Character* character, Camera* camera) : map(map), character(character), camera(camera) {
+	InitMapPath();
+}
 
 Game :: ~Game() {
 	//map = nullptr;
@@ -36,12 +38,17 @@ void Game::chooseCharacter(CharacterType type) {
 	else if (type == MARIO)
 		this->character = CharacterFactory::createCharacter(MARIO);
 }
-/*
-void Game::loadEntities(vector<unique_ptr<Entity>>& entities) {
-	for (auto& entity : entities) {
-		this->entities.push_back(entity.get());
+
+void Game :: InitMapPath() {
+	for (int i = 1; i <= 3; i++) {
+		vector<string> tmp;
+		for (int j = 1; j <= 3; j++) {
+			string mapPath = "/Resource/Map/map" + to_string(i) + "-" + to_string(j) + ".png"; //Ex: /Resource/Map/map1-1.png
+			tmp.push_back(mapPath);
+		}
+		mapPaths.push_back(tmp);
 	}
-}*/
+}
 
 void Game :: Begin(sf::RenderWindow& window)
 {
@@ -49,8 +56,9 @@ void Game :: Begin(sf::RenderWindow& window)
 	//map.CreateCheckerBoard(4, 2);
 	
 	Physics::Init();
-	string mapPath = convertToUnixPath(fs::current_path().string()) + mapPaths[map->getIndex()];
-	
+	//string mapPath = convertToUnixPath(fs::current_path().string()) + mapPaths[map->getIndex()];
+	string mapPath = convertToUnixPath(fs::current_path().string()) + mapPaths[map->difficulty][map->getIndex()];
+
 	map_image.loadFromFile(mapPath);
 	startPos = map->CreateFromImage(map_image, onEntities);
 	character->setPos(startPos);
@@ -100,6 +108,7 @@ void Game :: Update(float& deltaTime, RenderWindow& window) {
 
 void Game :: Render(Renderer& renderer, Resources& resource) {
 	//map->Draw(renderer, resource);
+	map->drawBackground(renderer, 2);
 	for (auto& entity : onEntities)
 		entity->draw(renderer.getRenderWindow(), Vector2f(map->cellSize, map->cellSize));
 	character->Draw(renderer);

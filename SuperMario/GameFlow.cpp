@@ -358,11 +358,16 @@ void GameFlow::handlePlayingGame()
 		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
 		if (game->win) {
-			if (chooseLevel.GetPressedItem() == 1) {
+			if (chooseLevel.GetPressedItem() == 2 && mapState == 2) {
 				curState = static_cast <int>(GameState::WinGame);
 				return;
 			}
-			else chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+			else {
+				if (mapState == 2)
+					chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+				else mapState++;
+				curState = static_cast <int>(GameState::PlayingGame);
+			}
 			isRestarted = true;
 			return;
 		}
@@ -989,7 +994,7 @@ void GameFlow::Restart() {
 		cout << "GameFlow :: Game deleted in gameFlow" << endl;
 	}
 	
-	map = new Map(1.0f, chooseLevel.GetPressedItem());
+	map = new Map(1.0f, chooseLevel.GetPressedItem(), 0, mapState);
 	if (chooseCharacterMenu.GetPressedItem() == 1)
 		character = CharacterFactory::createCharacter(LUIGI);
 	else character = CharacterFactory::createCharacter(MARIO);

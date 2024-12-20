@@ -22,7 +22,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         win = true;
         return;
     }
-    if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "spike" || data->entity->getName() == "lava")) {
+    if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "spike" || data->entity->getName() == "lava"|| data->entity->getName() == "spikeyTurtle")) {
         handleDeath();
         return;
     }

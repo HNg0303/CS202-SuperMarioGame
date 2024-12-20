@@ -4,6 +4,7 @@
 
 using namespace sf;
 
+
 extern vector<Entity*> onEntities; //For using on-screen entities
 void deleteEntity(Entity* entity);
 void clearEntities();
@@ -58,9 +59,9 @@ public:
 		yBound = make_pair(y_start, y_end);
 		xBound = make_pair(x_start, x_end);
 		if (x_start == x_end)
-			x_direction = 0;
+			x_direction = 0.0f;
 		if (y_start == y_end)
-			y_direction = 0;
+			y_direction = 0.0f;
 	};
 	float destroyingTimer = 0.0f;
 	bool isDead = false;

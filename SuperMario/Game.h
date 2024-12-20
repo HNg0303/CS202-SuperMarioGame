@@ -16,7 +16,8 @@ private:
 	Camera* camera = nullptr;
 	Vector2f startPos{};
 	sf::Image map_image;
-	vector<string> mapPaths{ "/Resource/Map1-3/map1ColorProcessed.png", "/Resource/Map1-3/map2ColorProcessed.png", "/Resource/Map1-3/map3ColorProcessed.png" };
+	//vector<string> mapPaths{ "/Resource/Map1-3/map1ColorProcessed.png", "/Resource/Map1-3/map2ColorProcessed.png", "/Resource/Map1-3/map3ColorProcessed.png" };
+	vector<vector<string>> mapPaths; //to access a mapPath: mapPaths[map->difficulty][map->stage]
 	//On screen
 	
 public:
@@ -26,6 +27,7 @@ public:
 	bool win = false;
 	bool lose = false;
 	Entity* getEntity(string name);
+	void InitMapPath();
 	void chooseCharacter(CharacterType type);
 	void Begin(sf::RenderWindow& window);
 	void Update(float& deltaTime, RenderWindow& window);

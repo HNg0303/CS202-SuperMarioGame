@@ -188,12 +188,44 @@ void Map::readObj(string filename)
 
 Entity* Map::createEntityFromMap(int z, int x, int y)
 {
+	float x_pos = cellSize * x + cellSize / 2.0f;
+	float y_pos = cellSize * y + cellSize / 2.0f;
+	Entity* entity = nullptr;
+	if (z == GridColor::coin)
+		entity = new Coin("coin", 0.3, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::tile)
+		entity = new Block("block", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::woodBlock)
+		entity = new Block("woodBlock", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::bridge)
+		entity = new Block("bridge", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::question)
+		entity = new Block("qblock", 0.3, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::powerup_green)
+		entity = new PowerUp("levelUp", 0.3, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::goal)
+		entity = new Block("goal", 0.0, x_pos, y_pos, Vector2f(cellSize, 11 * cellSize), Vector2f(x, y));
+	if (z == GridColor::tileMap3)
+		entity = new Block("tileMap3", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::fireBar)
+		entity = new Elevator("fireBar", 0.0, 1.0f, x_pos, x_pos, y_pos, (cellSize * y - 5 * cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::shell)
+		entity = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::bowser)
+		entity = new Enemy("bowser", 0, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), y_pos, y_pos, Vector2f(2 * cellSize, 2 * cellSize), Vector2f(x, y));
+	if (z == GridColor::spikyTurtle)
+		entity = new Block("spikeyTurtle", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::lava1)
+		entity = new Block("lava", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
+	if (z == GridColor::spike)
+		entity = new Block("spike", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
+	return entity;
+	/*
 	Entity* entity = nullptr;
 	if (z == GridColor::tile)
 		entity = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::coin)
 		entity = new Coin("coin", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
-
 	if (z == GridColor::question)
 		entity = new Block("qblock", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::powerup_green)
@@ -216,7 +248,7 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Bowser("bowser", 0.5, 1.0f, (cellSize * x - 2 * cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::bowser) {
 		entity = new Bowser("bowser", 0.5, 1.0f, (cellSize * x - 2 * cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, 2.0f * cellSize), Vector2f(x, y));
-	}
+	}*/
 	
 	return entity;
 }
@@ -250,6 +282,23 @@ int Map::getIndex() { return this->index; }
 
 Map :: ~Map() {
 	clearEntities();
+}
+
+void Map::drawBackground(Renderer& renderer, int n)
+{
+	string theme = "";
+	if (isTheme)
+		theme = "_theme";
+	string filename_png = "bg" + to_string(difficulty + 1) + "-" + to_string(stage + 1) + theme + ".png";//Example: bg1-1_theme.png, bg2-3.jpg
+	string filename_jpg = "bg" + to_string(difficulty + 1) + "-" + to_string(stage + 1) + theme + ".jpg";
+	float widthTexture = float(grid.size()) / float(n); // map can be very long in width --> need to draw background multiple time to fill the map
+	float height = (float)grid[0].size();
+	sf::Texture texture;
+	if (!texture.loadFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Background/" + filename_png)))
+		texture.loadFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Background/" + filename_jpg));
+	for (int i = 0; i < n; i++) {
+		renderer.Draw(texture, Vector2f(widthTexture / 2 + widthTexture * i, height / 2), Vector2f(widthTexture, height), 0, false);
+	}
 }
 
 /*
