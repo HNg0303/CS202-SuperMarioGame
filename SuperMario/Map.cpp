@@ -204,6 +204,8 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Block("tileMap3", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::spike)
 		entity = new Block("spike", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::lava1)
+		entity = new Block("lava", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	//if (z == GridColor::pipe)
 		//entity = new Block("pipe", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize*2.0f, cellSize*4.0f), Vector2f(x, y));
 	if (z == GridColor::fireBar) {

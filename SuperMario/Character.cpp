@@ -23,7 +23,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         win = true;
         return;
     }
-    if (data->type == FixtureDataType::MapTile && data->entity->getName() == "spike") {
+    if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "spike" || data->entity->getName() == "lava")) {
         handleDeath();
         return;
     }
@@ -42,6 +42,10 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         data->entity->markDeleted();
         //deleteEntity(data->entity);
         cout << "Coin: " << ++coin << endl;
+    }
+    else if (data->entity && data->type == FixtureDataType::Enemy && data->entity->getName() == "fireBar") {
+        handleDeath();
+        return;
     }
     else if (data->entity && data->type == FixtureDataType::Enemy && data->entity->getName() == "goombas") {
         if (groundFixture == self) {
@@ -337,7 +341,7 @@ void Mario::Update(float& deltaTime)
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
         drawingTexture = Resources::textures["marioflamethrow.png"];
-        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x - 150.0f, position.x + 150.0f, position.y, position.y+1000, Vector2f(2.0f, 1.0f), position);
+        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x - 150.0f, position.x + 150.0f, position.y + 0.2f, position.y+1000, Vector2f(2.0f, 1.0f), position);
         //Flame(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size, Vector2f coords) :
         //    Moveable(name_i, frameDuration_i, speed_i, start, end, y, coords) {
         //Flame(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :

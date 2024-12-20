@@ -119,14 +119,17 @@ public:
 	~PowerUp();
 };
 
-class Enemy : public Moveable {
+class Enemy : public Moveable, public ContactListener {
 public:
+	b2Fixture* fixture = nullptr;
 
 	Enemy(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
 		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, x_end, coords) {
 		this->size = size;
 	}
 	void Begin() override;
+	void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
+	void OnEndContact(b2Fixture* self, b2Fixture* other) override {};
 	void Die();
 	~Enemy();
 };
@@ -155,6 +158,8 @@ public:
 		this->size = size;
 	};
 	void Begin() override;
+
+
 	~Elevator();
 };
 

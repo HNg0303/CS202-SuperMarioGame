@@ -107,8 +107,15 @@ void Moveable::move()
 	//cout << "Im moving !!" << endl;
 	//position.x += speed * direction;
 	b2Vec2 velocity = body->GetLinearVelocity();
-	velocity.x += speed * x_direction;
-	velocity.y += speed * y_direction;
+	if (!y_direction) {
+		velocity.x += speed * x_direction;
+		velocity.y = 0.0f;
+	}
+	if (!x_direction) {
+		velocity.y += speed * y_direction;
+		velocity.x = 0.0f;
+	}
+	//velocity.y += speed * y_direction;
 	body->SetLinearVelocity(velocity);  // Update the body's velocity
 	checkAndChangeDirection();
 }
@@ -121,10 +128,11 @@ void Moveable::checkAndChangeDirection()
 		direction = -direction; // Reverse direction
 	}*/
 	//const b2Vec2& currentPos = body->GetPosition();
+		
 
 	// Reverse direction if bounds are exceeded
 	bool outOfBoundX = body->GetPosition().x <= xBound.first || body->GetPosition().x >= xBound.second;
-	bool outOfBoundY = body->GetPosition().y >= yBound.first || body->GetPosition().y <= yBound.second;
+	bool outOfBoundY = body->GetPosition().y > yBound.first || body->GetPosition().y < yBound.second;
 	b2Vec2 velocity = body->GetLinearVelocity();
 	if (outOfBoundX) {
 		x_direction = -x_direction;
@@ -256,6 +264,7 @@ void Enemy::Begin() {
 	fixtureData = new FixtureData();
 	fixtureData->entity = this;
 	fixtureData->type = FixtureDataType::Enemy;
+	fixtureData->listener = this;
 
 
 	b2BodyDef bodyDef;
@@ -273,7 +282,23 @@ void Enemy::Begin() {
 	fixtureDef.shape = &circle;
 	fixtureDef.friction = 0.0f;
 	fixtureDef.density = 1.0f;
-	body->CreateFixture(&fixtureDef);
+	fixture = body->CreateFixture(&fixtureDef);
+}
+
+void Enemy::OnBeginContact(b2Fixture* self, b2Fixture* other) {
+	if (!self) {
+		std::cerr << "Warning: Null fixture detected in OnBeginContact!" << std::endl;
+		return;  // Exit the function if fixture is invalid
+	}
+	FixtureData* otherData = reinterpret_cast<FixtureData*> (other->GetUserData().pointer);
+	FixtureData* selfData = reinterpret_cast<FixtureData*> (self->GetUserData().pointer);
+	if (!otherData) return;
+	if (fixture == self) {
+		if (otherData->type == FixtureDataType::Enemy || otherData->type == FixtureDataType::MapTile) {
+			x_direction = -x_direction;
+			//y_direction = -y_direction;
+		}
+	}
 }
 
 Enemy :: ~Enemy() {
