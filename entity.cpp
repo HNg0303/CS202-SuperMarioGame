@@ -1,13 +1,14 @@
 #include "entity.h"
+#include "Resources.h"
 
 vector<Entity*> onEntities;
 
-Entity :: Entity(string name_i, double frameDuration_i, float x, float y) :
-	name(name_i), frameDuration(frameDuration_i), currentFrame(0), direction(1.0)
+Entity :: Entity(string name_i, double frameDuration_i, float x, float y, Vector2f coords) :
+	name(name_i), frameDuration(frameDuration_i), currentFrame(0), coords(coords)
 {
 	position.x = x;
 	position.y = y;
-	frames = loadFrame("Resource/asset/frame/" + name);
+	frames = loadFrame(convertToUnixPath("Resource/asset/frame/" + name));
 	if (frames.empty())
 	{
 		std::cerr << "No frames loaded for entity " << name << std::endl;
@@ -17,6 +18,10 @@ Entity :: Entity(string name_i, double frameDuration_i, float x, float y) :
 
 string Entity::getName() {
 	return name;
+}
+
+Vector2f Entity::getCoords(){
+	return coords;
 }
 
 std::vector<sf::Texture> Entity::loadFrame(std::string folderPath)
@@ -52,7 +57,9 @@ void Entity::draw(sf::RenderWindow* window, const Vector2f& size)
 		sprite.setTexture(frames[currentFrame], true);
 		sf::Vector2f origin(frames[currentFrame].getSize().x / 2.0f, frames[currentFrame].getSize().y / 2.0f);
 		sprite.setOrigin(origin);
-		sf::Vector2f scale(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
+		Vector2f scale;
+		if (name == "goal") scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y*5.0f / frames[currentFrame].getSize().y);
+		else scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
 		sprite.setScale(scale);
 		//sprite.setScale(2.f * direction, 2.f);
 		sprite.setPosition(position);
@@ -73,10 +80,10 @@ void Moveable::Update(float deltaTime)
 		if (body) {
 			Physics::world.DestroyBody(this->body);
 			this->body = nullptr;
-			destroyingTimer += deltaTime;
-			if (destroyingTimer >= 3.0f) 
-				deleteEntity(this);
 		}
+		destroyingTimer += deltaTime;
+		if (destroyingTimer >= 1.5f)
+			deleteEntity(this);
 		return;
 	}
 	if (body) {
@@ -97,9 +104,11 @@ void Moveable::Update(float deltaTime)
 
 void Moveable::move()
 {
+	//cout << "Im moving !!" << endl;
 	//position.x += speed * direction;
 	b2Vec2 velocity = body->GetLinearVelocity();
-	velocity.x += speed * direction;
+	velocity.x += speed * x_direction;
+	velocity.y += speed * y_direction;
 	body->SetLinearVelocity(velocity);  // Update the body's velocity
 	checkAndChangeDirection();
 }
@@ -114,11 +123,14 @@ void Moveable::checkAndChangeDirection()
 	//const b2Vec2& currentPos = body->GetPosition();
 
 	// Reverse direction if bounds are exceeded
-	if (body->GetPosition().x <= xBound.first || body->GetPosition().x >= xBound.second) {
-		direction = -direction;
-
-		// Adjust velocity to match the new direction
-		//body->SetLinearVelocity(b2Vec2(speed * direction, 0.0f));
+	bool outOfBoundX = body->GetPosition().x <= xBound.first || body->GetPosition().x >= xBound.second;
+	bool outOfBoundY = body->GetPosition().y >= yBound.first || body->GetPosition().y <= yBound.second;
+	b2Vec2 velocity = body->GetLinearVelocity();
+	if (outOfBoundX) {
+		x_direction = -x_direction;
+	}
+	if (outOfBoundY) {
+		y_direction = -y_direction;
 	}
 }
 
@@ -128,7 +140,9 @@ void Unmoveable::Update(float deltaTime)
 {
 	if (deleted) {
 		deleteEntity(this);
+		return;
 	}
+	if (!body) Begin();
 	if (body) {
 		//std::cout << "unmoveable" ;
 		//std::cout << position.x << " " << position.y;
@@ -184,6 +198,7 @@ void Block::Begin() {
 	//Set Fixture Data for handle collision
 	fixtureData = new FixtureData();
 	fixtureData->type = FixtureDataType::MapTile;
+	fixtureData->entity = this;
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
@@ -202,6 +217,41 @@ Block::~Block(){
 	body = nullptr;
 }
 
+
+void PowerUp::Begin() {
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(position.x, position.y);
+
+	body = Physics::world.CreateBody(&bodyDef);
+
+	b2PolygonShape shape{};
+	shape.SetAsBox(0.4f, 0.4f);
+
+	fixtureData = new FixtureData();
+	fixtureData->type = FixtureDataType::Entity;
+	fixtureData->entity = this;
+
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &shape;
+	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
+	//fixtureDef.isSensor = true;
+	fixtureDef.density = 1.0f;
+	fixtureDef.friction = 0.0f;
+
+	body->CreateFixture(&fixtureDef);
+}
+
+
+
+PowerUp :: ~PowerUp() {
+	delete fixtureData;
+	fixtureData = nullptr;
+	Physics::world.DestroyBody(body);
+	body = nullptr;
+	cout << "Successfully Destroyed Level Up !" << endl;
+}
+
 void Enemy::Begin() {
 	fixtureData = new FixtureData();
 	fixtureData->entity = this;
@@ -216,7 +266,7 @@ void Enemy::Begin() {
 
 	b2CircleShape circle;
 	circle.m_p.Set(0.0f, 0.2f);
-	circle.m_radius = 0.4f;
+	circle.m_radius = 0.3f;
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
@@ -227,6 +277,10 @@ void Enemy::Begin() {
 }
 
 Enemy :: ~Enemy() {
+	if (body) {
+		Physics::world.DestroyBody(body);
+		body = nullptr;
+	}
 	delete fixtureData;
 	fixtureData = nullptr;
 	cout << "Successfully Destroyed Enemy !" << endl;
@@ -234,13 +288,120 @@ Enemy :: ~Enemy() {
 
 void Enemy::Die() {
 	isDead = true;
+	deleted = true;
 	size.y = size.y / 5.0f;
 	position.y += size.y / 5.0f;
 }
+
+void Flame::Begin() {
+	fixtureData = new FixtureData();
+	//fixtureData->entity = this;
+	fixtureData->listener = this;
+	fixtureData->type = FixtureDataType::Entity;
+
+	
+
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	if (faceLeft) {
+		x_direction = -x_direction;
+		bodyDef.position.Set(position.x + 148.0f, position.y);
+	}
+	else bodyDef.position.Set(position.x + 152.0f, position.y);
+	bodyDef.fixedRotation = true;
+	body = Physics::world.CreateBody(&bodyDef);
+
+	b2PolygonShape shape;
+	shape.SetAsBox(size.x / 2, size.y / 2);
+
+	b2FixtureDef fixtureDef;
+	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
+	fixtureDef.shape = &shape;
+	fixtureDef.friction = 0.0f;
+	fixtureDef.density = 0.0f;
+	fixture = body->CreateFixture(&fixtureDef);
+}
+
+void Flame::OnBeginContact(b2Fixture* self, b2Fixture* other) {
+	if (!self) {
+		std::cerr << "Warning: Null fixture detected in OnBeginContact!" << std::endl;
+		return;  // Exit the function if fixture is invalid
+	}
+	FixtureData* otherData = reinterpret_cast<FixtureData*> (other->GetUserData().pointer);
+	FixtureData* selfData = reinterpret_cast<FixtureData*> (self->GetUserData().pointer);
+	if (!otherData) return;
+	if (fixture == self) {
+		if (otherData->type == FixtureDataType::Enemy) {
+			Enemy* enemy = dynamic_cast<Enemy*> (otherData->entity);
+			if (enemy) {
+				enemy->Die();
+				cout << "Kill " << enemy->getName() << endl;
+			}
+		}
+		else if (otherData->type == FixtureDataType::MapTile || otherData->type == FixtureDataType::Character) {
+			isDead = true;
+			deleted = true;
+			cout << "Your flame is extinguished !" << endl;
+		}
+	}
+}
+
+Flame :: ~Flame() {
+	if (body) {
+		Physics::world.DestroyBody(body);
+		body = nullptr;
+	}
+	delete fixtureData;
+	fixtureData = nullptr;
+	cout << "Successfully Destroyed Flame !" << endl;
+}
+
 void deleteEntity(Entity* entity) {
 	const auto& it = find(onEntities.begin(), onEntities.end(), entity);
 	if (it != onEntities.end()) {
 		onEntities.erase(it);
 		delete entity;
 	}
+}
+
+void clearEntities() {
+	for (Entity* entity : onEntities) {
+		delete entity;
+		entity = nullptr;
+	}
+	onEntities.clear();
+}
+
+void Elevator::Begin()
+{
+	fixtureData = new FixtureData();
+	fixtureData->entity = this;
+	fixtureData->type = FixtureDataType::Enemy;
+
+
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(position.x, position.y);
+	bodyDef.fixedRotation = true;
+	body = Physics::world.CreateBody(&bodyDef);
+
+	b2PolygonShape shape;
+	shape.SetAsBox(size.x / 2, size.y / 2);
+
+	b2FixtureDef fixtureDef;
+	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
+	fixtureDef.shape = &shape;
+	fixtureDef.friction = 0.0f;
+	fixtureDef.density = 1.0f;
+	body->CreateFixture(&fixtureDef);
+}
+
+Elevator:: ~Elevator() {
+	if (body) {
+		Physics::world.DestroyBody(body);
+		body = nullptr;
+	}
+	delete fixtureData;
+	fixtureData = nullptr;
+	cout << "Successfully Destroyed Enemy !" << endl;
 }

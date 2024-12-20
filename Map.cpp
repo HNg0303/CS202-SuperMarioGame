@@ -20,6 +20,15 @@ void Map::CreateCheckerBoard(int width, int height)
 	}
 }
 
+void Map::Update(Vector2f pos) {
+	for (auto& entity : onEntities) {
+		if (entity->deleted) {
+			this->grid[entity->getCoords().x][entity->getCoords().y] = GridColor::nothing;
+		}
+	}
+	this->saveMapState("GameState.csv", pos);
+}
+
 void Map::Draw(Renderer& renderer, Resources& resource)
 {
 
@@ -48,7 +57,7 @@ void Map::Draw(Renderer& renderer, Resources& resource)
 				//sf::Vector2f cell_position(cellSize * x - cellSize * s, cellSize * y - cellSize * s);
 				Vector2f cell_position(cellSize * x + cellSize / 2.0f, cellSize * y + cellSize / 2.0f);
 
-				renderer.Draw(resource.getTexture("block2.png"),cell_position,sf::Vector2f(cellSize, cellSize), 0);
+				renderer.Draw(resource.getTexture("block2.png"),cell_position,sf::Vector2f(cellSize, cellSize), 0, 0);
 			}
 			y++;
 		}
@@ -58,8 +67,8 @@ void Map::Draw(Renderer& renderer, Resources& resource)
 
 sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entities)
 {
-	entities.clear();
-	/*grid.clear(); 
+	//entities.clear();
+	/*grid.clear();
 	grid = vector<vector<int>> (image.getSize().x, vector<int> (image.getSize().y, 0));*/
 	this->setGrid(image);
 	cout << endl << image.getSize().x << " " << image.getSize().y << endl;
@@ -90,13 +99,14 @@ sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entit
 				startingPos.second = y;
 				marioPos = sf::Vector2f(cellSize * x, cellSize * y);
 			}
-			else {
+			else  {
 				entity = this->createEntityFromMap(z, x, y);
-				if(entity != nullptr)
+				if (entity != nullptr)
 					entities.push_back(entity);
 			}
 		}
 	}
+	this->saveMapState("GameState.csv", marioPos);
 	return marioPos;
 }
 
@@ -118,14 +128,14 @@ void Map::setGrid(const sf::Image& image)
 	}
 }
 
-void Map::saveMapState(string filename, Character* character)
+void Map::saveMapState(string filename, Vector2f& CharPos)
 {
 	ofstream fout(filename);
 	if (!fout.is_open()) {
 		cout << "ERROR: CAN't open " + filename << endl;
 		return;
 	}
-	sf::Vector2f endingPos = character->getPos();
+	sf::Vector2f endingPos = CharPos ;
 	pair<int, int> endingPosInGrid;
 	endingPosInGrid.first = floor(endingPos.x);
 	endingPosInGrid.second = floor(endingPos.y);
@@ -180,11 +190,27 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 {
 	Entity* entity = nullptr;
 	if (z == GridColor::tile)
-		entity = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize));
+		entity = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x,y));
 	if (z == GridColor::coin)
-		entity = new Coin("coin", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize));
+		entity = new Coin("coin", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+
+	if (z == GridColor::question)
+		entity = new Block("qblock", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::powerup_green)
+		entity = new PowerUp("levelUp", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::goal)
+		entity = new Block("goal", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::tileMap3)
+		entity = new Block("tileMap3", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::spike)
+		entity = new Block("spike", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	//if (z == GridColor::pipe)
+		//entity = new Block("pipe", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize*2.0f, cellSize*4.0f), Vector2f(x, y));
+	if (z == GridColor::fireBar) {
+		entity = new Elevator("fireBar", 0.0, 1.0f, (cellSize * x + cellSize / 2.0f), (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y - 5*cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	}
 	if (z == GridColor::shell)
-		entity = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize));
+		entity = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	return entity;
 }
 
@@ -209,3 +235,47 @@ void Map::readMapState(string filename)
 	fin.close();
 }
 
+void Map::setMapIndex(int index) {
+	this->index = index;
+}
+
+int Map::getIndex() { return this->index; }
+
+Map :: ~Map() {
+	clearEntities();
+}
+
+/*
+sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entities)
+{
+	entities.clear();
+	grid.clear(); 
+	grid = vector<vector<int>> (image.getSize().x, vector<int> (image.getSize().y, 0));
+	cout << endl << image.getSize().x << " " << image.getSize().y << endl;
+
+	sf::Vector2f marioPos{};
+
+	for (int x = 0; x < grid.size(); x++) {
+		for (int y = 0; y < grid[x].size(); y++) {
+			sf::Color color = image.getPixel(x, y);
+			if (color == sf::Color::Black) {
+				grid[x][y] = 1;
+				Entity* block = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x,y));
+				entities.push_back(block);
+			}
+			else if (color == sf::Color::Red)
+				marioPos = sf::Vector2f(cellSize * x, cellSize * y);
+			else if (color == sf::Color::Yellow) {
+				grid[x][y] = 2;
+				Entity* coin = new Coin("coin", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+				entities.push_back(coin);
+			}
+			else if (color == sf::Color::Green) {
+				grid[x][y] = 3;
+				Entity* goomba = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+				entities.push_back(goomba);
+			}
+		}
+	}
+	return marioPos;
+}*/
