@@ -46,7 +46,7 @@ void Map::Draw(Renderer& renderer, Resources& resource)
 			}
 		}
 	}*/
-	
+
 	//std::cout << "Drawing stuff\n";
 	int x = 0;
 	for (const auto& col : grid) {
@@ -57,7 +57,7 @@ void Map::Draw(Renderer& renderer, Resources& resource)
 				//sf::Vector2f cell_position(cellSize * x - cellSize * s, cellSize * y - cellSize * s);
 				Vector2f cell_position(cellSize * x + cellSize / 2.0f, cellSize * y + cellSize / 2.0f);
 
-				renderer.Draw(resource.getTexture("block2.png"),cell_position,sf::Vector2f(cellSize, cellSize), 0, 0);
+				renderer.Draw(resource.getTexture("block2.png"), cell_position, sf::Vector2f(cellSize, cellSize), 0, 0);
 			}
 			y++;
 		}
@@ -99,7 +99,7 @@ sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entit
 				startingPos.second = y;
 				marioPos = sf::Vector2f(cellSize * x, cellSize * y);
 			}
-			else  {
+			else {
 				entity = this->createEntityFromMap(z, x, y);
 				if (entity != nullptr)
 					entities.push_back(entity);
@@ -135,7 +135,7 @@ void Map::saveMapState(string filename, Vector2f& CharPos)
 		cout << "ERROR: CAN't open " + filename << endl;
 		return;
 	}
-	sf::Vector2f endingPos = CharPos ;
+	sf::Vector2f endingPos = CharPos;
 	pair<int, int> endingPosInGrid;
 	endingPosInGrid.first = floor(endingPos.x);
 	endingPosInGrid.second = floor(endingPos.y);
@@ -190,14 +190,13 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 {
 	Entity* entity = nullptr;
 	if (z == GridColor::tile)
-		entity = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x,y));
+		entity = new Block("block", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::coin)
 		entity = new Coin("coin", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
-	if (z == GridColor::shell)
-		entity = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 2 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+
 	if (z == GridColor::question)
 		entity = new Block("qblock", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
-	if (z == GridColor::powerup_red)
+	if (z == GridColor::powerup_green)
 		entity = new PowerUp("levelUp", 0.3, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::goal)
 		entity = new Block("goal", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
@@ -205,10 +204,13 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Block("tileMap3", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::spike)
 		entity = new Block("spike", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
-	if (z == GridColor::pipe)
-		entity = new Block("pipe", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize*2.0f, cellSize*4.0f), Vector2f(x, y));
-	if (z == GridColor::fireBar)
-		entity = new Block("fireBar", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize * 3.0f), Vector2f(x, y));
+	//if (z == GridColor::pipe)
+		//entity = new Block("pipe", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize*2.0f, cellSize*4.0f), Vector2f(x, y));
+	if (z == GridColor::fireBar) {
+		entity = new Elevator("fireBar", 0.0, 1.0f, (cellSize * x + cellSize / 2.0f), (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y - 5 * cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	}
+	if (z == GridColor::shell)
+		entity = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	return entity;
 }
 
@@ -247,7 +249,7 @@ Map :: ~Map() {
 sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entities)
 {
 	entities.clear();
-	grid.clear(); 
+	grid.clear();
 	grid = vector<vector<int>> (image.getSize().x, vector<int> (image.getSize().y, 0));
 	cout << endl << image.getSize().x << " " << image.getSize().y << endl;
 

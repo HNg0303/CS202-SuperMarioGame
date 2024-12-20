@@ -337,7 +337,11 @@ void Mario::Update(float& deltaTime)
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
         drawingTexture = Resources::textures["marioflamethrow.png"];
-        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x - 150.0f, position.x + 150.0f, position.y, Vector2f(2.0f, 1.0f), position);
+        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x - 150.0f, position.x + 150.0f, position.y, position.y+1000, Vector2f(2.0f, 1.0f), position);
+        //Flame(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size, Vector2f coords) :
+        //    Moveable(name_i, frameDuration_i, speed_i, start, end, y, coords) {
+        //Flame(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
+
         flame->faceLeft = this->faceLeft;
         flame->Begin();
         onEntities.push_back(flame);
@@ -491,7 +495,7 @@ void Luigi::Update(float& deltaTime)
     b2Vec2 velocity = dynamicBody->GetLinearVelocity();
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
-        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x + 3.0f, position.x + 150.0f, position.y, Vector2f(2.0f, 1.0f), position);
+        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x + 3.0f, position.x + 150.0f, position.y, position.y, Vector2f(2.0f, 1.0f), position);
         flame->Begin();
         onEntities.push_back(flame);
         changeStateCounter = 0;

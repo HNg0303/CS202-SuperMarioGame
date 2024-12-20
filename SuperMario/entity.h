@@ -11,7 +11,7 @@ void clearEntities();
 class Entity // Drawable makes possible to use window.draw(object)
 {
 public:
-	
+
 	string name;
 	vector<Texture> frames;
 	int currentFrame;
@@ -22,17 +22,18 @@ public:
 
 	bool faceLeft = false;
 	bool deleted = false;
-	float direction; //left/right
+
 	Vector2f coords; //Coordinates in grid.
 	Vector2f size; //Render size
 	Vector2f position; //starting position
-
+	float x_direction = 1.0f; //left/right
+	float y_direction = -1.0f;
 	//Method
 	Entity(string name_i, double frameDuration_i, float x, float y, Vector2f coords);
 	vector<Texture> loadFrame(string folderPath);
 	void draw(RenderWindow* window, const Vector2f& size);
 	virtual void Begin() = 0;
-	virtual void Update(float deltaTime) = 0; 
+	virtual void Update(float deltaTime) = 0;
 	virtual string getName();
 	virtual ~Entity() = default;
 	Vector2f getCoords();
@@ -45,13 +46,19 @@ class Moveable : public Entity
 private:
 	float speed; //velocity
 	pair<float, float> xBound; //fixed bound [start, end]
-	float yPosition;
-	
+	pair<float, float> yBound;
+	float yPosition; // what does this even do
 public:
-	Moveable(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f coords) :
-		Entity(name_i, frameDuration_i, start, y, coords), yPosition(y), speed(speed_i)
+	Moveable(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f coords) :
+		Entity(name_i, frameDuration_i, x_start, y_start, coords), speed(speed_i)
 	{
-		xBound = make_pair(start, end);
+		yPosition = position.y;
+		yBound = make_pair(y_start, y_end);
+		xBound = make_pair(x_start, x_end);
+		if (x_start == x_end)
+			x_direction = 0;
+		if (y_start == y_end)
+			y_direction = 0;
 	};
 	float destroyingTimer = 0.0f;
 	bool isDead = false;
@@ -66,14 +73,15 @@ class Unmoveable : public Entity
 {
 public:
 	Unmoveable(string name_i, double frameDuration_i, float x, float y, Vector2f coords) :
-		Entity(name_i, frameDuration_i, x, y, coords) {}
+		Entity(name_i, frameDuration_i, x, y, coords) {
+	}
 	void Begin() override {};
-	void Update(float deltaTime) override;	
+	void Update(float deltaTime) override;
 };
 
 class Coin : public Unmoveable {
-public: 
-	Coin(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords):
+public:
+	Coin(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords) :
 		Unmoveable(name_i, frameDuration_i, x, y, coords) {
 		this->size = size;
 	}
@@ -102,7 +110,7 @@ class QBlock : public Unmoveable {
 
 class PowerUp : public Unmoveable {
 public:
-	PowerUp(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords):
+	PowerUp(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords) :
 		Unmoveable(name_i, frameDuration_i, x, y, coords) {
 		this->size = size;
 	}
@@ -113,9 +121,9 @@ public:
 
 class Enemy : public Moveable {
 public:
-	
-	Enemy(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size, Vector2f coords) :
-		Moveable(name_i, frameDuration_i, speed_i, start, end, y, coords) {
+
+	Enemy(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
+		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, x_end, coords) {
 		this->size = size;
 	}
 	void Begin() override;
@@ -125,13 +133,13 @@ public:
 
 class Flame : public Moveable, public ContactListener {
 public:
-	b2Fixture* fixture;
+	b2Fixture* fixture = nullptr;
 
-	Flame(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size, Vector2f coords) :
-		Moveable(name_i, frameDuration_i, speed_i, start, end, y, coords) {
+	Flame(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
+		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, y_end, coords) {
 		this->size = size;
 	}
-	
+
 	void Begin() override;
 	void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
 	void OnEndContact(b2Fixture* self, b2Fixture* other) override {};
@@ -139,4 +147,14 @@ public:
 	~Flame();
 };
 
+class Elevator : public Moveable {
+public:
+	Elevator(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
+		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, y_end, coords)
+	{
+		this->size = size;
+	};
+	void Begin() override;
+	~Elevator();
+};
 

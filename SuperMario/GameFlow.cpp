@@ -347,7 +347,7 @@ void GameFlow::handlePlayingGame()
 		window->clear();
 		float deltaTime = gameClock.restart().asSeconds();
 		
-		cout << map->getIndex() << endl;
+		//cout << map->getIndex() << endl;
 		//this->view = game->view;
 		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
@@ -376,18 +376,6 @@ void GameFlow::handlePlayingGame()
 	}
 }
 
-void GameFlow::handleEntity()
-{
-	for (const auto& anEntity : entities)
-	{
-		anEntity->Update(0.0f);
-		anEntity->draw(window, Vector2f(0.0f,0.0f));
-	
-		//std::cout << "already draw" << '\n';
-	}
-	//std::cout << entities.size() << '\n';
-
-}
 
 void GameFlow::handleChooseCharacter()
 {
