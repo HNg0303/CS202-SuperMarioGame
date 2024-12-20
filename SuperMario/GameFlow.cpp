@@ -279,12 +279,18 @@ void GameFlow::handleMainMenu() //handles controls in menu
 
 				if (mainMenu.GetPressedItem() == 3)
 				{
+					curState = static_cast<int>(GameState::Themes);
+					this->window->display();
+				}
+
+				if (mainMenu.GetPressedItem() == 4)
+				{
 					curState = static_cast<int>(GameState::HelpMenu);
 					mainMenu.drawHelpMenu(*window, center);
 					this->window->display();
 				}
 
-				if (mainMenu.GetPressedItem() == 4)
+				if (mainMenu.GetPressedItem() == 5)
 				{
 					curState = static_cast<int>(GameState::Exit);
 					window->close();
@@ -454,6 +460,49 @@ void GameFlow::handleChooseLevel()
 		}
 	}
 }
+
+void GameFlow::handleChooseThemes()
+{
+	
+
+	while (true)
+	{
+		chooseThemes.drawChooseThemes(*window, 70, 300);
+		window->display();
+
+		while (window->pollEvent(sfEvent))
+		{
+			if (sfEvent.type == sf::Event::Closed)
+			{
+				window->close();
+				return;
+			}
+
+			if (sfEvent.type == sf::Event::KeyPressed)
+			{
+				chooseThemes.handleUpDown(sfEvent);
+
+				/*if (sfEvent.key.code == sf::Keyboard::Enter)
+				{
+
+					resumeClock();
+					isRestarted = true;
+					curState = static_cast<int>(GameState::PlayingGame);
+					return;
+				}*/
+
+				if (sfEvent.key.code == sf::Keyboard::Escape)
+				{
+					curState = static_cast<int>(GameState::MainMenu);
+					return;
+				}
+			}
+		}
+	}
+}
+
+
+
 
 void GameFlow::handlePauseMenu()
 {
@@ -791,6 +840,10 @@ void GameFlow::run()
 
 		case GameState::Scoreboard:
 			handleScoreboard();
+			break;
+
+		case GameState::Themes:
+			handleChooseThemes();
 			break;
 
 		case GameState::HelpMenu:

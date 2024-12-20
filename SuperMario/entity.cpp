@@ -8,7 +8,7 @@ Entity::Entity(string name_i, double frameDuration_i, float x, float y, Vector2f
 {
 	position.x = x;
 	position.y = y;
-	frames = loadFrame(convertToUnixPath("Resource/asset/frame/" + name));
+	frames = loadFrame(convertToUnixPath("Resource/asset/frame/frame2/" + name));
 	if (frames.empty())
 	{
 		std::cerr << "No frames loaded for entity " << name << std::endl;

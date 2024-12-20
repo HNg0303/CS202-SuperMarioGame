@@ -21,8 +21,9 @@ private:
 	Game* game = nullptr;
 	bool isRestarted = false;
 	//Constructor Private for singleton.
-	GameFlow() : mainMenu(5, { "START GAME", "RESTART", "SCOREBOARD", "HELP", "EXIT" }),
+	GameFlow() : mainMenu(6, { "START GAME", "RESTART", "SCOREBOARD", "THEMES", "HELP", "EXIT" }),
 		chooseCharacterMenu(2, { "MARIO", "LUIGI" }),
+		chooseThemes(2, {"Default", "Ice"}),
 		chooseLevel(3, { "EASY","MEDIUM","HARD" }),
 		pauseMenu(3, { "CONTINUE", "RESTART","BACK TO MAIN MENU" }),
 		askRestart(2, { "YES","NO" }),
@@ -59,7 +60,8 @@ public:
 		AskRestart,
 		PlayingGame,
 		LooseGame,
-		WinGame
+		WinGame,
+		Themes
 	};
 	
 	static GameFlow* getInstance();
@@ -84,6 +86,7 @@ public:
 	ChooseLevelMenu chooseLevel;
 	PauseMenu pauseMenu;
 	AskRestart askRestart;
+	ChooseThemes chooseThemes;
 	
 	sf::Event sfEvent;
 
@@ -112,7 +115,7 @@ public:
 	void handleAskRestart();
 	void handleLooseGame();
 	void handleWinGame();
-	void handleEntity();
+	void handleChooseThemes();
 	void handleClosed();
 	void handleGameInfo();
 	//void handleContinue();
