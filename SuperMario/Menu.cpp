@@ -190,15 +190,9 @@ void ChooseThemes::drawChooseThemes(sf::RenderWindow& window, float x, float y) 
 {
 	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/chooseThemes.png"));
 	drawCenterMenuBackground(window, texture);
-	sf::Text text;
-	text.setString("Your current themes: ");
-	text.setCharacterSize(24);
-	text.setPosition({ 70,270 });
-	text.setFillColor(sf::Color::White);
-	window.draw(text);
-
-	drawItemSelectionVertical(window, texts, 24, x, y, 553, 50, 150);
+	drawItemSelectionVertical(window, texts, 26, x, y, 553, 50, 150);
 }
+
 
 void MainMenu::drawMainMenu(sf::RenderWindow& window, float x, float y) //draw menu screen
 {

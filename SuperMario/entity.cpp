@@ -2,13 +2,17 @@
 #include "Resources.h"
 
 vector<Entity*> onEntities;
+int Entity::curTheme = 1;
+
 
 Entity::Entity(string name_i, double frameDuration_i, float x, float y, Vector2f coords) :
 	name(name_i), frameDuration(frameDuration_i), currentFrame(0), coords(coords)
 {
 	position.x = x;
 	position.y = y;
-	frames = loadFrame(convertToUnixPath("Resource/asset/frame/frame1/" + name));
+	//cout << Entity::curTheme << endl;
+	//cout << "Resource/asset/frame/frame" + to_string(Entity::curTheme) + "/" + name << endl;
+	frames = loadFrame(convertToUnixPath("Resource/asset/frame/frame" + to_string(Entity::curTheme) + "/" + name));
 	if (frames.empty())
 	{
 		std::cerr << "No frames loaded for entity " << name << std::endl;

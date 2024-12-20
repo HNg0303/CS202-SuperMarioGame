@@ -468,11 +468,49 @@ void GameFlow::handleChooseLevel()
 
 void GameFlow::handleChooseThemes()
 {
-	
+	//cout << "HERREEEEEEEEEEEEEEe" << endl;
 
 	while (true)
 	{
-		chooseThemes.drawChooseThemes(*window, 70, 300);
+		chooseThemes.drawChooseThemes(*window, 70, 330);
+		sf::Text labelText, themeText;
+		sf::Texture image;
+		string themeName = "";
+		sf::Font font;
+		loadFont(font);
+		setupText(labelText, font, "Current Theme:", 24, sf::Color::White);
+		if (Entity::curTheme == 1)
+		{
+			setupText(themeText, font, "Default", 24, sf::Color::Red);
+			themeName = "DefaultTheme.png";
+		}
+		else
+		{
+			setupText(themeText, font, "Ice", 24, sf::Color::Red);
+			themeName = "IceTheme.png";
+		}
+
+		if (!image.loadFromFile(fs::current_path().string() + "/Resource/asset/image/" + themeName))
+		{
+			std::cerr << "Failed to load texture!" << std::endl;
+			return;
+		}
+
+		sf::Sprite sprite;
+		sprite.setTexture(image);
+
+		labelText.setPosition({ 280 + 70 + (553 - labelText.getGlobalBounds().width) / 2, 300 + 350 });
+		themeText.setPosition({ labelText.getPosition().x + labelText.getGlobalBounds().width + 30, labelText.getPosition().y });
+		sprite.setPosition({ labelText.getPosition().x + labelText.getGlobalBounds().width - 140 - 90, 380 });
+
+		window->draw(labelText);
+		window->draw(themeText);
+		window->draw(sprite);
+
+
+		std::cout << "LabelText Position: " << labelText.getPosition().x << ", " << labelText.getPosition().y << std::endl;
+		std::cout << "ThemeText Position: " << themeText.getPosition().x << ", " << themeText.getPosition().y << std::endl;
+
 		window->display();
 
 		while (window->pollEvent(sfEvent))
@@ -487,14 +525,11 @@ void GameFlow::handleChooseThemes()
 			{
 				chooseThemes.handleUpDown(sfEvent);
 
-				/*if (sfEvent.key.code == sf::Keyboard::Enter)
+				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
-
-					resumeClock();
-					isRestarted = true;
-					curState = static_cast<int>(GameState::PlayingGame);
+					Entity::setcurTheme(chooseThemes.GetPressedItem() + 1);
 					return;
-				}*/
+				}
 
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
@@ -505,6 +540,8 @@ void GameFlow::handleChooseThemes()
 		}
 	}
 }
+
+
 
 
 
@@ -878,7 +915,7 @@ void GameFlow::run()
 		case GameState::LooseGame:
 			handleLooseGame();
 			break;
-		
+
 		case GameState::WinGame:
 			handleWinGame();
 			break;

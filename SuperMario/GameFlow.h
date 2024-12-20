@@ -18,6 +18,8 @@ private:
 	Camera* camera = nullptr;
 	Character* character = nullptr;
 	//main game
+	
+	
 	Game* game = nullptr;
 	bool isRestarted = false;
 	//Constructor Private for singleton.

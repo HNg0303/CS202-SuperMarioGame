@@ -14,7 +14,7 @@ void clearEntities();
 class Entity 
 {
 public:
-
+	static int curTheme;
 	string name;
 	vector<Texture> frames;
 	int currentFrame;
@@ -41,7 +41,14 @@ public:
 	virtual ~Entity() = default;
 	Vector2f getCoords();
 	void markDeleted();
+
+
+	static void setcurTheme(int value)
+	{
+		curTheme = value;
+	}
 };
+
 
 
 class Moveable : public Entity
@@ -72,7 +79,7 @@ public:
 
 };
 
-class Unmoveable : public Entity
+class Unmoveable: public Entity
 {
 public:
 	Unmoveable(string name_i, double frameDuration_i, float x, float y, Vector2f coords) :
