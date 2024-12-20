@@ -1,7 +1,7 @@
 #include "Character.h"
 using namespace std;
 
-Character* CharacterFactory :: createCharacter(CharacterType type) {
+Character* CharacterFactory::createCharacter(CharacterType type) {
     switch (type) {
     case MARIO:
         return new Mario();
@@ -36,7 +36,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         return;
     }
     if (groundFixture == self && data->type == FixtureDataType::MapTile) {
-            onGround++;
+        onGround++;
     }
     else if (data->type == FixtureDataType::Entity && data->entity && data->entity->getName() == "coin") {
         data->entity->markDeleted();
@@ -85,11 +85,7 @@ void Character::OnEndContact(b2Fixture* self, b2Fixture* other) {
 }
 
 void Character::handleDeath() {
-    if (changeStateCounter == 1) {
-        changeStateCounter -= 1;
-        transform = true;
-    }
-    else if (changeStateCounter == 2) {
+    if (changeStateCounter) {
         changeStateCounter = 0;
         transform = true;
     }
@@ -134,14 +130,14 @@ Mario::Mario(float x, float y) {
 
 
 
-void Mario :: Draw(Renderer& renderer, Resources& resource) {
+void Mario::Draw(Renderer& renderer) {
     if (changeStateCounter == 0) //Small Mario.
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
     if (changeStateCounter == 1 || changeStateCounter == 2) //Big Mario
         renderer.Draw(drawingTexture, position, Vector2f(1.2f, 2.4f), 0, faceLeft);
     else return;
 }
- 
+
 void Mario::Begin() {
     //Set up animation and SFX
     jumpSFX.setBuffer(Resources::sfx["jump.wav"]);
@@ -153,16 +149,18 @@ void Mario::Begin() {
     isDead = false;
     transform = false;
 
+    float scale = 1.0f;
+
     if (changeStateCounter == 0) {
-        standAnimation = Resources::textures["mario1.png"];
-        jumpAnimation = Resources::textures["mariojump.png"];
+        standAnimation = Resources::textures["mario0.png"];
+        jumpAnimation = Resources::textures["mariojump0.png"];
         runAnimation = Animation(0.45f,
             {
                 Frame(0.15f, Resources::textures["mariorun1.png"]),
                 Frame(0.3f, Resources::textures["mariorun2.png"]),
                 Frame(0.45f, Resources::textures["mariorun3.png"])
             });
-        deathAnimation = Animation(0.9f,
+        changeStateAnimation = Animation(0.9f,
             {
                 Frame(0.1f, Resources::textures["mariodeath.png"]),
                 Frame(0.2f, Texture{}),
@@ -174,52 +172,11 @@ void Mario::Begin() {
                 Frame(0.8f, Texture{}),
                 Frame(0.9f, Resources::textures["mariodeath.png"])
             });
-        //Initialize a body of Character in the b2World.
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_dynamicBody; // specify type of body
-        bodyDef.position.Set(position.x, position.y); //Set position
-        bodyDef.fixedRotation = true;
-        dynamicBody = Physics::world.CreateBody(&bodyDef);
-
-        //Create and add Fixtures for the body => This will set for collision
-        b2FixtureDef fixtureDef{};
-        fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
-        b2PolygonShape shape;
-        //shape.SetAsBox(0.2f, 1.0f);
-
-        fixtureDef.density = 1.0f;
-        fixtureDef.friction = 0.0f;
-        //Create fixture for body => Done;
-
-        b2CircleShape circle{};
-        fixtureDef.shape = &circle;
-        circle.m_p.Set(0.0f, -0.5f); //His head.
-        circle.m_radius = 0.4f;
-        dynamicBody->CreateFixture(&fixtureDef);
-
-        circle.m_p.Set(0.0f, 0.5f); //His feet.
-        dynamicBody->CreateFixture(&fixtureDef);
-
-        b2PolygonShape polygonShape;
-        polygonShape.SetAsBox(0.3f, 0.5f);
-        fixtureDef.shape = &polygonShape;
-        dynamicBody->CreateFixture(&fixtureDef);
-
-        polygonShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, 1.0f), 0.0f);
-        //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
-        fixtureDef.shape = &polygonShape;
-        fixtureDef.isSensor = true;
-        groundFixture = dynamicBody->CreateFixture(&fixtureDef);
-
-        polygonShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, -0.8f), 0.0f);
-        fixtureDef.shape = &polygonShape;
-        fixtureDef.isSensor = true;
-        headFixture = dynamicBody->CreateFixture(&fixtureDef);
     }
     else if (changeStateCounter == 1 || changeStateCounter == 2) {
         if (changeStateCounter == 1)
         {
-            standAnimation = Resources::textures["mario2.png"];
+            standAnimation = Resources::textures["mario1.png"];
             jumpAnimation = Resources::textures["mariojump1.png"];
             runAnimation = Animation(0.45f,
                 {
@@ -227,22 +184,10 @@ void Mario::Begin() {
                     Frame(0.3f, Resources::textures["mariorun5.png"]),
                     Frame(0.45f, Resources::textures["mariorun6.png"])
                 });
-            deathAnimation = Animation(0.9f,
-                {
-                    Frame(0.1f, Resources::textures["mariolvdown1.png"]),
-                    Frame(0.2f, Resources::textures["mario1.png"]),
-                    Frame(0.3f, Resources::textures["mariolvdown1.png"]),
-                    Frame(0.4f, Resources::textures["mario1.png"]), 
-                    Frame(0.5f, Resources::textures["mariolvdown1.png"]),
-                    Frame(0.6f, Resources::textures["mario1.png"]), 
-                    Frame(0.7f, Resources::textures["mariolvdown1.png"]),
-                    Frame(0.8f, Resources::textures["mario1.png"]), 
-                    Frame(0.9f, Resources::textures["mariolvdown1.png"])
-                });
         }
         else
         {
-            standAnimation = Resources::textures["mario3.png"];
+            standAnimation = Resources::textures["mario2.png"];
             jumpAnimation = Resources::textures["mariojump2.png"];
             runAnimation = Animation(0.45f,
                 {
@@ -250,57 +195,46 @@ void Mario::Begin() {
                     Frame(0.3f, Resources::textures["mariorun8.png"]),
                     Frame(0.45f, Resources::textures["mariorun9.png"])
                 });
-            deathAnimation = Animation(0.9f,
-                {
-                    Frame(0.1f, Resources::textures["mariolvdown2.png"]),
-                    Frame(0.2f, Resources::textures["mario1.png"]),
-                    Frame(0.3f, Resources::textures["mariolvdown2.png"]),
-                    Frame(0.4f, Resources::textures["mario1.png"]),
-                    Frame(0.5f, Resources::textures["mariolvdown2.png"]),
-                    Frame(0.6f, Resources::textures["mario1.png"]),
-                    Frame(0.7f, Resources::textures["mariolvdown2.png"]),
-                    Frame(0.8f, Resources::textures["mario1.png"]),
-                    Frame(0.9f, Resources::textures["mariolvdown2.png"])
-                });
         }
-        float scale = 1.2f;
-        //Initialize a body of Character in the b2World.
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_dynamicBody; // specify type of body
-        bodyDef.position.Set(position.x, position.y); //Set position
-        bodyDef.fixedRotation = true;
-        dynamicBody = Physics::world.CreateBody(&bodyDef);
-
-        //Create and add Fixtures for the body => This will set for collision
-        b2FixtureDef fixtureDef{};
-        fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
-        b2PolygonShape shape;
-        //shape.SetAsBox(0.2f, 1.0f);
-
-        fixtureDef.density = 1.0f;
-        fixtureDef.friction = 0.0f;
-        //Create fixture for body => Done;
-
-        b2CircleShape circle{};
-        fixtureDef.shape = &circle;
-        circle.m_p.Set(0.0f, -0.5f*scale); //His head.
-        circle.m_radius = 0.4f*scale;
-        dynamicBody->CreateFixture(&fixtureDef);
-
-        circle.m_p.Set(0.0f, 0.5f*scale); //His feet.
-        dynamicBody->CreateFixture(&fixtureDef);
-
-        b2PolygonShape polygonShape;
-        polygonShape.SetAsBox(0.3f*scale, 0.5f*scale);
-        fixtureDef.shape = &polygonShape;
-        dynamicBody->CreateFixture(&fixtureDef);
-
-        polygonShape.SetAsBox(0.2f*(scale) , 0.1f*(scale), b2Vec2(0.0f, 1.5f), 0.0f);
-        //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
-        fixtureDef.shape = &polygonShape;
-        fixtureDef.isSensor = true;
-        groundFixture = dynamicBody->CreateFixture(&fixtureDef);
+        scale = 1.2f;
     }
+
+    //Initialize a body of Character in the b2World.
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody; // specify type of body
+    bodyDef.position.Set(position.x, position.y); //Set position
+    bodyDef.fixedRotation = true;
+    dynamicBody = Physics::world.CreateBody(&bodyDef);
+
+    //Create and add Fixtures for the body => This will set for collision
+    b2FixtureDef fixtureDef{};
+    fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
+    b2PolygonShape shape;
+    //shape.SetAsBox(0.2f, 1.0f);
+
+    fixtureDef.density = 1.0f;
+    fixtureDef.friction = 0.0f;
+    //Create fixture for body => Done;
+
+    b2CircleShape circle{};
+    fixtureDef.shape = &circle;
+    circle.m_p.Set(0.0f, -0.5f * scale); //His head.
+    circle.m_radius = 0.4f * scale;
+    dynamicBody->CreateFixture(&fixtureDef);
+
+    circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
+    dynamicBody->CreateFixture(&fixtureDef);
+
+    b2PolygonShape polygonShape;
+    polygonShape.SetAsBox(0.3f * scale, 0.5f * scale);
+    fixtureDef.shape = &polygonShape;
+    dynamicBody->CreateFixture(&fixtureDef);
+
+    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.5f), 0.0f);
+    //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
+    fixtureDef.shape = &polygonShape;
+    fixtureDef.isSensor = true;
+    groundFixture = dynamicBody->CreateFixture(&fixtureDef);
     cout << "Initialize Mario Body successfully !!!!!" << endl;
 }
 
@@ -311,15 +245,12 @@ void Mario::Update(float& deltaTime)
             Physics::world.DestroyBody(dynamicBody);
             dynamicBody = nullptr;
         }
-        if (isDead)
-        {
-            deathAnimation.Update(deltaTime);
-            drawingTexture = deathAnimation.getTexture();
-        }
+        changeStateAnimation.Update(deltaTime);
+        drawingTexture = changeStateAnimation.getTexture();
         transformTimer += deltaTime;
         if (transformTimer > 1.0f) {
             if (isDead) {
-                if (lives > 1) lives-=1;
+                if (lives > 1) lives -= 1;
                 else {
                     lives -= 1;
                     cout << "You're dead !" << endl;
@@ -382,12 +313,68 @@ void Mario::Update(float& deltaTime)
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
 }
 
+void Mario::OnBeginContact(b2Fixture* self, b2Fixture* other)
+{
+    int prevStateCounter = changeStateCounter;
+    Character::OnBeginContact(self, other);
+    if (transform)
+    {
+        if (prevStateCounter < changeStateCounter)
+        {
+            changeStateAnimation = Animation(0.9f,
+                {
+                    Frame(0.075f, Resources::textures["mariojump" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.15f, Texture{}),
+                    Frame(0.225f, Resources::textures["mariojump" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.3f, Texture{}),
+                    Frame(0.375f, Resources::textures["mariojump" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.45f, Texture{}),
+                    Frame(0.525f, Resources::textures["mariojump" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.6f, Texture{}),
+                    Frame(0.675f, Resources::textures["mariojump" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.75f, Texture{}),
+                    Frame(0.825f, Resources::textures["mariojump" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.9f, Texture{})
+                });
+            return;
+        }
+        if (prevStateCounter > changeStateCounter)
+        {
+            changeStateAnimation = Animation(0.9f,
+                {
+                    Frame(0.1f, Resources::textures["mariolvdown" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.2f, Resources::textures["mario" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.3f, Resources::textures["mariolvdown" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.4f, Resources::textures["mario" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.5f, Resources::textures["mariolvdown" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.6f, Resources::textures["mario" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.7f, Resources::textures["mariolvdown" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.8f, Resources::textures["mario" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.9f, Resources::textures["mariolvdown" + to_string(prevStateCounter) + ".png"])
+                });
+            return;
+        }
+        changeStateAnimation = Animation(0.9f,
+            {
+                Frame(0.1f, Resources::textures["mariojump" + to_string(changeStateCounter) + ".png"]),
+                Frame(0.2f, Texture{}),
+                Frame(0.3f, Resources::textures["mariojump" + to_string(changeStateCounter) + ".png"]),
+                Frame(0.4f, Texture{}),
+                Frame(0.5f, Resources::textures["mariojump" + to_string(changeStateCounter) + ".png"]),
+                Frame(0.6f, Texture{}),
+                Frame(0.7f, Resources::textures["mariojump" + to_string(changeStateCounter) + ".png"]),
+                Frame(0.8f, Texture{}),
+                Frame(0.9f, Resources::textures["mariojump" + to_string(changeStateCounter) + ".png"])
+            });
+    }
+}
 
-Luigi :: Luigi(float x, float y) {
+
+Luigi::Luigi(float x, float y) {
     position.x = x;
     position.y = y;
-    movementVelocity = 5.0f;
-    jumpVelocity = 8.0f;
+    movementVelocity = 8.4f;
+    jumpVelocity = 4.0f;
     angle = 0.0f;
 
     if (!fixtureData)
@@ -395,33 +382,90 @@ Luigi :: Luigi(float x, float y) {
     cout << "Initializing Luigi successfully !";
 }
 
-void Luigi :: Begin() { 
-    standAnimation = Resources::textures["luigi.png"];
-    jumpAnimation = Resources::textures["luigijump.png"];
-    runAnimation = Animation(0.45f,
-        {
-            Frame(0.15f, Resources::textures["luigirun1.png"]),
-            Frame(0.3f, Resources::textures["luigirun2.png"]),
-            Frame(0.45f, Resources::textures["luigirun3.png"])
-        });
-    deathAnimation = Animation(0.9f,
-        {
-            Frame(0.1f, Resources::textures["mariodeath.png"]),
-            Frame(0.2f, Texture{}),
-            Frame(0.3f, Resources::textures["mariodeath.png"]),
-            Frame(0.4f, Texture{}),
-            Frame(0.5f, Resources::textures["mariodeath.png"]),
-            Frame(0.6f, Texture{}),
-            Frame(0.7f, Resources::textures["mariodeath.png"]),
-            Frame(0.8f, Texture{}),
-            Frame(0.9f, Resources::textures["mariodeath.png"])
-        });
+void Luigi::Begin() {
+    //Set up animation and SFX
+    jumpSFX.setBuffer(Resources::sfx["jump.wav"]);
+    jumpSFX.setVolume(7);
     //Set up Fixture Data for handle collision
     fixtureData->type = FixtureDataType::Character;
     fixtureData->listener = this;
 
     isDead = false;
     transform = false;
+
+    float scale = 1.0f;
+
+    if (changeStateCounter == 0) {
+        standAnimation = Resources::textures["luigi0.png"];
+        jumpAnimation = Resources::textures["luigijump0.png"];
+        runAnimation = Animation(0.45f,
+            {
+                Frame(0.15f, Resources::textures["luigirun1.png"]),
+                Frame(0.3f, Resources::textures["luigirun2.png"]),
+                Frame(0.45f, Resources::textures["luigirun3.png"])
+            });
+        changeStateAnimation = Animation(0.9f,
+            {
+                Frame(0.1f, Resources::textures["luigideath.png"]),
+                Frame(0.2f, Texture{}),
+                Frame(0.3f, Resources::textures["luigideath.png"]),
+                Frame(0.4f, Texture{}),
+                Frame(0.5f, Resources::textures["luigideath.png"]),
+                Frame(0.6f, Texture{}),
+                Frame(0.7f, Resources::textures["luigideath.png"]),
+                Frame(0.8f, Texture{}),
+                Frame(0.9f, Resources::textures["luigideath.png"])
+            });
+    }
+    else if (changeStateCounter == 1 || changeStateCounter == 2) {
+        if (changeStateCounter == 1)
+        {
+            standAnimation = Resources::textures["luigi1.png"];
+            jumpAnimation = Resources::textures["luigijump1.png"];
+            runAnimation = Animation(0.45f,
+                {
+                    Frame(0.15f, Resources::textures["luigirun4.png"]),
+                    Frame(0.3f, Resources::textures["luigirun5.png"]),
+                    Frame(0.45f, Resources::textures["luigirun6.png"])
+                });
+            changeStateAnimation = Animation(0.9f,
+                {
+                    Frame(0.1f, Resources::textures["luigilvdown1.png"]),
+                    Frame(0.2f, Resources::textures["luigi.png"]),
+                    Frame(0.3f, Resources::textures["luigilvdown1.png"]),
+                    Frame(0.4f, Resources::textures["luigi.png"]),
+                    Frame(0.5f, Resources::textures["luigilvdown1.png"]),
+                    Frame(0.6f, Resources::textures["luigi.png"]),
+                    Frame(0.7f, Resources::textures["luigilvdown1.png"]),
+                    Frame(0.8f, Resources::textures["luigi.png"]),
+                    Frame(0.9f, Resources::textures["luigilvdown1.png"])
+                });
+        }
+        else
+        {
+            standAnimation = Resources::textures["luigi2.png"];
+            jumpAnimation = Resources::textures["luigijump2.png"];
+            runAnimation = Animation(0.45f,
+                {
+                    Frame(0.15f, Resources::textures["luigirun7.png"]),
+                    Frame(0.3f, Resources::textures["luigirun8.png"]),
+                    Frame(0.45f, Resources::textures["luigirun9.png"])
+                });
+            changeStateAnimation = Animation(0.9f,
+                {
+                    Frame(0.1f, Resources::textures["luigilvdown2.png"]),
+                    Frame(0.2f, Resources::textures["luigi.png"]),
+                    Frame(0.3f, Resources::textures["luigilvdown2.png"]),
+                    Frame(0.4f, Resources::textures["luigi.png"]),
+                    Frame(0.5f, Resources::textures["luigilvdown2.png"]),
+                    Frame(0.6f, Resources::textures["luigi.png"]),
+                    Frame(0.7f, Resources::textures["luigilvdown2.png"]),
+                    Frame(0.8f, Resources::textures["luigi.png"]),
+                    Frame(0.9f, Resources::textures["luigilvdown2.png"])
+                });
+        }
+        scale = 1.2f;
+    }
 
     //Initialize a body of Character in the b2World.
     b2BodyDef bodyDef;
@@ -442,27 +486,23 @@ void Luigi :: Begin() {
 
     b2CircleShape circle{};
     fixtureDef.shape = &circle;
-    circle.m_p.Set(0.0f, -0.5f); //His head.
-    circle.m_radius = 0.5f;
+    circle.m_p.Set(0.0f, -0.5f * scale); //His head.
+    circle.m_radius = 0.4f * scale;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    circle.m_p.Set(0.0f, 0.5f); //His feet.
+    circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
     dynamicBody->CreateFixture(&fixtureDef);
 
     b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.3f, 0.5f);
+    polygonShape.SetAsBox(0.3f * scale, 0.5f * scale);
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, 1.0f), 0.0f);
+    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.5f), 0.0f);
+    //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
-
-    polygonShape.SetAsBox(0.2f, 0.1f, b2Vec2(0.0f, -0.8f), 0.0f);
-    fixtureDef.shape = &polygonShape;
-    fixtureDef.isSensor = true;
-    headFixture = dynamicBody->CreateFixture(&fixtureDef);
 }
 
 void Luigi::Update(float& deltaTime)
@@ -473,10 +513,8 @@ void Luigi::Update(float& deltaTime)
             dynamicBody = nullptr;
         }
         transformTimer += deltaTime;
-        if (isDead) {
-            deathAnimation.Update(deltaTime);
-            drawingTexture = deathAnimation.getTexture();
-        }
+        changeStateAnimation.Update(deltaTime);
+        drawingTexture = changeStateAnimation.getTexture();
         if (transformTimer > 1.0f) {
             if (isDead) {
                 if (lives > 1) lives -= 1;
@@ -500,6 +538,7 @@ void Luigi::Update(float& deltaTime)
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
         Entity* flame = new Flame("flame", 0.5, 0.3f, position.x + 3.0f, position.x + 150.0f, position.y, position.y, Vector2f(2.0f, 1.0f), position);
+        drawingTexture = Resources::textures["luigiflamethrow.png"];
         flame->Begin();
         onEntities.push_back(flame);
         changeStateCounter = 0;
@@ -534,13 +573,66 @@ void Luigi::Update(float& deltaTime)
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
 }
 
-
-void Luigi::Draw(Renderer& renderer, Resources& resource) {
+void Luigi::Draw(Renderer& renderer) {
     if (changeStateCounter == 0) //Small Mario.
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
-    if (changeStateCounter == 1 || changeStateCounter == 2) //Big Mario
+    if (changeStateCounter == 1 || changeStateCounter == 2) //Big 
         renderer.Draw(drawingTexture, position, Vector2f(1.2f, 2.4f), 0, faceLeft);
     else return;
 }
 
-
+void Luigi::OnBeginContact(b2Fixture* self, b2Fixture* other)
+{
+    int prevStateCounter = changeStateCounter;
+    Character::OnBeginContact(self, other);
+    if (transform)
+    {
+        if (prevStateCounter < changeStateCounter)
+        {
+            changeStateAnimation = Animation(0.9f,
+                {
+                    Frame(0.075f, Resources::textures["luigijump" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.15f, Texture{}),
+                    Frame(0.225f, Resources::textures["luigijump" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.3f, Texture{}),
+                    Frame(0.375f, Resources::textures["luigijump" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.45f, Texture{}),
+                    Frame(0.525f, Resources::textures["luigijump" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.6f, Texture{}),
+                    Frame(0.675f, Resources::textures["luigijump" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.75f, Texture{}),
+                    Frame(0.825f, Resources::textures["luigijump" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.9f, Texture{})
+                });
+            return;
+        }
+        if (prevStateCounter > changeStateCounter)
+        {
+            changeStateAnimation = Animation(0.9f,
+                {
+                    Frame(0.1f, Resources::textures["luigilvdown" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.2f, Resources::textures["luigi" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.3f, Resources::textures["luigilvdown" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.4f, Resources::textures["luigi" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.5f, Resources::textures["luigilvdown" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.6f, Resources::textures["luigi" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.7f, Resources::textures["luigilvdown" + to_string(prevStateCounter) + ".png"]),
+                    Frame(0.8f, Resources::textures["luigi" + to_string(changeStateCounter) + ".png"]),
+                    Frame(0.9f, Resources::textures["luigilvdown" + to_string(prevStateCounter) + ".png"])
+                });
+            return;
+        }
+        changeStateAnimation = Animation(0.9f,
+            {
+                Frame(0.1f, Resources::textures["luigijump" + to_string(changeStateCounter) + ".png"]),
+                Frame(0.2f, Texture{}),
+                Frame(0.3f, Resources::textures["luigijump" + to_string(changeStateCounter) + ".png"]),
+                Frame(0.4f, Texture{}),
+                Frame(0.5f, Resources::textures["luigijump" + to_string(changeStateCounter) + ".png"]),
+                Frame(0.6f, Texture{}),
+                Frame(0.7f, Resources::textures["luigijump" + to_string(changeStateCounter) + ".png"]),
+                Frame(0.8f, Texture{}),
+                Frame(0.9f, Resources::textures["luigijump" + to_string(changeStateCounter) + ".png"])
+            });
+    }
+}

@@ -31,7 +31,7 @@ public:
     ~Character();
     virtual void Begin() = 0;
     virtual void Update(float& deltaTime) = 0;
-    virtual void Draw(Renderer& renderer, Resources& resource) = 0;
+    virtual void Draw(Renderer& renderer) = 0;
     bool isDead = false;
 protected:
     b2Body* dynamicBody = nullptr;
@@ -44,7 +44,7 @@ protected:
 
     Texture drawingTexture{};
     Texture standAnimation{}, jumpAnimation{};
-    Animation runAnimation, deathAnimation;
+    Animation runAnimation, changeStateAnimation;
     Sound jumpSFX{};
 
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.
@@ -61,17 +61,19 @@ public:
 class Mario : public Character {
 public:
     Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
-    void Draw(Renderer& renderer, Resources& resource) override;
+    void Draw(Renderer& renderer) override;
     void Begin() override;
     void Update(float& deltaTime) override;
+    void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
 };
 
 
 class Luigi : public Character {
 public:
     Luigi(float x = 1.0f, float y = 1.0f);
-    void Draw(Renderer& renderer, Resources& resource) override;
+    void Draw(Renderer& renderer) override;
     void Begin() override;
     void Update(float& deltaTime) override;
+    void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
 };
 
