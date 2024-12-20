@@ -31,7 +31,7 @@ public:
     ~Character();
     virtual void Begin() = 0;
     virtual void Update(float& deltaTime) = 0;
-    virtual void Draw(Renderer& renderer, Resources& resource) = 0;
+    virtual void Draw(Renderer& renderer) = 0;
     bool isDead = false;
 protected:
     b2Body* dynamicBody = nullptr;
@@ -61,7 +61,7 @@ public:
 class Mario : public Character {
 public:
     Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
-    void Draw(Renderer& renderer, Resources& resource) override;
+    void Draw(Renderer& renderer) override;
     void Begin() override;
     void Update(float& deltaTime) override;
 };
@@ -70,7 +70,7 @@ public:
 class Luigi : public Character {
 public:
     Luigi(float x = 1.0f, float y = 1.0f);
-    void Draw(Renderer& renderer, Resources& resource) override;
+    void Draw(Renderer& renderer) override;
     void Begin() override;
     void Update(float& deltaTime) override;
 };
