@@ -12,12 +12,11 @@
 
 class result {
 public:
-	std::string date;
-	std::string score;
-	std::string time;
-	std::string coins;
-	std::string userName;
-	result(std::string date, std::string score, std::string time, std::string coins, std::string userName) :date(date), score(score), time(time), coins(coins), userName(userName) {};
+	string level;
+	string username;
+	int time;
+	int coin;
+	result(std::string level, int coin, int time, std::string username) : time(time), coin(coin), username(username), level(level) {};
 };
 
 class Menu
@@ -68,6 +67,7 @@ public:
 	void drawScoreaboardDetail(sf::RenderWindow& window, int center);
 
 	//handling scoreboard
+	void saveResultsFromFile(string level, int coin, int time, string name);
 	void readResultsFromFile();
 	void loadResultsToArray();
 	static bool comparator(result i1, result i2);

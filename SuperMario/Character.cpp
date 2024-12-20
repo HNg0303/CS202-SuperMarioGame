@@ -497,21 +497,21 @@ void Luigi::Update(float& deltaTime)
         changeStateCounter = 0;
         //transform = true;
     }
-    if (Keyboard::isKeyPressed(Keyboard::Right))
+    if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
     {
         runAnimation.Update(deltaTime);
         drawingTexture = runAnimation.getTexture();
         faceLeft = false;
         velocity.x += move;
     }
-    if (Keyboard::isKeyPressed(Keyboard::Left))
+    if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
     {
         runAnimation.Update(deltaTime);
         drawingTexture = runAnimation.getTexture();
         faceLeft = true;
         velocity.x -= move;
     }
-    if (Keyboard::isKeyPressed(Keyboard::Up) && onGround) {
+    if ((Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) && onGround) {
         velocity.y -= jump;
         jumpSFX.play();
     }

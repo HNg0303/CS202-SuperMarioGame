@@ -4,7 +4,6 @@
 #include <fstream>
 #include <filesystem>
 
-
 Menu::Menu()
 {
 	try {
@@ -59,88 +58,80 @@ Menu::~Menu()
 
 bool MainMenu::comparator(result  i1, result  i2)
 {
-	return (i1.score > i2.score);
+	return (i1.coin > i2.coin || (i1.coin == i2.coin && i1.time < i2.time));
 }
 
 void MainMenu::sortResults()
 {
-	std::sort(loadedResults.begin(), loadedResults.end(), comparator);
+	sort(loadedResults.begin(), loadedResults.end(), comparator);
 }
 
 void MainMenu::readResultsFromFile() //load scoreboard
 {
-	std::string line, line2;
-	std::string coinsTemp;;
-	std::string scoreTemp;
-	std::string timeTemp;
-	std::ifstream infile;
-	std::string userName;
-
-	loadedResults.clear();
-
-	infile.open(convertToUnixPath(fs::current_path().string() + "/results/Results.txt"));
-
-	try
+	ifstream inf;
+	inf.open(convertToUnixPath(fs::current_path().string() + "/Resource/asset/txt/results.txt"));
+	if (inf.is_open())
 	{
-		if (!infile)
+		loadedResults.clear();
+		string levelStr, username;
+		int coin, time;
+		while (inf >> levelStr >> coin >> time >> username)
 		{
-			throw - 1;
+			loadedResults.push_back(result(levelStr, coin, time, username));
 		}
+		inf.close();
+		sortResults();
+		cout << "read results succesfully" << endl;
 	}
-	catch (int)
-	{
-		std::cout << "can not load results";
-		exit(1);
-	}
-
-	int counter = 0;
-
-	while (getline(infile, line)) {
-
-
-		getline(infile, line2);
-
-
-		coinsTemp = (std::to_string(line2[7] - 48) + std::to_string(line2[8] - 48) + std::to_string(line2[9] - 48));
-		scoreTemp = (std::to_string(line2[18] - 48) + std::to_string(line2[19] - 48) + std::to_string(line2[20] - 48) + std::to_string(line2[21] - 48));
-		timeTemp = (std::to_string(line2[29] - 48) + std::to_string(line2[30] - 48) + std::to_string(line2[31] - 48));
-
-		userName.clear();
-		for (int i = 33; i < line2.length(); i++)
-		{
-			userName = userName + line2[i];
-		}
-
-		loadedResults.push_back(result(line, scoreTemp, timeTemp, coinsTemp, userName));
-
-		coinsTemp.clear();
-		scoreTemp.clear();
-		timeTemp.clear();
-
-		counter++;
-		getline(infile, line2);
-	}
-
-	infile.close();
-
-	sortResults();
+	else cout << "Fail to read results" << endl;
 }
 
-void MainMenu::loadResultsToArray() //set scoreboard details
+void MainMenu::saveResultsFromFile(string level, int coin, int time, string name)
 {
-	readResultsFromFile();
+	ofstream ouf;
+	ouf.open(convertToUnixPath(fs::current_path().string() + "/Resource/asset/txt/results.txt"), ios_base::app);
+	if (ouf.is_open())
+	{
+		ouf << level << " " << coin << " " << time << " " << name << endl;
+		cout << "save result succesfully" << endl;
+		ouf.close();
+	}
+	else cout << "Fail to save result" << endl;
+}
+
+//level coins time name
+//Coins: 064 Score : 0890 Time : 055 RUBIKA
+
+void MainMenu::loadResultsToArray() // Set scoreboard details
+{
 	int numberOfResults = 5;
 	if (loadedResults.size() < 5)
 		numberOfResults = loadedResults.size();
 
-	resultsToDisplay.resize(numberOfResults);
+	resultsToDisplay.resize(numberOfResults + 1);
+
+	std::ostringstream header;
+	header << std::left << std::setw(7) << "No."
+		<< std::setw(15) << "Level"
+		<< std::setw(10) << "Coin"
+		<< std::setw(10) << "Time"
+		<< "Username";
+	resultsToDisplay[0].setString(header.str());
+	resultsToDisplay[0].setFont(font);
+	resultsToDisplay[0].setFillColor(sf::Color::White);
+
 	for (int i = 0; i < numberOfResults; i++)
 	{
-		std::string toDisplay = std::to_string(i + 1) + ". Score: " + loadedResults.at(i).score + "   coins: " + loadedResults.at(i).coins + " time " + loadedResults.at(i).time + "    " + loadedResults.at(i).userName;
-		resultsToDisplay[i].setString(toDisplay);
+		std::ostringstream oss;
+		oss << std::left << std::setw(8) << std::to_string(i + 1)  // Cột số thứ tự
+			<< std::setw(13) << loadedResults[i].level                  // Cột "Level"
+			<< std::setw(12) << loadedResults[i].coin                   // Cột "Coin"
+			<< std::setw(11) << loadedResults[i].time                   // Cột "Time"
+			<< loadedResults[i].username;                               // Cột "Username"
 
-		resultsToDisplay[i].setFont(font);
-		resultsToDisplay[i].setFillColor(sf::Color::White);
+		resultsToDisplay[i+1].setString(oss.str());
+		resultsToDisplay[i+1].setFont(font);
+		resultsToDisplay[i+1].setFillColor(sf::Color::White);
 	}
 }
 
@@ -152,7 +143,7 @@ void MainMenu::drawScoreboardBackground(sf::RenderWindow& window, int center) //
 
 void MainMenu::drawScoreaboardDetail(sf::RenderWindow& window, int center) //draw scoreboard details
 {
-	for (int i = 0; i < NUMBER_OF_RESULTS; i++)
+	for (int i = 0; i < min(6, int(resultsToDisplay.size())); i++)
 	{
 		resultsToDisplay[i].setCharacterSize(23);
 		resultsToDisplay[i].setPosition(sf::Vector2f(center - 320, 400 + 50*i));
@@ -163,6 +154,7 @@ void MainMenu::drawScoreaboardDetail(sf::RenderWindow& window, int center) //dra
 void MainMenu::drawScoreboard(sf::RenderWindow& window, int center) //draws scoreboard
 {
 	drawScoreboardBackground(window, center); //background image for score
+	cout << "HERE" << endl;
 	drawScoreaboardDetail(window, center);
 }
 

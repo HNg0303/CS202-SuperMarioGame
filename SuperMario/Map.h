@@ -49,4 +49,3 @@ public:
 	void readMapState(string filename);
 	~Map();
 };
-

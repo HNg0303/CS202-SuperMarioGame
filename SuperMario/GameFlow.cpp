@@ -325,20 +325,6 @@ void GameFlow::handlePlayingGame()
 
 			if (sfEvent.type == sf::Event::KeyPressed)
 			{
-				/*if (sfEvent.key.code == sf::Keyboard::Left)
-				{
-					//chooseCharacterMenu.MoveLeft();
-				}
-
-				if (sfEvent.key.code == sf::Keyboard::Right)
-				{
-					//chooseCharacterMenu.MoveRight();
-				}
-
-				if (sfEvent.key.code == sf::Keyboard::Enter)
-				{
-					
-				}*/
 
 				if (sfEvent.key.code == sf::Keyboard::P)
 				{
@@ -361,6 +347,7 @@ void GameFlow::handlePlayingGame()
 		window->clear();
 		float deltaTime = gameClock.restart().asSeconds();
 		
+		cout << map->getIndex() << endl;
 		//this->view = game->view;
 		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
@@ -573,6 +560,8 @@ void GameFlow::handleAskRestart()
 
 void GameFlow::handleScoreboard()
 {
+	mainMenu.readResultsFromFile();
+	mainMenu.loadResultsToArray();
 	while (true)
 	{
 		mainMenu.drawScoreboard(*window, WINDOW_WIDTH / 2);
@@ -673,6 +662,7 @@ void GameFlow::handleWinGame()
 	sf::Sprite sprite;
 	sprite.setTexture(texture);
 	sprite.setPosition(0, 0);
+	sf::Time getTime = (pausedTime + clock.getElapsedTime());
 
 	//Load font
 	sf::Font font;
@@ -695,7 +685,7 @@ void GameFlow::handleWinGame()
 	setupText(coinInfo, font, formatValue(coins), 40, sf::Color::White);
 
 	setupText(timeLabel, font, "Time:", 40, sf::Color::Yellow);
-	setupText(timeInfo, font, formatTime(pausedTime + clock.getElapsedTime()), 40, sf::Color::White);
+	setupText(timeInfo, font, formatTime(getTime), 40, sf::Color::White);
 
 	setupText(usernameLabel, font, "Username:", 40, sf::Color::Yellow);
 	setupText(usernameText, font, "", 30, sf::Color::Black);
@@ -755,7 +745,8 @@ void GameFlow::handleWinGame()
 
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
 			{
-				//saveScoreboard(username, coins, pausedTime, character->lives);
+				transform(levelStr.begin(), levelStr.end(), levelStr.begin(), [](unsigned char c) { return std::tolower(c); });
+				mainMenu.saveResultsFromFile(levelStr, coins, getTime.asSeconds(), username);
 				curState = static_cast<int>(GameState::MainMenu);
 				return;
 			}

@@ -6,7 +6,7 @@
 #include "entity.h"
 #include "Animation.h"
 
-enum CharacterType {MARIO, LUIGI, CustomCharacter};
+enum CharacterType { MARIO, LUIGI, CustomCharacter };
 
 class Character : public ContactListener {
 public:
@@ -24,8 +24,8 @@ public:
     float transformTimer = 0.0f;
     void handleDeath();
     void setPos(Vector2f position);
-    virtual void OnBeginContact(b2Fixture* self, b2Fixture *other) override;
-    virtual void OnEndContact(b2Fixture* self, b2Fixture * other) override;
+    virtual void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
+    virtual void OnEndContact(b2Fixture* self, b2Fixture* other) override;
     virtual void setPosition(float x, float y);
     virtual Vector2f getPos();
     ~Character();
@@ -46,14 +46,14 @@ protected:
     Texture standAnimation{}, jumpAnimation{};
     Animation runAnimation, deathAnimation;
     Sound jumpSFX{};
-    
+
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.
     //float angle{};// => Use velocity in b2_body.
 };
 
 
 class CharacterFactory {
-public: 
+public:
     static Character* createCharacter(CharacterType type);
 };
 
@@ -74,5 +74,4 @@ public:
     void Begin() override;
     void Update(float& deltaTime) override;
 };
-
 
