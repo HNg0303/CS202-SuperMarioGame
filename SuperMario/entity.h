@@ -8,7 +8,9 @@ extern vector<Entity*> onEntities; //For using on-screen entities
 void deleteEntity(Entity* entity);
 void clearEntities();
 
-class Entity // Drawable makes possible to use window.draw(object)
+
+//Composite Design Pattern
+class Entity 
 {
 public:
 
@@ -161,5 +163,15 @@ public:
 
 
 	~Elevator();
+};
+
+class Bowser : public Enemy {
+public:
+	Bowser(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
+		Enemy(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, y_end, size, coords) { }
+	float fireTime = 0.0f;
+	void Update(float deltaTime) override;
+
+	~Bowser();
 };
 

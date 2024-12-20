@@ -208,11 +208,16 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Block("lava", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	//if (z == GridColor::pipe)
 		//entity = new Block("pipe", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize*2.0f, cellSize*4.0f), Vector2f(x, y));
-	if (z == GridColor::fireBar) {
-		entity = new Elevator("fireBar", 0.0, 1.0f, (cellSize * x + cellSize / 2.0f), (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y - 5 * cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
-	}
+	//if (z == GridColor::fireBar) {
+		//entity = new Elevator("fireBar", 0.0, 1.0f, (cellSize * x + cellSize / 2.0f), (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y - 5 * cellSize / 2.0f), Vector2f(cellSize*0.8f, cellSize*0.8f), Vector2f(x, y));
+	//}
 	if (z == GridColor::shell)
-		entity = new Enemy("goombas", 0.5f, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+		//entity = new Enemy("goombas", 0.5f, 0.5f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+		entity = new Bowser("bowser", 0.5, 1.0f, (cellSize * x - 2 * cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::bowser) {
+		entity = new Bowser("bowser", 0.5, 1.0f, (cellSize * x - 2 * cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, 2.0f * cellSize), Vector2f(x, y));
+	}
+	
 	return entity;
 }
 

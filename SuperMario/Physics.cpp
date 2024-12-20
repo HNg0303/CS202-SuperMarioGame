@@ -114,7 +114,7 @@ void Physics::Init() {
 }
 
 void Physics::Update(float& deltaTime) {
-	world.Step( (float) 1/ (float) 60, 8, 3);
+    world.Step(deltaTime , 8, 3);
 }
 
 void Physics::draw(Renderer& renderer) {

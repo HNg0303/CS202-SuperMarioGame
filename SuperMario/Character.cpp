@@ -1,5 +1,4 @@
 #include "Character.h"
-using namespace std;
 
 Character* CharacterFactory::createCharacter(CharacterType type) {
     switch (type) {
@@ -27,6 +26,11 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         handleDeath();
         return;
     }
+    if (data->type == FixtureDataType::Entity && (data->entity->getName() == "flame")) {
+        data->entity->markDeleted();
+        handleDeath();
+        return;
+    }
     if (headFixture == self && data->type == FixtureDataType::MapTile && data->entity->getName() == "qblock") {
         data->entity->markDeleted();
         Entity* star = new PowerUp("star", 0.3, data->entity->position.x, data->entity->position.y - 1.0f, data->entity->size, Vector2f(data->entity->position.x, data->entity->position.y - 1.0f));
@@ -39,9 +43,10 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         onGround++;
     }
     else if (data->type == FixtureDataType::Entity && data->entity && data->entity->getName() == "coin") {
-        data->entity->markDeleted();
-        //deleteEntity(data->entity);
-        cout << "Coin: " << ++coin << endl;
+        if (!data->entity->deleted) {
+            data->entity->markDeleted();
+            cout << "Coin: " << ++coin << endl;
+        }
     }
     else if (data->entity && data->type == FixtureDataType::Enemy && data->entity->getName() == "fireBar") {
         handleDeath();
@@ -230,11 +235,17 @@ void Mario::Begin() {
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.5f), 0.0f);
+    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
+
+    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f*(scale)), 0.0f);
+    //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
+    fixtureDef.shape = &polygonShape;
+    fixtureDef.isSensor = true;
+    headFixture = dynamicBody->CreateFixture(&fixtureDef);
     cout << "Initialize Mario Body successfully !!!!!" << endl;
 }
 
@@ -272,7 +283,7 @@ void Mario::Update(float& deltaTime)
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
         drawingTexture = Resources::textures["marioflamethrow.png"];
-        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x - 150.0f, position.x + 150.0f, position.y + 0.2f, position.y+1000, Vector2f(2.0f, 1.0f), position);
+        Entity* flame = new Flame("flame", 0.5, 3.0f, position.x - 150.0f, position.x + 150.0f, position.y + 0.2f, position.y+1000, Vector2f(2.0f, 1.0f), position);
         //Flame(string name_i, double frameDuration_i, float speed_i, float start, float end, float y, Vector2f size, Vector2f coords) :
         //    Moveable(name_i, frameDuration_i, speed_i, start, end, y, coords) {
         //Flame(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
@@ -498,11 +509,19 @@ void Luigi::Begin() {
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.5f), 0.0f);
+    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f * (scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
+
+    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f * (scale)), 0.0f);
+    //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
+    fixtureDef.shape = &polygonShape;
+    fixtureDef.isSensor = true;
+    headFixture = dynamicBody->CreateFixture(&fixtureDef);
+
+    cout << "Initialize Luigi successfully !" << endl;
 }
 
 void Luigi::Update(float& deltaTime)
@@ -537,12 +556,14 @@ void Luigi::Update(float& deltaTime)
     b2Vec2 velocity = dynamicBody->GetLinearVelocity();
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
-        Entity* flame = new Flame("flame", 0.5, 0.3f, position.x + 3.0f, position.x + 150.0f, position.y, position.y, Vector2f(2.0f, 1.0f), position);
+        Entity* flame = new Flame("flame", 0.5, 3.0f, position.x - 150.0f, position.x + 150.0f, position.y + 0.2f, position.y + 1000, Vector2f(2.0f, 1.0f), position);
         drawingTexture = Resources::textures["luigiflamethrow.png"];
+        flame->faceLeft = this->faceLeft;
         flame->Begin();
         onEntities.push_back(flame);
         changeStateCounter = 0;
-        //transform = true;
+        transformTimer += 1.0f;
+        transform = true;
     }
     if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
     {

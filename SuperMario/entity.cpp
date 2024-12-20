@@ -82,8 +82,9 @@ void Moveable::Update(float deltaTime)
 			this->body = nullptr;
 		}
 		destroyingTimer += deltaTime;
-		if (destroyingTimer >= 1.5f)
+		if (destroyingTimer >= 1.5f) {
 			deleteEntity(this);
+		}
 		return;
 	}
 	if (body) {
@@ -107,15 +108,12 @@ void Moveable::move()
 	//cout << "Im moving !!" << endl;
 	//position.x += speed * direction;
 	b2Vec2 velocity = body->GetLinearVelocity();
-	if (!y_direction) {
+	//velocity.x = 0.0f;
+	//velocity.y = 0.0f;
+	if (velocity.x <= abs(2.0f))
 		velocity.x += speed * x_direction;
-		velocity.y = 0.0f;
-	}
-	if (!x_direction) {
+	if (velocity.y <= abs(2.0f))
 		velocity.y += speed * y_direction;
-		velocity.x = 0.0f;
-	}
-	//velocity.y += speed * y_direction;
 	body->SetLinearVelocity(velocity);  // Update the body's velocity
 	checkAndChangeDirection();
 }
@@ -132,14 +130,17 @@ void Moveable::checkAndChangeDirection()
 
 	// Reverse direction if bounds are exceeded
 	bool outOfBoundX = body->GetPosition().x <= xBound.first || body->GetPosition().x >= xBound.second;
-	bool outOfBoundY = body->GetPosition().y > yBound.first || body->GetPosition().y < yBound.second;
+	bool outOfBoundY = body->GetPosition().y >= yBound.first || body->GetPosition().y <= yBound.second;
 	b2Vec2 velocity = body->GetLinearVelocity();
 	if (outOfBoundX) {
 		x_direction = -x_direction;
+		velocity.x = 0.0f;
 	}
 	if (outOfBoundY) {
 		y_direction = -y_direction;
+		velocity.y = 0.0f;
 	}
+	body->SetLinearVelocity(velocity);
 }
 
 
@@ -152,13 +153,11 @@ void Unmoveable::Update(float deltaTime)
 	}
 	if (!body) Begin();
 	if (body) {
-		//std::cout << "unmoveable" ;
-		//std::cout << position.x << " " << position.y;
+		position = Vector2f(body->GetPosition().x, body->GetPosition().y);
 		if (clock.getElapsedTime().asSeconds() > frameDuration)
 		{
 			currentFrame = (currentFrame + 1) % frames.size();
 			clock.restart();
-			//std::cout << "check frame " << currentFrame << " " << frames.size() << '\n';
 		}
 	}
 }
@@ -243,7 +242,6 @@ void PowerUp::Begin() {
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &shape;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
-	//fixtureDef.isSensor = true;
 	fixtureDef.density = 1.0f;
 	fixtureDef.friction = 0.0f;
 
@@ -274,8 +272,11 @@ void Enemy::Begin() {
 	body = Physics::world.CreateBody(&bodyDef);
 
 	b2CircleShape circle;
-	circle.m_p.Set(0.0f, 0.2f);
+	circle.m_p.Set(0.0f, 0.1f);
 	circle.m_radius = 0.3f;
+
+	b2PolygonShape rect;
+	rect.SetAsBox(size.x / 2.0f, (size.y - 0.2f) / 2.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
@@ -283,6 +284,11 @@ void Enemy::Begin() {
 	fixtureDef.friction = 0.0f;
 	fixtureDef.density = 1.0f;
 	fixture = body->CreateFixture(&fixtureDef);
+
+	fixtureDef.shape = &rect;
+	fixtureDef.isSensor = true;
+
+	body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 }
 
 void Enemy::OnBeginContact(b2Fixture* self, b2Fixture* other) {
@@ -293,10 +299,10 @@ void Enemy::OnBeginContact(b2Fixture* self, b2Fixture* other) {
 	FixtureData* otherData = reinterpret_cast<FixtureData*> (other->GetUserData().pointer);
 	FixtureData* selfData = reinterpret_cast<FixtureData*> (self->GetUserData().pointer);
 	if (!otherData) return;
-	if (fixture == self) {
-		if (otherData->type == FixtureDataType::Enemy || otherData->type == FixtureDataType::MapTile) {
+	if (self == fixture) {
+		if (otherData->type == FixtureDataType::Enemy) {
 			x_direction = -x_direction;
-			//y_direction = -y_direction;
+			y_direction = -y_direction;
 		}
 	}
 }
@@ -315,16 +321,14 @@ void Enemy::Die() {
 	isDead = true;
 	deleted = true;
 	size.y = size.y / 5.0f;
-	position.y += size.y / 5.0f;
+	//position.y += size.y / 5.0f;
 }
 
 void Flame::Begin() {
 	fixtureData = new FixtureData();
-	//fixtureData->entity = this;
+	fixtureData->entity = this;
 	fixtureData->listener = this;
 	fixtureData->type = FixtureDataType::Entity;
-
-
 
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
@@ -363,7 +367,7 @@ void Flame::OnBeginContact(b2Fixture* self, b2Fixture* other) {
 				cout << "Kill " << enemy->getName() << endl;
 			}
 		}
-		else if (otherData->type == FixtureDataType::MapTile || otherData->type == FixtureDataType::Character) {
+		else if (otherData->type == FixtureDataType::MapTile) {
 			isDead = true;
 			deleted = true;
 			cout << "Your flame is extinguished !" << endl;
@@ -422,6 +426,29 @@ void Elevator::Begin()
 }
 
 Elevator:: ~Elevator() {
+	if (body) {
+		Physics::world.DestroyBody(body);
+		body = nullptr;
+	}
+	delete fixtureData;
+	fixtureData = nullptr;
+	cout << "Successfully Destroyed Enemy !" << endl;
+}
+
+void Bowser::Update(float deltaTime) {
+	fireTime += deltaTime;
+	if (fireTime > 5.0f) {
+		Entity* flame = new Flame("flame", 0.5, 2.0f, body->GetPosition().x - 150.0f, body->GetPosition().x + 150.0f, body->GetPosition().y - 0.5f, body->GetPosition().y + 1000, Vector2f(2.0f, 1.0f), Vector2f(body->GetPosition().x, body->GetPosition().y));
+		flame->faceLeft = true;
+		flame->Begin();
+		onEntities.push_back(flame);
+		fireTime = 0.0f;
+		return;
+	}
+	Moveable::Update(deltaTime);
+}
+
+Bowser :: ~Bowser() {
 	if (body) {
 		Physics::world.DestroyBody(body);
 		body = nullptr;
