@@ -183,20 +183,35 @@ void ChooseLevelMenu::drawChooseLevel(sf::RenderWindow& window, float x, float y
 {
 	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/chooseLevel.png"));
 	drawMenuBackground(window, texture, 0, 0);
-	drawItemSelection(window, texts, 60, x, y, 662, 80, 150);
+	drawItemSelectionVertical(window, texts, 60, x, y, 662, 80, 150);
 }
+
+void ChooseThemes::drawChooseThemes(sf::RenderWindow& window, float x, float y) //background for choosing themes
+{
+	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/chooseThemes.png"));
+	drawCenterMenuBackground(window, texture);
+	sf::Text text;
+	text.setString("Your current themes: ");
+	text.setCharacterSize(24);
+	text.setPosition({ 70,270 });
+	text.setFillColor(sf::Color::White);
+	window.draw(text);
+
+	drawItemSelectionVertical(window, texts, 24, x, y, 553, 50, 150);
+}
+
 void MainMenu::drawMainMenu(sf::RenderWindow& window, float x, float y) //draw menu screen
 {
 	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/MainMenu.png"));
 	drawMenuBackground(window, texture, 0, 0);
-	drawItemSelection(window, texts, 35, x, y, 553, 50, 140);
+	drawItemSelectionVertical(window, texts, 35, x, y, 553, 50, 140);
 }
 
 void PauseMenu::drawPauseMenu(sf::RenderWindow& window, float x, float y)
 {
 	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/PauseMenu.png"));
 	drawMenuBackground(window, texture, x, y);
-	drawItemSelection(window, texts, 40, x, y, 630, 70, 160);
+	drawItemSelectionVertical(window, texts, 40, x, y, 630, 70, 160);
 }
 
 void AskRestart::drawAskRestart(sf::RenderWindow& window, float x, float y)
@@ -253,7 +268,7 @@ void Menu::drawCenterMenuBackground(sf::RenderWindow& window, sf::Texture textur
 }
 
 //draw vertically item selection
-void Menu::drawItemSelection(sf::RenderWindow& window, std::vector<sf::Text>& texts, float size, float x, float y, float width, float space, float Ypos)
+void Menu::drawItemSelectionVertical(sf::RenderWindow& window, std::vector<sf::Text>& texts, float size, float x, float y, float width, float space, float Ypos)
 { 
 	//{x,y}
 	//space: between lines
@@ -265,6 +280,21 @@ void Menu::drawItemSelection(sf::RenderWindow& window, std::vector<sf::Text>& te
 		texts[i].setCharacterSize(size);
 		float X = x + (width - texts[i].getGlobalBounds().width) / (2.0);
 		texts[i].setPosition(sf::Vector2f(X, y + Ypos + space * i));
+		window.draw(texts[i]);
+	}
+}
+void Menu::drawItemSelectionHorizontal(sf::RenderWindow& window, std::vector<sf::Text>& texts, float size, float x, float y, float height, float space, float Xpos)
+{
+	// {x, y} is the starting point of the text area
+	// space: distance between items horizontally
+	// Xpos: x position of the first item
+
+	int num = texts.size();
+	for (int i = 0; i < num; ++i)
+	{
+		texts[i].setCharacterSize(size);
+		float Y = y + (height - texts[i].getGlobalBounds().height) / 2.0;
+		texts[i].setPosition(sf::Vector2f(x + Xpos + space * i, Y));
 		window.draw(texts[i]);
 	}
 }

@@ -43,7 +43,8 @@ public:
 	
 	void drawMenuBackground(sf::RenderWindow& window, sf::Texture texture, float x, float y);
 	void drawCenterMenuBackground(sf::RenderWindow& window, sf::Texture texture);
-	void drawItemSelection(sf::RenderWindow& window, std::vector<sf::Text> &texts, float size, float x, float y, float width, float space, float Ypos);
+	void drawItemSelectionVertical(sf::RenderWindow& window, std::vector<sf::Text> &texts, float size, float x, float y, float width, float space, float Ypos);
+	void drawItemSelectionHorizontal(sf::RenderWindow& window, std::vector<sf::Text>& texts, float size, float x, float y, float height, float space, float Xpos);
 	sf::Texture loadTexture(std::string name);
 };
 
@@ -55,7 +56,7 @@ private:
 	std::vector<sf::Text> resultsToDisplay;
 
 public:
-	MainMenu(): Menu(){}
+	MainMenu(): Menu() {}
 	MainMenu(int n, std::vector<std::string> textVec) : Menu(n, textVec){}
 	
 	void drawMainMenu(sf::RenderWindow& window, float x, float y); //draw main menu itself
@@ -65,7 +66,7 @@ public:
 	void drawScoreboard(sf::RenderWindow& window, int center);
 	void drawScoreboardBackground(sf::RenderWindow& window, int center);
 	void drawScoreaboardDetail(sf::RenderWindow& window, int center);
-
+	
 	//handling scoreboard
 	void saveResultsFromFile(string level, int coin, int time, string name);
 	void readResultsFromFile();
@@ -100,4 +101,11 @@ class AskRestart : public Menu
 public:
 	AskRestart(int n, std::vector<std::string> textVec) : Menu(n, textVec) {}
 	void drawAskRestart(sf::RenderWindow& window, float x, float y);
+};
+
+class ChooseThemes : public Menu
+{
+public:
+	ChooseThemes(int n, std::vector<std::string> textVec) : Menu(n, textVec) {}
+	void drawChooseThemes(sf::RenderWindow& window, float x, float y);
 };
