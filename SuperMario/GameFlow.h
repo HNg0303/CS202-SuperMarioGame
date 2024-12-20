@@ -32,7 +32,7 @@ private:
 		sfEvent()
 	{
 		loadPausedTimeToFile();
-		//loadMobs();
+		
 		mainMenu.loadResultsToArray();
 		//game->loadEntities(entities);
 		
@@ -131,12 +131,8 @@ public:
 	std::string formatValue(int value);
 	void drawText(sf::Text& labelText, sf::Text& valueText);
 
-	//Mobs
-	//void loadMobs();
-	//void drawMobs();
 
 	std::vector<sf::Texture> loadFrame(std::string folderPath);
-	//void loadFrame(std::string folderPath, sf::RenderWindow& window);
 
 
 	//Clock

@@ -154,7 +154,6 @@ void MainMenu::drawScoreaboardDetail(sf::RenderWindow& window, int center) //dra
 void MainMenu::drawScoreboard(sf::RenderWindow& window, int center) //draws scoreboard
 {
 	drawScoreboardBackground(window, center); //background image for score
-	cout << "HERE" << endl;
 	drawScoreaboardDetail(window, center);
 }
 
@@ -175,7 +174,7 @@ void ChooseCharacterMenu::drawChooseCharacter(sf::RenderWindow& window, int cent
 	window.draw(texts[0]);
 
 	texts[1].setCharacterSize(50);
-	texts[1].setPosition(sf::Vector2f(890, H));
+	texts[1].setPosition(sf::Vector2f(880, H));
 	window.draw(texts[1]);
 }
 

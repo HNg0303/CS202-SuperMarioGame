@@ -13,81 +13,6 @@ GameFlow::~GameFlow()
 	delete this->window;
 }
 
-/*
-void GameFlow::loadMobs()
-{
-	std::string line;
-	float x1, x2, y, speed;
-	std::fstream infile;
-	std::string mobName;
-
-	entities.clear();
-	
-	infile.open("assets/txt/mobs.txt");
-	if (!infile) {
-		std::cout << "can not open file to read results from";
-	}
-
-	while (getline(infile, line)) {
-		{
-			std::stringstream ss(line);
-			ss >> mobName;
-			std::string temp;
-			ss >> x1;
-			ss >> y;
-			ss >> x2;
-			ss >> speed;
-
-			//std::string entityName[11] = { "cheep","coin","flame","goombas","koopas","levelUp","plant1","plant2","plant3","qblock","star","winning","princess_winning" };
-
-			if (mobName.compare("goombas") == 0)
-				entities.push_back(std::make_unique<Moveable>("goombas", 0.5, speed, x1, x2, y));
-
-			else if (mobName.compare("koopas") == 0)
-				entities.push_back(std::make_unique<Moveable>("koopas", 0.5, speed, x1, x2, y));
-
-			else if (mobName.compare("cheep") == 0)
-				entities.push_back(std::make_unique<Moveable>("cheep", 0.5, speed, x1, x2, y));
-
-			else if (mobName.compare("flame") == 0)
-				entities.push_back(std::make_unique<Moveable>("flame", 0.5, speed, x1, x2, y));
-
-			else if (mobName.compare("coin") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("coin", 0.3, x1, y));
-
-			else if (mobName.compare("mushroom") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("mushroom", 0.3, x1, y));
-
-			else if (mobName.compare("levelUp") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("levelUp", 0.3, x1, y));
-
-			else if (mobName.compare("plant1") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("plant1", 0.3, x1, y));
-
-			else if (mobName.compare("plant2") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("plant2", 0.3, x1, y));
-
-			else if (mobName.compare("plant3") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("plant3", 0.3, x1, y));
-
-			else if (mobName.compare("qblock") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("qblock", 0.2, x1, y));
-
-			else if (mobName.compare("star") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("star", 0.3, x1, y));
-
-			else if (mobName.compare("winning") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("winning", 0.05, x1, y));
-
-			else if (mobName.compare("princess_winning") == 0)
-				entities.push_back(std::make_unique<Unmoveable>("princess_winning", 0.5, x1, y));
-
-		}
-	}
-
-	infile.close();
-}*/
-
 void GameFlow::loadFont(sf::Font& font)
 {
 	try
@@ -507,9 +432,6 @@ void GameFlow::handleChooseThemes()
 		window->draw(themeText);
 		window->draw(sprite);
 
-
-		std::cout << "LabelText Position: " << labelText.getPosition().x << ", " << labelText.getPosition().y << std::endl;
-		std::cout << "ThemeText Position: " << themeText.getPosition().x << ", " << themeText.getPosition().y << std::endl;
 
 		window->display();
 
