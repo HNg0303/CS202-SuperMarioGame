@@ -44,7 +44,7 @@ protected:
 
     Texture drawingTexture{};
     Texture standAnimation{}, jumpAnimation{};
-    Animation runAnimation, deathAnimation;
+    Animation runAnimation, changeStateAnimation;
     Sound jumpSFX{};
 
     //float spd[2]; //Acceleration and Speed on the x-axis and y-axis => Use velocity.
@@ -64,6 +64,7 @@ public:
     void Draw(Renderer& renderer) override;
     void Begin() override;
     void Update(float& deltaTime) override;
+    void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
 };
 
 
@@ -73,5 +74,6 @@ public:
     void Draw(Renderer& renderer) override;
     void Begin() override;
     void Update(float& deltaTime) override;
+    void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
 };
 
