@@ -237,6 +237,7 @@ void GameFlow::handlePlayingGame()
 		cout << "Restart successfully !" << endl;
 		this->game->Begin(*window);
 		isRestarted = false;
+		cout << "Map: " << chooseLevel.GetPressedItem() << "-" << mapState << endl;
 	}
 	if (!game) {
 	this->game = new Game(this->map, this->character, this->camera);
@@ -296,7 +297,7 @@ void GameFlow::handlePlayingGame()
 					mapState = 0;
 					return;
 				}
-				else mapState++;
+				else mapState+=1;
 				curState = static_cast <int>(GameState::PlayingGame);
 			}
 			isRestarted = true;
