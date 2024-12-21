@@ -123,11 +123,11 @@ void MainMenu::loadResultsToArray() // Set scoreboard details
 	for (int i = 0; i < numberOfResults; i++)
 	{
 		std::ostringstream oss;
-		oss << std::left << std::setw(8) << std::to_string(i + 1)  // Cột số thứ tự
-			<< std::setw(13) << loadedResults[i].level                  // Cột "Level"
-			<< std::setw(12) << loadedResults[i].coin                   // Cột "Coin"
-			<< std::setw(11) << loadedResults[i].time                   // Cột "Time"
-			<< loadedResults[i].username;                               // Cột "Username"
+		oss << std::right << std::to_string(i + 1)  // Cột số thứ tự
+			<< std::setw(12) << loadedResults[i].level                  // Cột "Level"
+			<< std::setw(17 - loadedResults[i].level.length()) << loadedResults[i].coin                   // Cột "Coin"
+			<< std::setw(13 - to_string(loadedResults[i].coin).length()) << loadedResults[i].time                   // Cột "Time"
+			<< std::setw(19 - to_string(loadedResults[i].time).length()) << loadedResults[i].username;                               // Cột "Username"
 
 		resultsToDisplay[i+1].setString(oss.str());
 		resultsToDisplay[i+1].setFont(font);
