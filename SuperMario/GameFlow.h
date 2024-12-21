@@ -35,6 +35,7 @@ private:
 		chooseLevel(3, { "EASY","MEDIUM","HARD" }),
 		pauseMenu(3, { "CONTINUE", "RESTART","BACK TO MAIN MENU" }),
 		askRestart(2, { "YES","NO" }),
+		askNextLevel(2, { "NEXT LEVEL","MAIN MENU" }),
 		sfEvent(),
 		isPassed(3, vector<bool>(3, 0)),
 		lives(3, 3),
@@ -72,7 +73,8 @@ public:
 		PlayingGame,
 		LooseGame,
 		WinGame,
-		Themes
+		Themes,
+		AskNextLevel
 	};
 	
 	static GameFlow* getInstance();
@@ -97,6 +99,7 @@ public:
 	ChooseLevelMenu chooseLevel;
 	PauseMenu pauseMenu;
 	AskRestart askRestart;
+	AskNextLevel askNextLevel;
 	ChooseThemes chooseThemes;
 	
 	sf::Event sfEvent;
@@ -122,6 +125,7 @@ public:
 	void handlePlayingGame();
 	void handleChooseLevel();
 	void handleAskRestart();
+	void handleAskNextLevel();
 	void handleLooseGame();
 	void handleWinGame();
 	void handleChooseThemes();

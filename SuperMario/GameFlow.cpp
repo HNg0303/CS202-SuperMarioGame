@@ -232,9 +232,12 @@ void GameFlow::handleMainMenu() //handles controls in menu
 
 void GameFlow::handlePlayingGame()
 {
+	cout << "CHECK TIME " << formatTime(pausedTime)<<" "<<formatTime(pausedTime + clock.getElapsedTime()) << endl;
+	clock.restart();
+	cout << "CHECK TIME " << formatTime(pausedTime)<<" "<<formatTime(pausedTime + clock.getElapsedTime()) << endl;
 	while (window->isOpen())
 	{
-		clock.restart();
+		
 		if (isRestarted) {
 			Restart();
 			this->game = new Game(this->map, this->character, this->camera);
@@ -278,27 +281,32 @@ void GameFlow::handlePlayingGame()
 			}
 		}
 
-		
+
 		// Render
 		window->clear();
 		float deltaTime = gameClock.restart().asSeconds();
-		
+
 		//cout << map->getIndex() << endl;
 		//this->view = game->view;
 		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
 		this->lives[chooseLevel.GetPressedItem()] = character->lives;
 		if (game->win) {
+			
 			if (mapState == 2) {
-					curState = static_cast <int>(GameState::WinGame);
-					isPassed[chooseLevel.GetPressedItem()][mapState] = true;
-					return;
+				curState = static_cast <int>(GameState::WinGame);
+				isPassed[chooseLevel.GetPressedItem()][mapState] = true;
+				return;
 			}
 			else {
+				pauseClock();
+
 				isPassed[chooseLevel.GetPressedItem()][mapState] = true;
 				mapState += 1;
 				curState = static_cast <int>(GameState::PlayingGame);
 				isRestarted = true;
+				cout << "CHECK TIME " << formatTime(pausedTime + clock.getElapsedTime()) << endl;
+
 				return;
 			}
 		}
@@ -313,8 +321,8 @@ void GameFlow::handlePlayingGame()
 		coins[chooseLevel.GetPressedItem()] = game->getCoin();
 		handleGameInfo();
 		//handleEntity();
-		
-		
+
+
 		window->display();
 	}
 }
@@ -582,6 +590,51 @@ void GameFlow::handleAskRestart()
 	}
 }
 
+void GameFlow::handleAskNextLevel()
+{
+	cout << "came here already" << endl;
+	while (true)
+	{
+		//window->clear();
+		askNextLevel.drawAskNextLevel(*window, 290, 297);
+		window->display();
+
+		while (window->pollEvent(sfEvent))
+		{
+			handleClosed();
+
+			if (sfEvent.type == sf::Event::KeyPressed)
+			{
+				askNextLevel.handleUpDown(sfEvent);
+
+				if (sfEvent.key.code == sf::Keyboard::Enter)
+				{
+					if (askNextLevel.GetPressedItem() == 0) //next level
+					{
+						chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+						isRestarted = true;
+						mapState = 0;
+						curState = static_cast<int>(GameState::PlayingGame);
+						return;
+					}
+
+					if (askNextLevel.GetPressedItem() == 1) //main menu
+					{
+						curState = static_cast<int>(GameState::MainMenu);
+						return;
+					}
+				}
+
+				if (sfEvent.key.code == sf::Keyboard::Escape)
+				{
+					curState = static_cast<int>(GameState::MainMenu);
+					return;
+				}
+			}
+		}
+	}
+}
+
 void GameFlow::handleScoreboard()
 {
 	mainMenu.readResultsFromFile();
@@ -723,7 +776,7 @@ void GameFlow::handleWinGame()
 
 	//Set Position
 	float centerX = WINDOW_WIDTH / 2 - 300;
-	float startY = WINDOW_HEIGHT / 2 - 50;
+	float startY = WINDOW_HEIGHT / 2 - 50 - 30;
 	float padding1 = 200;
 	float padding2 = 50;
 
@@ -751,6 +804,12 @@ void GameFlow::handleWinGame()
 		{
 			if (event.type == sf::Event::Closed)
 			{
+				transform(levelStr.begin(), levelStr.end(), levelStr.begin(), [](unsigned char c) { return std::tolower(c); });
+				if (username == "")
+					username = "anonymous";
+
+				mainMenu.saveResultsFromFile(levelStr, coins[level], getTime.asSeconds(), username);
+
 				window->close();
 				return;
 			}
@@ -771,15 +830,18 @@ void GameFlow::handleWinGame()
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
 			{
 				transform(levelStr.begin(), levelStr.end(), levelStr.begin(), [](unsigned char c) { return std::tolower(c); });
+				if (username == "")
+					username = "anonymous";
+
 				mainMenu.saveResultsFromFile(levelStr, coins[level], getTime.asSeconds(), username);
-				chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+
+				cout << "still here" << endl;
 				if (chooseLevel.GetPressedItem() > 2) {
 					curState = static_cast<int>(GameState::MainMenu);
 					return;
 				}
-				isRestarted = true;
-				mapState = 0;
-				curState = static_cast<int>(GameState::PlayingGame);
+
+				curState = static_cast<int>(GameState::AskNextLevel);
 				return;
 			}
 		}
@@ -895,6 +957,18 @@ void GameFlow::run()
 			music.setVolume(40);
 			music.play();
 			handleWinGame();
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.setLoop(true);
+			music.setVolume(40);
+			music.play();
+			break;
+		
+		case GameState::AskNextLevel:
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/worldclear.wav"));
+			music.setLoop(false);
+			music.setVolume(40);
+			music.play();
+			handleAskNextLevel();
 			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
 			music.setLoop(true);
 			music.setVolume(40);

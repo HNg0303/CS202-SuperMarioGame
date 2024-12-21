@@ -103,6 +103,14 @@ public:
 	void drawAskRestart(sf::RenderWindow& window, float x, float y);
 };
 
+class AskNextLevel : public Menu
+{
+public:
+	AskNextLevel(int n, std::vector<std::string> textVec) : Menu(n, textVec) {}
+	void drawAskNextLevel(sf::RenderWindow& window, float x, float y);
+};
+
+
 class ChooseThemes : public Menu
 {
 public:

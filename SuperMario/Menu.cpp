@@ -223,6 +223,22 @@ void AskRestart::drawAskRestart(sf::RenderWindow& window, float x, float y)
 	window.draw(texts[1]);
 }
 
+void AskNextLevel::drawAskNextLevel(sf::RenderWindow& window, float x, float y)
+{
+	sf::Texture texture = loadTexture(convertToUnixPath(fs::current_path().string() + "/Resource/asset/image/AskNextLevel.png"));
+	drawMenuBackground(window, texture, x, y);
+
+	float X = 490;
+	float Y = 500;
+	texts[0].setCharacterSize(43);
+	texts[0].setPosition(sf::Vector2f(X, Y));
+	window.draw(texts[0]);
+
+	texts[1].setCharacterSize(43);
+	texts[1].setPosition(sf::Vector2f(X, Y + 80));
+	window.draw(texts[1]);
+}
+
 sf::Texture Menu::loadTexture(std::string name)
 {
 	sf::Texture texture;

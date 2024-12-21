@@ -197,7 +197,7 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Block("block", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::tile)
 		entity = new Block("tile", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
-	if (z == GridColor::stone) //new
+	if (z == GridColor::stone) 
 		entity = new Block("stone", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::woodBlock)
 		entity = new Block("woodBlock", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
