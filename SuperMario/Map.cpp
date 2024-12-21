@@ -193,8 +193,12 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 	Entity* entity = nullptr;
 	if (z == GridColor::coin)
 		entity = new Coin("coin", 0.3, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
-	if (z == GridColor::tile)
+	if (z == GridColor::block)
 		entity = new Block("block", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::tile)
+		entity = new Block("title", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::stone) //new
+		entity = new Block("stone", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::woodBlock)
 		entity = new Block("woodBlock", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::bridge)
@@ -216,9 +220,14 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 	if (z == GridColor::spikyTurtle)
 		entity = new Block("spikeyTurtle", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::lava1)
-		entity = new Block("lava", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
+		entity = new Block("lava2", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
+	if (z == GridColor::lava2)
+		entity = new Block("lava2", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
 	if (z == GridColor::spike)
 		entity = new Block("spike", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
+	if (z == GridColor::pipe)
+		entity = new Block("pipe", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize * 2.0f, cellSize * 4.0f), Vector2f(x, y));
+	
 	return entity;
 	/*
 	Entity* entity = nullptr;
