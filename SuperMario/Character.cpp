@@ -137,9 +137,15 @@ Mario::Mario(float x, float y) {
 
 void Mario::Draw(Renderer& renderer) {
     if (changeStateCounter == 0) //Small Mario.
-        renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
+    {
+        position.y += 0.4f;
+        renderer.Draw(drawingTexture, position, Vector2f(1.0f, 1.0f), 0, faceLeft);
+    }
     if (changeStateCounter == 1 || changeStateCounter == 2) //Big Mario
-        renderer.Draw(drawingTexture, position, Vector2f(1.2f, 2.4f), 0, faceLeft);
+    {
+        position.y += 0.03f;
+        renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
+    }
     else return;
 }
 
