@@ -141,7 +141,7 @@ void Mario::Draw(Renderer& renderer) {
         position.y += 0.4f;
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 1.0f), 0, faceLeft);
     }
-    if (changeStateCounter == 1 || changeStateCounter == 2) //Big Mario
+    if (changeStateCounter == 1 || changeStateCounter == 2)  //Big Mario
     {
         position.y += 0.03f;
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
