@@ -56,13 +56,13 @@ protected:
 
 class CharacterFactory {
 public:
-    static Character* createCharacter(CharacterType type);
+    static Character* createCharacter(CharacterType type, int lives = 3);
 };
 
 
 class Mario : public Character {
 public:
-    Mario(float x = 1.0f, float y = 1.0f); //set Position, Velocity and JumpVelocity
+    Mario(float x = 1.0f, float y = 1.0f, int lives = 3); //set Position, Velocity and JumpVelocity
     void Draw(Renderer& renderer) override;
     void Begin() override;
     void Update(float& deltaTime) override;
@@ -72,7 +72,7 @@ public:
 
 class Luigi : public Character {
 public:
-    Luigi(float x = 1.0f, float y = 1.0f);
+    Luigi(float x = 1.0f, float y = 1.0f, int lives = 3);
     void Draw(Renderer& renderer) override;
     void Begin() override;
     void Update(float& deltaTime) override;

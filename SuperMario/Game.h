@@ -23,6 +23,7 @@ private:
 public:
 	Game(Map* map, Character* character, Camera* camera);
 	~Game();
+	int coins = 0;
 	sf::View view;
 	bool win = false;
 	bool lose = false;

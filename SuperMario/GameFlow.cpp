@@ -229,13 +229,13 @@ void GameFlow::handleMainMenu() //handles controls in menu
 
 void GameFlow::handlePlayingGame()
 {
-	mapState = 0;
 	clock.restart();
 	if (isRestarted) {
 		Restart();
 		this->game = new Game(this->map, this->character, this->camera);
 		cout << "Restart successfully !" << endl;
 		this->game->Begin(*window);
+		game->coins = this->coins;
 		isRestarted = false;
 		cout << "Map: " << chooseLevel.GetPressedItem() << "-" << mapState << endl;
 	}
@@ -284,6 +284,7 @@ void GameFlow::handlePlayingGame()
 		//this->view = game->view;
 		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
+		this->lives = character->lives;
 		if (game->win) {
 			if (mapState == 2) 
 			{
@@ -294,6 +295,8 @@ void GameFlow::handlePlayingGame()
 				if (mapState == 2) {
 					curState = static_cast <int>(GameState::WinGame);
 					chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+					this->lives = 3;
+					this->coins = 0;
 					mapState = 0;
 					return;
 				}
@@ -305,6 +308,8 @@ void GameFlow::handlePlayingGame()
 		}
 		else if (game->lose) {
 			curState = static_cast <int>(GameState::LooseGame);
+			this->lives = 3;
+			this->coins = 0;
 			mapState = 0;
 			cout << "Loose Menu ! " << endl;
 			return;
@@ -940,6 +945,8 @@ std::vector<sf::Texture> GameFlow::loadFrame(std::string folderPath)
 
 void GameFlow::Restart() {
 	// Delete and recreate Map, Character, and Camera
+	//this->coins = game->getCoin();
+
 	if (map) {
 		delete map;
 		map = nullptr;
@@ -963,12 +970,12 @@ void GameFlow::Restart() {
 	
 	map = new Map(1.0f, chooseLevel.GetPressedItem(), 0, mapState);
 	if (chooseCharacterMenu.GetPressedItem() == 1)
-		character = CharacterFactory::createCharacter(LUIGI);
-	else character = CharacterFactory::createCharacter(MARIO);
+		character = CharacterFactory::createCharacter(LUIGI, this->lives);
+	else character = CharacterFactory::createCharacter(MARIO, this->lives);
 
 	camera = new Camera(30.0f);
 	isRestarted = true;
-	coins = 0;
+	
 }
 
 void GameFlow::Start() {

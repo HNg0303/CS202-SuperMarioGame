@@ -118,7 +118,7 @@ void Game :: Render(Renderer& renderer, Resources& resource) {
 }
 
 int Game::getCoin() {
-	return this->character->coin;
+	return this->character->coin + this->coins;
 }
 
 /*void Game::deleteEntities(Entity* entity) {

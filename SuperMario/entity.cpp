@@ -62,7 +62,7 @@ void Entity::draw(sf::RenderWindow* window, const Vector2f& size)
 		sf::Vector2f origin(frames[currentFrame].getSize().x / 2.0f, frames[currentFrame].getSize().y / 2.0f);
 		sprite.setOrigin(origin);
 		Vector2f scale;
-		if (name == "goal") scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y * 2.0f / frames[currentFrame].getSize().y);
+		if (name == "goal") scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
 		else scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
 		sprite.setScale(scale);
 		//sprite.setScale(2.f * direction, 2.f);
@@ -119,7 +119,7 @@ void Moveable::move()
 	if (abs(velocity.x) <= 0.02f) {
 		x_direction = -1.0f*x_direction;
 	}
-	if (abs(velocity.y) <= 0.02f) {
+	if (abs(velocity.y) <= 0.1f) {
 		y_direction = -1.0f*y_direction;
 	}
 
@@ -153,11 +153,11 @@ void Moveable::checkAndChangeDirection()
 		//velocity.x = 0.0f;
 	}
 	if (body->GetPosition().y >= yBound.first && y_direction != 0.0f) {
-		y_direction = 1.0f;
+		y_direction = -1.0f;
 		//velocity.y = 0.0f;
 	}
 	if (body->GetPosition().y <= yBound.second && y_direction != 0.0f) {
-		y_direction = -1.0f;
+		y_direction = 1.0f;
 		//velocity.y = 0.0f;
 	}
 	//body->SetLinearVelocity(velocity);
@@ -300,10 +300,10 @@ void Enemy::Begin() {
 	y_direction = 0.0f;
 	b2CircleShape circle;
 	//circle.m_p.Set(0.0f, 0.0f);
-	circle.m_radius = 0.4f;
+	circle.m_radius = 0.45f;
 
 	b2PolygonShape rect;
-	rect.SetAsBox(size.x / 2.0f, (size.y - 0.8f) / 2.0f, b2Vec2(0.0f, size.y / 2.0f), 0.0f);
+	rect.SetAsBox(size.x / 2.0f - 0.2f, (size.y - 0.8f) / 2.0f, b2Vec2(0.0f, size.y / 2.0f), 0.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
@@ -311,12 +311,12 @@ void Enemy::Begin() {
 	fixtureDef.friction = 0.0f;
 	fixtureDef.density = 1.0f;
 	body->CreateFixture(&fixtureDef);
-
+	
 	fixtureDef.shape = &rect;
 	fixtureDef.isSensor = true;
 	fixture = body->CreateFixture(&fixtureDef);
 
-	body->SetLinearVelocity(b2Vec2(0.3f, 0.0f));
+	body->SetLinearVelocity(b2Vec2(speed * x_direction, 0.0f));
 }
 
 void Enemy::OnBeginContact(b2Fixture* self, b2Fixture* other) {
@@ -372,7 +372,7 @@ void Flame::Begin() {
 	body = Physics::world.CreateBody(&bodyDef);
 
 	b2PolygonShape shape;
-	shape.SetAsBox(size.x / 2, size.y / 2);
+	shape.SetAsBox(size.x / 2.0f, size.y / 2.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
@@ -449,7 +449,7 @@ void Elevator::Begin()
 	body = Physics::world.CreateBody(&bodyDef);
 	x_direction = 0.0f;
 	b2PolygonShape shape;
-	shape.SetAsBox(size.x / 2, size.y / 2);
+	shape.SetAsBox(size.x / 2.0f, size.y / 2.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
@@ -471,12 +471,39 @@ Elevator:: ~Elevator() {
 	cout << "Successfully Destroyed Enemy !" << endl;
 }
 
+void Bowser::Begin() {
+	fixtureData = new FixtureData();
+	fixtureData->entity = this;
+	fixtureData->type = FixtureDataType::Enemy;
+
+
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(position.x, position.y);
+	bodyDef.fixedRotation = true;
+	body = Physics::world.CreateBody(&bodyDef);
+	y_direction = 0.0f;
+	b2PolygonShape shape;
+	shape.SetAsBox(size.x / 2.0f, size.y / 2.0f);
+
+	b2FixtureDef fixtureDef;
+	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
+	fixtureDef.shape = &shape;
+	fixtureDef.friction = 0.0f;
+	fixtureDef.density = 1.0f;
+	body->CreateFixture(&fixtureDef);
+
+	body->SetLinearVelocity(b2Vec2(speed * x_direction, 0.0f));
+}
+
 void Bowser::Update(float deltaTime) {
+	//cout << "Update Bowser !!!" << endl;
 	fireTime += deltaTime;
-	if (fireTime > 5.0f) {
-		Entity* flame = new Flame("flame", 0.5, 2.0f, body->GetPosition().x - 150.0f, body->GetPosition().x + 150.0f, body->GetPosition().y - 0.5f, body->GetPosition().y + 1000, Vector2f(2.0f, 1.0f), Vector2f(body->GetPosition().x, body->GetPosition().y));
+	if (fireTime > 4.0f) {
+		Entity* flame = new Flame("flame", 0.5, 5.0f, body->GetPosition().x - 151.0f, body->GetPosition().x + 200.0f, body->GetPosition().y, body->GetPosition().y + 1000.0f, Vector2f(2.0f, 1.0f), Vector2f(body->GetPosition().x, body->GetPosition().y));
 		flame->faceLeft = true;
 		flame->Begin();
+		cout << "Bowser has fire too !" << endl;
 		onEntities.push_back(flame);
 		fireTime = 0.0f;
 		return;
