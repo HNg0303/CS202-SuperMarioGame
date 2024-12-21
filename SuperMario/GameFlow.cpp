@@ -229,6 +229,7 @@ void GameFlow::handleMainMenu() //handles controls in menu
 
 void GameFlow::handlePlayingGame()
 {
+	mapState = 0;
 	clock.restart();
 	if (isRestarted) {
 		Restart();
@@ -283,14 +284,17 @@ void GameFlow::handlePlayingGame()
 		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
 		if (game->win) {
-			if (chooseLevel.GetPressedItem() == 2 && mapState == 2) {
+			if (mapState == 2) 
+			{
 				curState = static_cast <int>(GameState::WinGame);
 				return;
 			}
-			else {
-				if (mapState == 2)
-					chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
-				else mapState++;
+			else 
+			{
+				//if (mapState == 2)
+				//	chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+				//else 
+				mapState++;
 				curState = static_cast <int>(GameState::PlayingGame);
 			}
 			isRestarted = true;
