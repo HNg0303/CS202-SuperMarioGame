@@ -1,31 +1,307 @@
 ﻿  Animation.cpp
-  entity.cpp
+  Camera.cpp
+  Character.cpp
   Game.cpp
   GameFlow.cpp
-F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(314,68): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
-F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(314,68): warning C4244:         with
-F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(314,68): warning C4244:         [
-F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(314,68): warning C4244:             T=float
-F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(314,68): warning C4244:         ]
-F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(592,40): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  main.cpp
-  Character.cpp
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:             T=unsigned int
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         and
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         ]
+  (compiling source file 'GameFlow.cpp')
+  
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:             T=unsigned int
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         and
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         ]
+  (compiling source file 'GameFlow.cpp')
+  
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(330,68): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(330,68): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(330,68): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(330,68): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(330,68): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(758,68): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.cpp(862,40): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   Map.cpp
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,34): warning C4244: 'argument': conversion from 'T' to 'const unsigned __int64', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,34): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,34): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,34): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,34): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,57): warning C4244: 'argument': conversion from 'T' to 'const unsigned __int64', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,57): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,57): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,57): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(26,57): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(140,31): warning C4244: '=': conversion from 'float' to '_Ty1', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(140,31): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(140,31): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(140,31): warning C4244:             _Ty1=int
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(140,31): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(141,32): warning C4244: '=': conversion from 'float' to '_Ty2', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(141,32): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(141,32): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(141,32): warning C4244:             _Ty2=int
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(141,32): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(157,21): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(159,15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(160,15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,90): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,90): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,90): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,90): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,90): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,87): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,87): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,87): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,87): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(195,87): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,92): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,92): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,92): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,92): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,92): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,89): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,89): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,89): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,89): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(197,89): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,92): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,92): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,92): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,92): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,92): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,89): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,89): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,89): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,89): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(199,89): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,92): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,92): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,92): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,92): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,92): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,89): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,89): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,89): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,89): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(201,89): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,96): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,96): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,96): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,96): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,96): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,93): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,93): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,93): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,93): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(203,93): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,93): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,93): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,93): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,93): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,93): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,90): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,90): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,90): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,90): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(205,90): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,93): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,93): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,93): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,93): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,93): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,90): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,90): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,90): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,90): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(207,90): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,96): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,96): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,96): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,96): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,96): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,93): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,93): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,93): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,93): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(209,93): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,96): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,96): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,96): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,96): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,96): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,93): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,93): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,93): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,93): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(211,93): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,95): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,95): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,95): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,95): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,95): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,92): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,92): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,92): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,92): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(213,92): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,148): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,148): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,148): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,148): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,148): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,145): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,145): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,145): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,145): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(215,145): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,241): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,241): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,241): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,241): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,241): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,238): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,238): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,238): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,238): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(217,238): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,177): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,177): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,177): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,177): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,177): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,174): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,174): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,174): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,174): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(219,174): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,99): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,99): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,99): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,99): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,99): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,96): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,96): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,96): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,96): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(221,96): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,95): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,95): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,95): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,95): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,95): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,92): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,92): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,92): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,92): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(223,92): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,95): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,95): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,95): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,95): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,95): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,92): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,92): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,92): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,92): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(225,92): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,96): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,96): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,96): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,96): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,96): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,93): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,93): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,93): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,93): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(227,93): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,159): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,159): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,159): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,159): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,159): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,156): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,156): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,156): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,156): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Map.cpp(229,156): warning C4244:         ]
   Menu.cpp
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(134,39): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,66): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,66): warning C4244:         with
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,66): warning C4244:         [
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,66): warning C4244:             T=float
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,66): warning C4244:         ]
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,55): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,55): warning C4244:         with
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,55): warning C4244:         [
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,55): warning C4244:             T=float
-F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(158,55): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(109,39): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,66): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,66): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,66): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,66): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,66): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,55): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,55): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,55): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,55): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(149,55): warning C4244:         ]
 F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(270,10): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(273,29): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
 F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(274,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(285,10): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(288,29): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Menu.cpp(289,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Physics.cpp
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(13,84): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(13,69): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(13,54): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(13,39): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(21,84): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(21,69): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(21,54): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(21,39): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(34,87): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(34,72): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(34,57): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(34,42): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(45,86): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(45,71): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(45,56): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(45,41): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(51,19): warning C4244: 'argument': conversion from 'float' to 'sf::Uint32', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(74,83): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(74,68): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(74,53): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\Physics.cpp(74,38): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+  Renderer.cpp
   Resources.cpp
+  entity.cpp
+  main.cpp
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:             T=unsigned int
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         and
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,79): warning C4244:         ]
+  (compiling source file 'main.cpp')
+  
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         with
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:             T=unsigned int
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         ]
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         and
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         [
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:             T=float
+F:\GitHub\SuperMario\SuperMARIO\GameFlow.h(48,58): warning C4244:         ]
+  (compiling source file 'main.cpp')
+  
   Generating Code...
-  SuperMario.vcxproj -> F:\GitHub\SuperMario\SuperMARIO\x64\Debug\SuperMario.exe
+  LINK : F:\GitHub\SuperMario\SuperMARIO\x64\Debug\SuperMario.exe not found or not built by the last incremental link; performing full link
+LINK : fatal error LNK1104: cannot open file 'box2d.lib'

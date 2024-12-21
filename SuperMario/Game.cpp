@@ -72,7 +72,7 @@ void Game :: Begin(sf::RenderWindow& window)
 	cout << "Initialize game successfully !!!!" << endl;
 	music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/music.wav"));
 	music.setLoop(true);
-	music.setVolume(25);
+	music.setVolume(20);
 	music.play();
 }
 
