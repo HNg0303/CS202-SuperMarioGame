@@ -2,6 +2,7 @@
 
 Music music{};
 
+//using namespace std;
 GameFlow* GameFlow::getInstance() {
 	if (instance == nullptr) {
 		instance = new GameFlow();
@@ -94,7 +95,7 @@ void GameFlow::handleGameInfo()
 	setupText(timeText, font, formatTime(pausedTime + clock.getElapsedTime()), 24, sf::Color::White);
 
 	setupText(labelCoinText, font, "COINS:", 25, sf::Color::Yellow);
-	setupText(coinText, font, formatValue(coins), 24, sf::Color::Yellow);
+	setupText(coinText, font, formatValue(coins[chooseLevel.GetPressedItem()]), 24, sf::Color::Yellow);
 
 	setupText(labelLivesText, font, "LIVES:", 25, sf::Color::Red);
 	setupText(livesText, font, formatValue(character->lives), 24, sf::Color::Red);
@@ -237,7 +238,7 @@ void GameFlow::handlePlayingGame()
 		this->game = new Game(this->map, this->character, this->camera);
 		cout << "Restart successfully !" << endl;
 		this->game->Begin(*window);
-		game->coins = this->coins;
+		game->coins = this->coins[chooseLevel.GetPressedItem()];
 		isRestarted = false;
 		cout << "Map: " << chooseLevel.GetPressedItem() << "-" << mapState << endl;
 	}
@@ -268,12 +269,12 @@ void GameFlow::handlePlayingGame()
 					return;
 				}
 
-				
+				/*
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
 					curState = static_cast<int>(GameState::ChooseLevel);
 					return;
-				}
+				}*/
 			}
 		}
 
@@ -286,45 +287,49 @@ void GameFlow::handlePlayingGame()
 		//this->view = game->view;
 		//cout << "In Handle Playing Game !" << endl;
 		game->Update(deltaTime, *window);
-		this->lives = character->lives;
+		this->lives[chooseLevel.GetPressedItem()] = character->lives;
 		if (game->win) {
-			if (mapState == 2) 
-			{
-				curState = static_cast <int>(GameState::WinGame);
-				return;
+			if (mapState == 2) {
+					curState = static_cast <int>(GameState::WinGame);
+					isPassed[chooseLevel.GetPressedItem()][mapState] = true;
+					return;
 			}
 			else {
-				if (mapState == 2) {
-					curState = static_cast <int>(GameState::WinGame);
-					chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
-					this->lives = 3;
-					this->coins = 0;
-					mapState = 0;
-					return;
-				}
-				else mapState+=1;
+				isPassed[chooseLevel.GetPressedItem()][mapState] = true;
+				mapState += 1;
 				curState = static_cast <int>(GameState::PlayingGame);
+				isRestarted = true;
+				return;
 			}
-			isRestarted = true;
-			return;
 		}
 		else if (game->lose) {
 			curState = static_cast <int>(GameState::LooseGame);
-			this->lives = 3;
-			this->coins = 0;
 			mapState = 0;
 			cout << "Loose Menu ! " << endl;
 			return;
 		}
 		//cout << "Error in render" << endl;
 		game->Render(*renderer, resources);
-		coins = game->getCoin();
+		coins[chooseLevel.GetPressedItem()] = game->getCoin();
 		handleGameInfo();
 		//handleEntity();
 		
 		
 		window->display();
 	}
+}
+
+void GameFlow::handleChooseState(int difficulty) {
+	cout << "Handle Choose State" << endl;
+	for (int state = 0; state <= 2; ++state)
+		if (!isPassed[difficulty][state]) {
+			mapState = state;
+			return;
+		}
+	mapState = 2;
+	this->lives[difficulty] = 3;
+	this->coins[difficulty] = 0;
+	//If we have passed every stages in a difficulty then we play the hardest level.
 }
 
 
@@ -389,9 +394,11 @@ void GameFlow::handleChooseLevel()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
-
+					if (mainMenu.GetPressedItem() == 1)
+						ResetLevel(chooseLevel.GetPressedItem());
 					resumeClock();
 					isRestarted = true;
+					handleChooseState(chooseLevel.GetPressedItem());
 					curState = static_cast<int>(GameState::PlayingGame);
 					return;
 				}
@@ -553,6 +560,7 @@ void GameFlow::handleAskRestart()
 					{
 						resumeClock();
 						isRestarted = true;
+						this->coins[chooseLevel.GetPressedItem()] -= character->coin;
 						curState = static_cast<int>(GameState::PlayingGame);
 						return;
 					}
@@ -657,6 +665,7 @@ void GameFlow::handleLooseGame()
 			{
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					ResetLevel(chooseLevel.GetPressedItem());
 					curState = static_cast<int>(GameState::MainMenu);
 					return;
 				}
@@ -698,7 +707,7 @@ void GameFlow::handleWinGame()
 	setupText(levelInfo, font, levelStr, 40, sf::Color::White);
 
 	setupText(coinLabel, font, "Coins:", 40, sf::Color::Yellow);
-	setupText(coinInfo, font, formatValue(coins), 40, sf::Color::White);
+	setupText(coinInfo, font, formatValue(coins[level]), 40, sf::Color::White);
 
 	setupText(timeLabel, font, "Time:", 40, sf::Color::Yellow);
 	setupText(timeInfo, font, formatTime(getTime), 40, sf::Color::White);
@@ -762,8 +771,15 @@ void GameFlow::handleWinGame()
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
 			{
 				transform(levelStr.begin(), levelStr.end(), levelStr.begin(), [](unsigned char c) { return std::tolower(c); });
-				mainMenu.saveResultsFromFile(levelStr, coins, getTime.asSeconds(), username);
-				curState = static_cast<int>(GameState::MainMenu);
+				mainMenu.saveResultsFromFile(levelStr, coins[level], getTime.asSeconds(), username);
+				chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+				if (chooseLevel.GetPressedItem() > 2) {
+					curState = static_cast<int>(GameState::MainMenu);
+					return;
+				}
+				isRestarted = true;
+				mapState = 0;
+				curState = static_cast<int>(GameState::PlayingGame);
 				return;
 			}
 		}
@@ -1000,12 +1016,22 @@ void GameFlow::Restart() {
 	
 	map = new Map(1.0f, chooseLevel.GetPressedItem(), 0, mapState);
 	if (chooseCharacterMenu.GetPressedItem() == 1)
-		character = CharacterFactory::createCharacter(LUIGI, this->lives);
-	else character = CharacterFactory::createCharacter(MARIO, this->lives);
+		character = CharacterFactory::createCharacter(LUIGI, this->lives[chooseLevel.GetPressedItem()]);
+	else character = CharacterFactory::createCharacter(MARIO, this->lives[chooseLevel.GetPressedItem()]);
 
 	camera = new Camera(30.0f);
-	isRestarted = true;
+	//isRestarted = true;
 	
+}
+
+void GameFlow::ResetLevel(int difficulty) {
+	//if lose reset the whole level
+	//or ask to restart the whole level.
+	isPassed[difficulty][0] = false;
+	isPassed[difficulty][1] = false;
+	isPassed[difficulty][2] = false;
+	this->coins[difficulty] = 0;
+	this->lives[difficulty] = 3;
 }
 
 void GameFlow::Start() {

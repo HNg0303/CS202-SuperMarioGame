@@ -2,7 +2,7 @@
 #include "Menu.h"
 #include "Game.h"
 
-
+//using namespace std;
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 900
@@ -14,11 +14,16 @@ private:
 	inline static GameFlow* instance = nullptr;
 	int curState = 0;
 	int mapState = 0;
-	int lives = 3;
+	//int lives = 3;
 	Map* map = nullptr;
 	Camera* camera = nullptr;
 	Character* character = nullptr;
+	vector<vector<bool>> isPassed;
+	vector<int> lives;
+	vector<int> coins;
 	//main game
+
+	 //Check if we have passed the difficulty.
 	
 	
 	Game* game = nullptr;
@@ -26,11 +31,14 @@ private:
 	//Constructor Private for singleton.
 	GameFlow() : mainMenu(6, { "START GAME", "RESTART", "SCOREBOARD", "THEMES", "HELP", "EXIT" }),
 		chooseCharacterMenu(2, { "MARIO", "LUIGI" }),
-		chooseThemes(2, {"Default", "Ice"}),
+		chooseThemes(2, { "Default", "Ice" }),
 		chooseLevel(3, { "EASY","MEDIUM","HARD" }),
 		pauseMenu(3, { "CONTINUE", "RESTART","BACK TO MAIN MENU" }),
 		askRestart(2, { "YES","NO" }),
-		sfEvent()
+		sfEvent(),
+		isPassed(3, vector<bool>(3, 0)),
+		lives(3, 3),
+		coins(3, 0)
 	{
 		loadPausedTimeToFile();
 		
@@ -74,7 +82,7 @@ public:
 	sf::Clock gameClock;
 	sf::Clock clock;
 	sf::Time pausedTime;
-	int coins = 0;
+	//int coins = 0;
 	bool isPaused = true;
 	bool alreadyPlayed = false;
 
@@ -93,8 +101,6 @@ public:
 	
 	sf::Event sfEvent;
 
-	//Mobs
-	std::vector<std::unique_ptr<Entity>> entities;
 
 	//Resource
 	Resources resources;
@@ -121,6 +127,7 @@ public:
 	void handleChooseThemes();
 	void handleClosed();
 	void handleGameInfo();
+	void handleChooseState(int difficulty);
 	//void handleContinue();
 
 	//Game Info
@@ -143,6 +150,7 @@ public:
 	void loadPausedTimeToFile();
 
 	//void restart
+	void ResetLevel(int difficulty); //If you lose
 	void Restart();
 
 	//void startGame

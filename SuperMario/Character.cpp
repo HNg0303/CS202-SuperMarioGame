@@ -2,7 +2,8 @@
 
 Sound soundEffect{};
 
-Character* CharacterFactory::createCharacter(CharacterType type,int lives) {
+Character* CharacterFactory::createCharacter(CharacterType type, int lives) {
+    
     switch (type) {
     case MARIO:
         return new Mario(0, 0, lives);
@@ -520,8 +521,6 @@ void Luigi::Begin() {
                     Frame(0.9f, Resources::textures["luigilvdown2.png"])
                 });
         }
-        jumpSFX.setBuffer(Resources::sfx["jumpbig.wav"]);
-        jumpSFX.setVolume(7);
         scale = 1.0f;
     }
 
