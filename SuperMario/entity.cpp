@@ -207,11 +207,13 @@ void Coin::Begin() {
 
 
 Coin :: ~Coin() {
-	delete fixtureData;
-	fixtureData = nullptr;
 	if (body) {
 		Physics::world.DestroyBody(body);
 		body = nullptr;
+	}
+	if (fixtureData) {
+		delete fixtureData;
+		fixtureData = nullptr;
 	}
 	cout << "Successfully Destroyed Coin !" << endl;
 }
@@ -240,11 +242,13 @@ Block::~Block() {
 		auto* data = reinterpret_cast<FixtureData*>(fixture->GetUserData().pointer);
 		delete data;  // Free the FixtureData memory
 	}*/
-	delete fixtureData;
-	fixtureData = nullptr;
 	if (body) {
 		Physics::world.DestroyBody(body);
 		body = nullptr;
+	}
+	if (fixtureData) {
+		delete fixtureData;
+		fixtureData = nullptr;
 	}
 }
 
@@ -275,12 +279,14 @@ void PowerUp::Begin() {
 
 
 PowerUp :: ~PowerUp() {
-	delete fixtureData;
-	fixtureData = nullptr;
 	if (body) {
 		Physics::world.DestroyBody(body);
 		body = nullptr;
 		
+	}
+	if (fixtureData) {
+		delete fixtureData;
+		fixtureData = nullptr;
 	}
 	cout << "Successfully Destroyed Level Up !" << endl;
 }
@@ -342,8 +348,10 @@ Enemy :: ~Enemy() {
 		Physics::world.DestroyBody(body);
 		body = nullptr;
 	}
-	delete fixtureData;
-	fixtureData = nullptr;
+	if (fixtureData) {
+		delete fixtureData;
+		fixtureData = nullptr;
+	}
 	cout << "Successfully Destroyed Enemy !" << endl;
 }
 
@@ -418,8 +426,10 @@ Flame :: ~Flame() {
 		Physics::world.DestroyBody(body);
 		body = nullptr;
 	}
-	delete fixtureData;
-	fixtureData = nullptr;
+	if (fixtureData) {
+		delete fixtureData;
+		fixtureData = nullptr;
+	}
 	cout << "Successfully Destroyed Flame !" << endl;
 }
 
@@ -434,7 +444,7 @@ void deleteEntity(Entity* entity) {
 void clearEntities() {
 	for (Entity* entity : onEntities) {
 		delete entity;
-		entity = nullptr;
+		//entity = nullptr;
 	}
 	onEntities.clear();
 }
@@ -470,8 +480,10 @@ Elevator:: ~Elevator() {
 		Physics::world.DestroyBody(body);
 		body = nullptr;
 	}
-	delete fixtureData;
-	fixtureData = nullptr;
+	if (fixtureData) {
+		delete fixtureData;
+		fixtureData = nullptr;
+	}
 	cout << "Successfully Destroyed Enemy !" << endl;
 }
 
@@ -520,7 +532,9 @@ Bowser :: ~Bowser() {
 		Physics::world.DestroyBody(body);
 		body = nullptr;
 	}
-	delete fixtureData;
-	fixtureData = nullptr;
+	if (fixtureData) {
+		delete fixtureData;
+		fixtureData = nullptr;
+	}
 	cout << "Successfully Destroyed Enemy !" << endl;
 }

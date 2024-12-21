@@ -276,17 +276,17 @@ void Mario::Begin() {
     dynamicBody->CreateFixture(&fixtureDef);
 
     b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.5f * scale, 0.3f * scale);
+    polygonShape.SetAsBox(0.4f * scale, 0.3f * scale);
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.4f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.3f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.4f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.3f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
@@ -551,17 +551,17 @@ void Luigi::Begin() {
     dynamicBody->CreateFixture(&fixtureDef);
 
     b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.5f * scale, 0.3f * scale);
+    polygonShape.SetAsBox(0.4f * scale, 0.3f * scale);
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.4f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f * (scale)), 0.0f);
+    polygonShape.SetAsBox(0.3f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f * (scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.4f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f * (scale)), 0.0f);
+    polygonShape.SetAsBox(0.3f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f * (scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
@@ -634,6 +634,9 @@ void Luigi::Update(float& deltaTime)
         drawingTexture = jumpAnimation;
     dynamicBody->SetLinearVelocity(velocity);
     //Update position and angle
+
+    if (position.y >= yBound || position.x < xBound.first || position.x > xBound.second)
+        handleDeath();
 
     position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian

@@ -232,24 +232,24 @@ void GameFlow::handleMainMenu() //handles controls in menu
 
 void GameFlow::handlePlayingGame()
 {
-	clock.restart();
-	if (isRestarted) {
-		Restart();
-		this->game = new Game(this->map, this->character, this->camera);
-		cout << "Restart successfully !" << endl;
-		this->game->Begin(*window);
-		game->coins = this->coins[chooseLevel.GetPressedItem()];
-		isRestarted = false;
-		cout << "Map: " << chooseLevel.GetPressedItem() << "-" << mapState << endl;
-	}
-	if (!game) {
-	this->game = new Game(this->map, this->character, this->camera);
-		this->game->Begin(*window);
-		
-	}
-	
 	while (window->isOpen())
 	{
+		clock.restart();
+		if (isRestarted) {
+			Restart();
+			this->game = new Game(this->map, this->character, this->camera);
+			cout << "Restart successfully !" << endl;
+			this->game->Begin(*window);
+			game->coins = this->coins[chooseLevel.GetPressedItem()];
+			isRestarted = false;
+			cout << "Map: " << chooseLevel.GetPressedItem() << "-" << mapState << endl;
+		}
+		if (!game) {
+			this->game = new Game(this->map, this->character, this->camera);
+			this->game->Begin(*window);
+
+		}
+
 		if (isPaused == true)
 		{
 			isPaused = false;
