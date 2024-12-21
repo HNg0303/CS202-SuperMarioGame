@@ -62,6 +62,8 @@ void Game :: Begin(sf::RenderWindow& window)
 	map_image.loadFromFile(mapPath);
 	startPos = map->CreateFromImage(map_image, onEntities);
 	character->setPos(startPos);
+	character->yBound = map->cellSize * map->grid[0].size();
+	character->xBound = pair<float, float>(map->cellSize, map->cellSize * map->grid.size());
 	character->Begin();
 	for (auto& entity : onEntities)
 		entity->Begin();

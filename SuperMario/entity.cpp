@@ -62,7 +62,7 @@ void Entity::draw(sf::RenderWindow* window, const Vector2f& size)
 		sf::Vector2f origin(frames[currentFrame].getSize().x / 2.0f, frames[currentFrame].getSize().y / 2.0f);
 		sprite.setOrigin(origin);
 		Vector2f scale;
-		if (name == "goal") scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y * 5.0f / frames[currentFrame].getSize().y);
+		if (name == "goal") scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y * 2.0f / frames[currentFrame].getSize().y);
 		else scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
 		sprite.setScale(scale);
 		//sprite.setScale(2.f * direction, 2.f);
@@ -103,6 +103,8 @@ void Moveable::Update(float deltaTime)
 		const b2Vec2& bodyPos = body->GetPosition();
 		position.x = bodyPos.x;
 		position.y = bodyPos.y;
+		//cout << "MyBound: " << xBound.first << ", " << xBound.second << endl;
+		//cout << "Position:" << position.x << ", " << position.y << endl;
 	}
 	//cout << "x: " << position.x << ", y:" << position.y << endl;
 }
@@ -112,12 +114,18 @@ void Moveable::move()
 	//cout << "Im moving !!" << endl;
 	//position.x += speed * direction;
 	b2Vec2 velocity = body->GetLinearVelocity();
-	//velocity.x = 0.0f;
-	//velocity.y = 0.0f;
-	if (velocity.x <= abs(2.0f))
-		velocity.x += speed * x_direction;
-	if (velocity.y <= abs(2.0f))
-		velocity.y += speed * y_direction;
+	
+	//cout << "My Velocity:" << velocity.x << ", " << velocity.y << endl;
+	if (abs(velocity.x) <= 0.02f) {
+		x_direction = -1.0f*x_direction;
+	}
+	if (abs(velocity.y) <= 0.02f) {
+		y_direction = -1.0f*y_direction;
+	}
+
+	velocity.x = speed * x_direction;
+	velocity.y = speed * y_direction;
+
 	body->SetLinearVelocity(velocity);  // Update the body's velocity
 	checkAndChangeDirection();
 }
@@ -133,18 +141,26 @@ void Moveable::checkAndChangeDirection()
 		
 
 	// Reverse direction if bounds are exceeded
-	bool outOfBoundX = body->GetPosition().x <= xBound.first || body->GetPosition().x >= xBound.second;
-	bool outOfBoundY = body->GetPosition().y >= yBound.first || body->GetPosition().y <= yBound.second;
-	b2Vec2 velocity = body->GetLinearVelocity();
-	if (outOfBoundX) {
-		x_direction = -x_direction;
-		velocity.x = 0.0f;
+	//bool outOfBoundX = body->GetPosition().x <= xBound.first || body->GetPosition().x >= xBound.second;
+	//bool outOfBoundY = body->GetPosition().y >= yBound.first || body->GetPosition().y <= yBound.second;
+	//b2Vec2 velocity = body->GetLinearVelocity();
+	if (body->GetPosition().x <= xBound.first && x_direction != 0.0f) {
+		x_direction = 1.0f;
+		//velocity.x = 0.0f;
 	}
-	if (outOfBoundY) {
-		y_direction = -y_direction;
-		velocity.y = 0.0f;
+	if (body->GetPosition().x >= xBound.second && x_direction != 0.0f) {
+		x_direction = -1.0f;
+		//velocity.x = 0.0f;
 	}
-	body->SetLinearVelocity(velocity);
+	if (body->GetPosition().y >= yBound.first && y_direction != 0.0f) {
+		y_direction = 1.0f;
+		//velocity.y = 0.0f;
+	}
+	if (body->GetPosition().y <= yBound.second && y_direction != 0.0f) {
+		y_direction = -1.0f;
+		//velocity.y = 0.0f;
+	}
+	//body->SetLinearVelocity(velocity);
 }
 
 
@@ -193,8 +209,10 @@ void Coin::Begin() {
 Coin :: ~Coin() {
 	delete fixtureData;
 	fixtureData = nullptr;
-	Physics::world.DestroyBody(body);
-	body = nullptr;
+	if (body) {
+		Physics::world.DestroyBody(body);
+		body = nullptr;
+	}
 	cout << "Successfully Destroyed Coin !" << endl;
 }
 
@@ -224,8 +242,10 @@ Block::~Block() {
 	}*/
 	delete fixtureData;
 	fixtureData = nullptr;
-	Physics::world.DestroyBody(body);
-	body = nullptr;
+	if (body) {
+		Physics::world.DestroyBody(body);
+		body = nullptr;
+	}
 }
 
 
@@ -257,8 +277,11 @@ void PowerUp::Begin() {
 PowerUp :: ~PowerUp() {
 	delete fixtureData;
 	fixtureData = nullptr;
-	Physics::world.DestroyBody(body);
-	body = nullptr;
+	if (body) {
+		Physics::world.DestroyBody(body);
+		body = nullptr;
+		
+	}
 	cout << "Successfully Destroyed Level Up !" << endl;
 }
 
@@ -274,25 +297,26 @@ void Enemy::Begin() {
 	bodyDef.position.Set(position.x, position.y);
 	bodyDef.fixedRotation = true;
 	body = Physics::world.CreateBody(&bodyDef);
-
+	y_direction = 0.0f;
 	b2CircleShape circle;
-	circle.m_p.Set(0.0f, 0.1f);
-	circle.m_radius = 0.3f;
+	//circle.m_p.Set(0.0f, 0.0f);
+	circle.m_radius = 0.4f;
 
 	b2PolygonShape rect;
-	rect.SetAsBox(size.x / 2.0f, (size.y - 0.2f) / 2.0f);
+	rect.SetAsBox(size.x / 2.0f, (size.y - 0.8f) / 2.0f, b2Vec2(0.0f, size.y / 2.0f), 0.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
 	fixtureDef.shape = &circle;
 	fixtureDef.friction = 0.0f;
 	fixtureDef.density = 1.0f;
-	fixture = body->CreateFixture(&fixtureDef);
+	body->CreateFixture(&fixtureDef);
 
 	fixtureDef.shape = &rect;
 	fixtureDef.isSensor = true;
+	fixture = body->CreateFixture(&fixtureDef);
 
-	body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+	body->SetLinearVelocity(b2Vec2(0.3f, 0.0f));
 }
 
 void Enemy::OnBeginContact(b2Fixture* self, b2Fixture* other) {
@@ -304,9 +328,11 @@ void Enemy::OnBeginContact(b2Fixture* self, b2Fixture* other) {
 	FixtureData* selfData = reinterpret_cast<FixtureData*> (self->GetUserData().pointer);
 	if (!otherData) return;
 	if (self == fixture) {
-		if (otherData->type == FixtureDataType::Enemy) {
-			x_direction = -x_direction;
-			y_direction = -y_direction;
+		if (otherData->type == FixtureDataType::Enemy || otherData->type == FixtureDataType::MapTile) {
+			cout << "Colliding !" << endl;
+			x_direction = -1.0f * x_direction;
+			y_direction = -1.0f * y_direction;
+			body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 		}
 	}
 }
@@ -337,10 +363,11 @@ void Flame::Begin() {
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	if (faceLeft) {
-		x_direction = -x_direction;
+		x_direction = -1.0f;
 		bodyDef.position.Set(position.x + 148.0f, position.y);
 	}
 	else bodyDef.position.Set(position.x + 152.0f, position.y);
+	y_direction = 0.0f;
 	bodyDef.fixedRotation = true;
 	body = Physics::world.CreateBody(&bodyDef);
 
@@ -353,7 +380,10 @@ void Flame::Begin() {
 	fixtureDef.friction = 0.0f;
 	fixtureDef.density = 0.0f;
 	fixture = body->CreateFixture(&fixtureDef);
+
+	body->SetLinearVelocity(b2Vec2(speed * x_direction, 0.0f));
 }
+
 
 void Flame::OnBeginContact(b2Fixture* self, b2Fixture* other) {
 	if (!self) {
@@ -417,7 +447,7 @@ void Elevator::Begin()
 	bodyDef.position.Set(position.x, position.y);
 	bodyDef.fixedRotation = true;
 	body = Physics::world.CreateBody(&bodyDef);
-
+	x_direction = 0.0f;
 	b2PolygonShape shape;
 	shape.SetAsBox(size.x / 2, size.y / 2);
 
@@ -427,6 +457,8 @@ void Elevator::Begin()
 	fixtureDef.friction = 0.0f;
 	fixtureDef.density = 1.0f;
 	body->CreateFixture(&fixtureDef);
+
+	body->SetLinearVelocity(b2Vec2(0.0f, speed * y_direction));
 }
 
 Elevator:: ~Elevator() {

@@ -54,11 +54,12 @@ public:
 class Moveable : public Entity
 {
 private:
-	float speed; //velocity
+	
 	pair<float, float> xBound; //fixed bound [start, end]
 	pair<float, float> yBound;
 	float yPosition; // what does this even do
 public:
+	float speed; //velocity
 	Moveable(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f coords) :
 		Entity(name_i, frameDuration_i, x_start, y_start, coords), speed(speed_i)
 	{
@@ -154,6 +155,7 @@ public:
 	}
 
 	void Begin() override;
+	//void Update(float deltaTime) override;
 	void OnBeginContact(b2Fixture* self, b2Fixture* other) override;
 	void OnEndContact(b2Fixture* self, b2Fixture* other) override {};
 

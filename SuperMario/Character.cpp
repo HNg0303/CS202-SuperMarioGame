@@ -48,20 +48,29 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
             cout << "Coin: " << ++coin << endl;
         }
     }
-    else if (data->entity && data->type == FixtureDataType::Enemy && data->entity->getName() == "fireBar") {
-        handleDeath();
-        return;
-    }
-    else if (data->entity && data->type == FixtureDataType::Enemy && data->entity->getName() == "goombas") {
-        if (groundFixture == self) {
-            Enemy* enemy = dynamic_cast<Enemy*> (data->entity);
-            if (enemy) {
-                enemy->Die();
-                cout << "Kill Goombas" << endl;
-            }
-        }
-        else {
+    else if (data->entity && data->type == FixtureDataType::Enemy) {
+        if (data->entity->getName() == "fireBar") {
+            b2Vec2 velocity = data->entity->body->GetLinearVelocity();
+            velocity.x = 0.0f;
+            data->entity->body->SetLinearVelocity(velocity);
             handleDeath();
+            return;
+        }
+        else if (data->entity->getName() == "bowser") {
+            handleDeath();
+            return;
+        }
+        else if (data->entity->getName() == "goombas") {
+            if (groundFixture == self) {
+                Enemy* enemy = dynamic_cast<Enemy*> (data->entity);
+                if (enemy) {
+                    enemy->Die();
+                    cout << "Kill Goombas" << endl;
+                }
+            }
+            else {
+                handleDeath();
+            }
         }
     }
     else if (data->entity && data->type == FixtureDataType::Entity && data->entity->getName() == "levelUp") {
@@ -137,9 +146,9 @@ Mario::Mario(float x, float y) {
 
 void Mario::Draw(Renderer& renderer) {
     if (changeStateCounter == 0) //Small Mario.
-        renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
+        renderer.Draw(drawingTexture, position, Vector2f(1.0f, 1.0f), 0, faceLeft);
     if (changeStateCounter == 1 || changeStateCounter == 2) //Big Mario
-        renderer.Draw(drawingTexture, position, Vector2f(1.2f, 2.4f), 0, faceLeft);
+        renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);
     else return;
 }
 
@@ -154,7 +163,7 @@ void Mario::Begin() {
     isDead = false;
     transform = false;
 
-    float scale = 1.0f;
+    float scale = 0.5f;
 
     if (changeStateCounter == 0) {
         standAnimation = Resources::textures["mario0.png"];
@@ -201,7 +210,7 @@ void Mario::Begin() {
                     Frame(0.45f, Resources::textures["mariorun9.png"])
                 });
         }
-        scale = 1.2f;
+        scale = 1.0f;
     }
 
     //Initialize a body of Character in the b2World.
@@ -235,13 +244,13 @@ void Mario::Begin() {
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.1f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.2f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.1f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
@@ -283,7 +292,7 @@ void Mario::Update(float& deltaTime)
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
         drawingTexture = Resources::textures["marioflamethrow.png"];
-        Entity* flame = new Flame("flame", 0.5, 3.0f, position.x - 150.0f, position.x + 150.0f, position.y + 0.2f, position.y+1000, Vector2f(2.0f, 1.0f), position);
+        Entity* flame = new Flame("flame", 0.5, 7.0f, position.x - 150.0f, position.x + 200.0f, position.y + 0.2f, position.y+1000, Vector2f(2.0f, 1.0f), position);
         
         flame->faceLeft = this->faceLeft;
         flame->Begin();
@@ -318,6 +327,9 @@ void Mario::Update(float& deltaTime)
     //Update position and angle
 
     position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
+    //Check Bound 
+    if (position.y >= yBound || position.x < xBound.first || position.x > xBound.second) 
+        handleDeath();
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
 }
 

@@ -18,6 +18,8 @@ public:
     int onGround = 0;
     bool transform = false;
     bool win = false;
+    float yBound = 0.0f;
+    pair<float, float> xBound;
     //Testing collecting coin
     int lives = 3;
     int coin = 0;

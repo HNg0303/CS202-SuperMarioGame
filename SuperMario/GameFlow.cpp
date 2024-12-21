@@ -288,8 +288,12 @@ void GameFlow::handlePlayingGame()
 				return;
 			}
 			else {
-				if (mapState == 2)
+				if (mapState == 2) {
+					curState = static_cast <int>(GameState::WinGame);
 					chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
+					mapState = 0;
+					return;
+				}
 				else mapState++;
 				curState = static_cast <int>(GameState::PlayingGame);
 			}
@@ -298,6 +302,7 @@ void GameFlow::handlePlayingGame()
 		}
 		else if (game->lose) {
 			curState = static_cast <int>(GameState::LooseGame);
+			mapState = 0;
 			cout << "Loose Menu ! " << endl;
 			return;
 		}
