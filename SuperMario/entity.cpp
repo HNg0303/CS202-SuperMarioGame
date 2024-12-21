@@ -355,6 +355,10 @@ void Enemy::Die() {
 }
 
 void Flame::Begin() {
+	soundFX.setBuffer(Resources::sfx["fire.wav"]);
+	soundFX.setVolume(15);
+	soundFX.play();
+
 	fixtureData = new FixtureData();
 	fixtureData->entity = this;
 	fixtureData->listener = this;
