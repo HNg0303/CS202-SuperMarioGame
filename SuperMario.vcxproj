@@ -176,6 +176,9 @@
   <ItemGroup>
     <None Include="colorSheet.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resource\Map\map3-1.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
