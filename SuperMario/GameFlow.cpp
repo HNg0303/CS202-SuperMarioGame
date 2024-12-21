@@ -1,5 +1,7 @@
 ﻿#include "GameFlow.h"
 
+Music music{};
+
 GameFlow* GameFlow::getInstance() {
 	if (instance == nullptr) {
 		instance = new GameFlow();
@@ -802,6 +804,10 @@ void handleExit(sf::Event sfEvent, int& curState, GameFlow::GameState& newState)
 
 void GameFlow::run()
 {
+	music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+	music.setLoop(true);
+	music.setVolume(40);
+	music.play();
 	while (window->isOpen())
 	{
 		switch (static_cast<GameState>(curState))
@@ -836,7 +842,15 @@ void GameFlow::run()
 			break;
 
 		case GameState::PauseMenu:
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/pause.wav"));
+			music.setLoop(false);
+			music.setVolume(40);
+			music.play();
 			handlePauseMenu();
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.setLoop(true);
+			music.setVolume(40);
+			music.play();
 			break;
 
 		case GameState::AskRestart:
@@ -848,11 +862,27 @@ void GameFlow::run()
 			break;
 
 		case GameState::LooseGame:
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/gameover.wav"));
+			music.setLoop(false);
+			music.setVolume(40);
+			music.play();
 			handleLooseGame();
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.setLoop(true);
+			music.setVolume(40);
+			music.play();
 			break;
 
 		case GameState::WinGame:
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/worldclear.wav"));
+			music.setLoop(false);
+			music.setVolume(40);
+			music.play();
 			handleWinGame();
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.setLoop(true);
+			music.setVolume(40);
+			music.play();
 			break;
 
 		}

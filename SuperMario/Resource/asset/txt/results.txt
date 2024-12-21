@@ -6,3 +6,9 @@ easy 14 64 myanne
 easy 46 99 okkk
 easy 31 68 ehehe
 medium 23 21 
+easy 30 40 it's sa me
+medium 53 35 
+easy 22 149 
+easy 18 34 
+easy 20 32 
+medium 30 15 

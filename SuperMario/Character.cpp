@@ -1,12 +1,8 @@
 #include "Character.h"
 
-<<<<<<< HEAD
-Character* CharacterFactory::createCharacter(CharacterType type, int lives) {
-=======
 Sound soundEffect{};
 
-Character* CharacterFactory::createCharacter(CharacterType type) {
->>>>>>> 086c5f59cad83a2d9ca4b7eabbfec3489b6652db
+Character* CharacterFactory::createCharacter(CharacterType type,int lives) {
     switch (type) {
     case MARIO:
         return new Mario(0, 0, lives);
@@ -25,20 +21,17 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
     FixtureData* data = reinterpret_cast<FixtureData*> (other->GetUserData().pointer);
     if (!data) return;
     if (data->type == FixtureDataType::MapTile && data->entity->getName() == "goal") {
+        soundEffect.setBuffer(Resources::sfx["win.wav"]);
+        soundEffect.setVolume(10);
+        soundEffect.play();
         win = true;
         return;
     }
     if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "spike" || data->entity->getName() == "lava"|| data->entity->getName() == "spikeyTurtle")) {
-        soundEffect.setBuffer(Resources::sfx["death.wav"]);
-        soundEffect.setVolume(50);
-        soundEffect.play();
         handleDeath();
         return;
     }
     if (data->type == FixtureDataType::Entity && (data->entity->getName() == "flame")) {
-        soundEffect.setBuffer(Resources::sfx["death.wav"]);
-        soundEffect.setVolume(50);
-        soundEffect.play();
         data->entity->markDeleted();
         handleDeath();
         return;
@@ -70,17 +63,11 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         if (data->entity->getName() == "fireBar") {
             b2Vec2 velocity = data->entity->body->GetLinearVelocity();
             velocity.x = 0.0f;
-            data->entity->body->SetLinearVelocity(velocity); 
-            soundEffect.setBuffer(Resources::sfx["death.wav"]);
-            soundEffect.setVolume(50);
-            soundEffect.play();
+            data->entity->body->SetLinearVelocity(velocity);
             handleDeath();
             return;
         }
         else if (data->entity->getName() == "bowser") {
-            soundEffect.setBuffer(Resources::sfx["death.wav"]);
-            soundEffect.setVolume(50);
-            soundEffect.play();
             handleDeath();
             return;
         }
@@ -96,18 +83,16 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
                 }
                 return;
             }
-            else {
-                soundEffect.setBuffer(Resources::sfx["death.wav"]);
-                soundEffect.setVolume(50);
-                soundEffect.play();
+            else
                 handleDeath();
-            }
         }
     }
     else if (data->entity && data->type == FixtureDataType::Entity && data->entity->getName() == "levelUp") {
         soundEffect.setBuffer(Resources::sfx["lvlup.wav"]);
         soundEffect.setVolume(10);
         soundEffect.play();
+        if(!changeStateCounter)
+            position.y -= 0.5f;
         data->entity->markDeleted();
         cout << "LEVEL UP HEHEE !!!!!!!!!!" << endl;
         changeStateCounter = 1;
@@ -117,6 +102,8 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         soundEffect.setBuffer(Resources::sfx["lvlup.wav"]);
         soundEffect.setVolume(10);
         soundEffect.play();
+        if (!changeStateCounter)
+            position.y -= 0.5f;
         data->entity->markDeleted();
         cout << "FLAME HEHEE !!!!!!!!!!" << endl;
         changeStateCounter = 2;
@@ -136,6 +123,9 @@ void Character::OnEndContact(b2Fixture* self, b2Fixture* other) {
 }
 
 void Character::handleDeath() {
+    soundEffect.setBuffer(Resources::sfx["death.wav"]);
+    soundEffect.setVolume(50);
+    soundEffect.play();
     if (changeStateCounter) {
         changeStateCounter = 0;
         transform = true;
@@ -337,12 +327,7 @@ void Mario::Update(float& deltaTime)
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
         drawingTexture = Resources::textures["marioflamethrow.png"];
-<<<<<<< HEAD
         Entity* flame = new Flame("flame", 0.5, 7.0f, position.x - 150.0f, position.x + 200.0f, position.y + 0.2f, position.y + 1000.0f, Vector2f(2.0f, 1.0f), position);
-        
-=======
-        Entity* flame = new Flame("flame", 0.5, 7.0f, position.x - 150.0f, position.x + 200.0f, position.y + 0.2f, position.y+1000, Vector2f(2.0f, 1.0f), position);
->>>>>>> 086c5f59cad83a2d9ca4b7eabbfec3489b6652db
         flame->faceLeft = this->faceLeft;
         flame->Begin();
         onEntities.push_back(flame);
@@ -535,13 +520,9 @@ void Luigi::Begin() {
                     Frame(0.9f, Resources::textures["luigilvdown2.png"])
                 });
         }
-<<<<<<< HEAD
-        scale = 1.0f;
-=======
         jumpSFX.setBuffer(Resources::sfx["jumpbig.wav"]);
         jumpSFX.setVolume(7);
-        scale = 1.2f;
->>>>>>> 086c5f59cad83a2d9ca4b7eabbfec3489b6652db
+        scale = 1.0f;
     }
 
     //Initialize a body of Character in the b2World.
