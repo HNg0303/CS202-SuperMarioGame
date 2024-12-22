@@ -1,12 +1,73 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "F:\\GitHub\\SuperMario\\SuperMARIO\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{73317967-1797-4660-B5A1-D20204551052}|SuperMario.vcxproj|F:\\GitHub\\SuperMario\\SuperMARIO\\GameFlow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{73317967-1797-4660-B5A1-D20204551052}|SuperMario.vcxproj|solutionrelative:GameFlow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{73317967-1797-4660-B5A1-D20204551052}|SuperMario.vcxproj|F:\\GitHub\\SuperMario\\SuperMARIO\\Character.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{73317967-1797-4660-B5A1-D20204551052}|SuperMario.vcxproj|solutionrelative:Character.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{73317967-1797-4660-B5A1-D20204551052}|SuperMario.vcxproj|F:\\GitHub\\SuperMario\\SuperMARIO\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{73317967-1797-4660-B5A1-D20204551052}|SuperMario.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Character.cpp",
+              "DocumentMoniker": "F:\\GitHub\\SuperMario\\SuperMARIO\\Character.cpp",
+              "RelativeDocumentMoniker": "Character.cpp",
+              "ToolTip": "F:\\GitHub\\SuperMario\\SuperMARIO\\Character.cpp",
+              "RelativeToolTip": "Character.cpp",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAE0AAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-22T10:29:15.294Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GameFlow.cpp",
+              "DocumentMoniker": "F:\\GitHub\\SuperMario\\SuperMARIO\\GameFlow.cpp",
+              "RelativeDocumentMoniker": "GameFlow.cpp",
+              "ToolTip": "F:\\GitHub\\SuperMario\\SuperMARIO\\GameFlow.cpp",
+              "RelativeToolTip": "GameFlow.cpp",
+              "ViewState": "AgIAAHQDAAAAAAAAAAAAAJIDAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-22T10:00:41.6Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "main.cpp",
+              "DocumentMoniker": "F:\\GitHub\\SuperMario\\SuperMARIO\\main.cpp",
+              "RelativeDocumentMoniker": "main.cpp",
+              "ToolTip": "F:\\GitHub\\SuperMario\\SuperMARIO\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-22T09:58:48.978Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

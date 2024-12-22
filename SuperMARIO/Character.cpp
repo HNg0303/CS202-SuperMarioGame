@@ -75,7 +75,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         else if (data->entity->getName() == "goombas") {
             if (groundFixture == self) {
                 soundEffect.setBuffer(Resources::sfx["kill.wav"]);
-                soundEffect.setVolume(10);
+                soundEffect.setVolume(20);
                 soundEffect.play();
                 Enemy* enemy = dynamic_cast<Enemy*> (data->entity);
                 if (enemy) {

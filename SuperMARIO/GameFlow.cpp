@@ -1,6 +1,7 @@
 ﻿#include "GameFlow.h"
 
 Music music{};
+string background = "background.wav";
 
 //using namespace std;
 GameFlow* GameFlow::getInstance() {
@@ -424,7 +425,6 @@ void GameFlow::handleChooseLevel()
 void GameFlow::handleChooseThemes()
 {
 	//cout << "HERREEEEEEEEEEEEEEe" << endl;
-
 	while (true)
 	{
 		chooseThemes.drawChooseThemes(*window, 70, 330);
@@ -675,7 +675,7 @@ void GameFlow::handleHelpMenu()
 			{
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
-					curState = static_cast<int>(GameState::MainMenu); 
+					curState = static_cast<int>(GameState::MainMenu);
 					return;
 				}
 			}
@@ -882,9 +882,9 @@ void handleExit(sf::Event sfEvent, int& curState, GameFlow::GameState& newState)
 
 void GameFlow::run()
 {
-	music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+	music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
 	music.setLoop(true);
-	music.setVolume(40);
+	music.setVolume(50);
 	music.play();
 	while (window->isOpen())
 	{
@@ -905,6 +905,14 @@ void GameFlow::run()
 
 		case GameState::Themes:
 			handleChooseThemes();
+			if (chooseThemes.GetPressedItem())
+				background = "cloud.wav";
+			else
+				background = "background.wav";
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
+			music.setLoop(true);
+			music.setVolume(50);
+			music.play();
 			break;
 
 		case GameState::HelpMenu:
@@ -925,9 +933,9 @@ void GameFlow::run()
 			music.setVolume(40);
 			music.play();
 			handlePauseMenu();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
 			music.setLoop(true);
-			music.setVolume(40);
+			music.setVolume(50);
 			music.play();
 			break;
 
@@ -945,9 +953,9 @@ void GameFlow::run()
 			music.setVolume(40);
 			music.play();
 			handleLooseGame();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
 			music.setLoop(true);
-			music.setVolume(40);
+			music.setVolume(50);
 			music.play();
 			break;
 
@@ -957,21 +965,21 @@ void GameFlow::run()
 			music.setVolume(40);
 			music.play();
 			handleWinGame();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
 			music.setLoop(true);
-			music.setVolume(40);
+			music.setVolume(50);
 			music.play();
 			break;
 		
 		case GameState::AskNextLevel:
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/worldclear.wav"));
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/flag.wav"));
 			music.setLoop(false);
 			music.setVolume(40);
 			music.play();
 			handleAskNextLevel();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
 			music.setLoop(true);
-			music.setVolume(40);
+			music.setVolume(50);
 			music.play();
 			break;
 
