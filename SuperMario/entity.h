@@ -93,7 +93,8 @@ public:
 class Coin : public Unmoveable {
 public:
 	Coin(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords) :
-		Unmoveable(name_i, frameDuration_i, x, y, coords) {
+		Unmoveable(name_i, frameDuration_i, x, y, coords) 
+	{
 		this->size = size;
 	}
 	void Begin() override;
@@ -103,7 +104,8 @@ public:
 class Block : public Unmoveable {
 public:
 	Block(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords) :
-		Unmoveable(name_i, frameDuration_i, x, y, coords) {
+		Unmoveable(name_i, frameDuration_i, x, y, coords)
+	{
 		this->size = size;
 	}
 	void Begin() override;
@@ -115,8 +117,6 @@ class QBlock : public Unmoveable {
 		Unmoveable(name_i, frameDuration_i, x, y, coords) {
 		this->size = size;
 	}
-	//void Begin() override;
-	//~QBlock();
 };
 
 class PowerUp : public Unmoveable {
@@ -135,7 +135,8 @@ public:
 	b2Fixture* fixture = nullptr;
 
 	Enemy(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
-		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, x_end, coords) {
+		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, x_end, coords) 
+	{
 		this->size = size;
 	}
 	void Begin() override;
@@ -167,13 +168,11 @@ public:
 class Elevator : public Moveable {
 public:
 	Elevator(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
-		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, y_end, coords)
+		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, x_end, coords)
 	{
 		this->size = size;
-	};
+	}
 	void Begin() override;
-
-
 	~Elevator();
 };
 

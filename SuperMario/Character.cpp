@@ -28,7 +28,8 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         win = true;
         return;
     }
-    if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "spike" || data->entity->getName() == "lava"|| data->entity->getName() == "spikeyTurtle")) {
+    if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "spike" || data->entity->getName() == "lava"|| data->entity->getName() == "spikeyTurtle" || data->entity->getName() == "lava2")) {
+        cout << "Death Block" << endl;
         handleDeath();
         return;
     }
@@ -65,6 +66,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
             b2Vec2 velocity = data->entity->body->GetLinearVelocity();
             velocity.x = 0.0f;
             data->entity->body->SetLinearVelocity(velocity);
+            cout << "FireBar ! Death" << endl;
             handleDeath();
             return;
         }
@@ -154,21 +156,22 @@ Character::~Character() {
         Physics::world.DestroyBody(dynamicBody);
         dynamicBody = nullptr;
     }
-    delete fixtureData;
-    fixtureData = nullptr;
+    if (fixtureData) {
+        delete fixtureData;
+        fixtureData = nullptr;
+    }
 }
 
 Mario::Mario(float x, float y, int lives) {
     position.x = x;
     position.y = y;
-    movementVelocity = 7.0f;
-    jumpVelocity = 3.0f;
+    movementVelocity = 5.0f;
+    jumpVelocity = 4.0f;
     angle = 0.0f;
 
     this->lives = lives;
     if (!fixtureData)
         fixtureData = new FixtureData();
-    //groundFixture = new b2Fixture();
     cout << "Initialize Mario successfully !\n";
 }
 
@@ -266,27 +269,27 @@ void Mario::Begin() {
     fixtureDef.friction = 0.0f;
     //Create fixture for body => Done;
 
+    
     b2CircleShape circle{};
     fixtureDef.shape = &circle;
     circle.m_p.Set(0.0f, -0.5f * scale); //His head.
-    circle.m_radius = 0.4f * scale;
+    circle.m_radius = 0.48f * scale;
     dynamicBody->CreateFixture(&fixtureDef);
 
     circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
     dynamicBody->CreateFixture(&fixtureDef);
-
     b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.4f * scale, 0.3f * scale);
+    polygonShape.SetAsBox(0.48f, 0.4f * scale);
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.3f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.35f, 0.28f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.3f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.35f, 0.28f * (scale), b2Vec2(0.0f, -1.0f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
@@ -322,13 +325,17 @@ void Mario::Update(float& deltaTime)
     drawingTexture = Resources::textures["mario1.png"];
     float move = movementVelocity;
     float jump = jumpVelocity;
+    if (changeStateCounter) {
+        move += 2.0f;
+        jump += 1.0f;
+    }
     if (Keyboard::isKeyPressed(Keyboard::LShift))
         move *= 2;
     b2Vec2 velocity = dynamicBody->GetLinearVelocity();
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
         drawingTexture = Resources::textures["marioflamethrow.png"];
-        Entity* flame = new Flame("flame", 0.5, 7.0f, position.x - 150.0f, position.x + 200.0f, position.y + 0.2f, position.y + 1000.0f, Vector2f(2.0f, 1.0f), position);
+        Entity* flame = new Flame("flame", 0.5, 7.0f, position.x - 150.0f, position.x + 200.0f, position.y, position.y + 1000.0f, Vector2f(2.0f, 1.0f), position);
         flame->faceLeft = this->faceLeft;
         flame->Begin();
         onEntities.push_back(flame);
@@ -351,8 +358,10 @@ void Mario::Update(float& deltaTime)
         velocity.x -= move;
     }
     if ((Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) && onGround) {
-        velocity.y -= jump;
-        jumpSFX.play();
+        if (abs(velocity.y) <= jump) {
+            velocity.y -= jump;
+            jumpSFX.play();
+        }
     }
     if (velocity.x == 0)
         drawingTexture = standAnimation;
@@ -363,7 +372,7 @@ void Mario::Update(float& deltaTime)
 
     position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
     //Check Bound 
-    if (position.y >= yBound || position.x < xBound.first || position.x > xBound.second) 
+    if (position.y >= yBound || position.x < xBound.first - 2.0f || position.x > xBound.second + 2.0f) 
         handleDeath();
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
 }
@@ -428,8 +437,8 @@ void Mario::OnBeginContact(b2Fixture* self, b2Fixture* other)
 Luigi::Luigi(float x, float y, int lives) {
     position.x = x;
     position.y = y;
-    movementVelocity = 5.0f;
-    jumpVelocity = 3.5f;
+    movementVelocity = 4.0f;
+    jumpVelocity = 6.0f;
     angle = 0.0f;
 
     this->lives = lives;
@@ -544,24 +553,23 @@ void Luigi::Begin() {
     b2CircleShape circle{};
     fixtureDef.shape = &circle;
     circle.m_p.Set(0.0f, -0.5f * scale); //His head.
-    circle.m_radius = 0.4f * scale;
+    circle.m_radius = 0.48f * scale;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    circle.m_p.Set(0.0f, 0.4f * scale); //His feet.
+    circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
     dynamicBody->CreateFixture(&fixtureDef);
-
     b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.4f * scale, 0.3f * scale);
+    polygonShape.SetAsBox(0.48f, 0.4f * scale);
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.3f * (scale), 0.1f * (scale), b2Vec2(0.0f, 1.0f * (scale)), 0.0f);
+    polygonShape.SetAsBox(0.35f, 0.28f * (scale), b2Vec2(0.0f, 1.0f * (scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.3f * (scale), 0.1f * (scale), b2Vec2(0.0f, -0.8f * (scale)), 0.0f);
+    polygonShape.SetAsBox(0.35f, 0.28f * (scale), b2Vec2(0.0f, -1.0f * (scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
@@ -596,12 +604,17 @@ void Luigi::Update(float& deltaTime)
     }
     float move = movementVelocity;
     float jump = jumpVelocity;
+    if (changeStateCounter)
+    {
+        move += 1.0f;
+        jump += 1.0f;
+    }
     if (Keyboard::isKeyPressed(Keyboard::LShift))
         move *= 2;
     b2Vec2 velocity = dynamicBody->GetLinearVelocity();
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
-        Entity* flame = new Flame("flame", 0.5, 7.0f, position.x - 150.0f, position.x + 200.0f, position.y + 0.2f, position.y + 1000.0f, Vector2f(2.0f, 1.0f), position);
+        Entity* flame = new Flame("flame", 0.5, 7.0f, position.x - 150.0f, position.x + 200.0f, position.y, position.y + 1000.0f, Vector2f(2.0f, 1.0f), position);
         drawingTexture = Resources::textures["luigiflamethrow.png"];
         flame->faceLeft = this->faceLeft;
         flame->Begin();
@@ -625,8 +638,10 @@ void Luigi::Update(float& deltaTime)
         velocity.x -= move;
     }
     if ((Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) && onGround) {
-        velocity.y -= jump;
-        jumpSFX.play();
+        if (abs(velocity.y) <= jump) {
+            velocity.y -= jump;
+            jumpSFX.play();
+        }
     }
     if (velocity.x == 0)
         drawingTexture = standAnimation;
@@ -635,15 +650,17 @@ void Luigi::Update(float& deltaTime)
     dynamicBody->SetLinearVelocity(velocity);
     //Update position and angle
 
-    if (position.y >= yBound || position.x < xBound.first || position.x > xBound.second)
+    if (position.y >= yBound || position.x <= xBound.first - 2.0f || position.x >= xBound.second + 2.0f) {
+        cout << "Out of bound" << endl;
         handleDeath();
+    }
 
     position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
 }
 
 void Luigi::Draw(Renderer& renderer) {
-    if (changeStateCounter == 0) //Small Mario.
+    if (changeStateCounter == 0) //Small Luigi
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 1.0f), 0, faceLeft);
     if (changeStateCounter == 1 || changeStateCounter == 2) //Big 
         renderer.Draw(drawingTexture, position, Vector2f(1.0f, 2.0f), 0, faceLeft);

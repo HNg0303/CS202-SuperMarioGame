@@ -1089,6 +1089,7 @@ void GameFlow::Restart() {
 	}
 	
 	map = new Map(1.0f, chooseLevel.GetPressedItem(), 0, mapState);
+	//map = new Map(1.0f, 2, 0, 2);
 	if (chooseCharacterMenu.GetPressedItem() == 1)
 		character = CharacterFactory::createCharacter(LUIGI, this->lives[chooseLevel.GetPressedItem()]);
 	else character = CharacterFactory::createCharacter(MARIO, this->lives[chooseLevel.GetPressedItem()]);
