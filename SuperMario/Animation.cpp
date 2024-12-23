@@ -12,7 +12,7 @@ Texture Animation::getTexture()
 {
 	if (currentTime >= endTime)
 	{
-		currentTime -= endTime;
+		currentTime = 0.0f;
 		currentFrame = 0;
 	}
 	if (currentTime >= frames[currentFrame].endTime)
