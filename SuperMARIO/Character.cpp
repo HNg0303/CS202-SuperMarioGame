@@ -607,13 +607,17 @@ void Luigi::Update(float& deltaTime)
     }
     float move = movementVelocity;
     float jump = jumpVelocity;
+    float fast = 1.0f;
     if (changeStateCounter)
     {
         move += 1.0f;
         jump += 1.0f;
     }
     if (Keyboard::isKeyPressed(Keyboard::LShift))
+    {
+        fast = 2.0f;
         move *= 2;
+    }
     b2Vec2 velocity = dynamicBody->GetLinearVelocity();
     velocity.x = 0;
     if (Keyboard::isKeyPressed(Keyboard::F) && changeStateCounter == 2) {
@@ -628,14 +632,14 @@ void Luigi::Update(float& deltaTime)
     }
     if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
     {
-        runAnimation.Update(deltaTime);
+        runAnimation.Update(deltaTime * fast);
         drawingTexture = runAnimation.getTexture();
         faceLeft = false;
         velocity.x += move;
     }
     if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
     {
-        runAnimation.Update(deltaTime);
+        runAnimation.Update(deltaTime * fast);
         drawingTexture = runAnimation.getTexture();
         faceLeft = true;
         velocity.x -= move;
