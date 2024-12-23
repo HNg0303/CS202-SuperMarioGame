@@ -1,8 +1,7 @@
 ﻿#include "GameFlow.h"
 
 Music music{};
-string background = "background.wav";
-int volume = 50;
+Sound SFX{};
 
 //using namespace std;
 GameFlow* GameFlow::getInstance() {
@@ -183,6 +182,9 @@ void GameFlow::handleMainMenu() //handles controls in menu
 
 			if (sfEvent.key.code == sf::Keyboard::Enter)
 			{
+				SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
+				SFX.setVolume(30);
+				SFX.play();
 				if (mainMenu.GetPressedItem() == 0)
 				{
 					//if (pausedTime == sf::Time::Zero)
@@ -367,6 +369,9 @@ void GameFlow::handleChooseCharacter()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
+					SFX.setVolume(30);
+					SFX.play();
 					curState = static_cast<int>(GameState::ChooseLevel);
 					return;
 				}
@@ -404,6 +409,9 @@ void GameFlow::handleChooseLevel()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setVolume(60);
+					SFX.play();
 					if (mainMenu.GetPressedItem() == 1)
 						ResetLevel(chooseLevel.GetPressedItem());
 					resumeClock();
@@ -480,6 +488,9 @@ void GameFlow::handleChooseThemes()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
+					SFX.setVolume(30);
+					SFX.play();
 					Entity::setcurTheme(chooseThemes.GetPressedItem() + 1);
 					return;
 				}
@@ -518,6 +529,9 @@ void GameFlow::handlePauseMenu()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
+					SFX.setVolume(30);
+					SFX.play();
 					if (pauseMenu.GetPressedItem() == 0) //continue
 					{
 						curState = static_cast<int>(GameState::PlayingGame);
@@ -567,6 +581,9 @@ void GameFlow::handleAskRestart()
 				{
 					if (askRestart.GetPressedItem() == 0) //restart
 					{
+						SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+						SFX.setVolume(60);
+						SFX.play();
 						resumeClock();
 						isRestarted = true;
 						this->coins[chooseLevel.GetPressedItem()] -= character->coin;
@@ -576,6 +593,9 @@ void GameFlow::handleAskRestart()
 
 					if (askRestart.GetPressedItem() == 1) //continue
 					{
+						SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
+						SFX.setVolume(30);
+						SFX.play();
 						curState = static_cast<int>(GameState::PlayingGame);
 						return;
 					}
@@ -610,6 +630,9 @@ void GameFlow::handleAskNextLevel()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setVolume(60);
+					SFX.play();
 					if (askNextLevel.GetPressedItem() == 0) //next level
 					{
 						chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
@@ -719,6 +742,9 @@ void GameFlow::handleLooseGame()
 			{
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setVolume(60);
+					SFX.play();
 					ResetLevel(chooseLevel.GetPressedItem());
 					curState = static_cast<int>(GameState::MainMenu);
 					return;
@@ -830,6 +856,9 @@ void GameFlow::handleWinGame()
 
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
 			{
+				SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+				SFX.setVolume(60);
+				SFX.play();
 				transform(levelStr.begin(), levelStr.end(), levelStr.begin(), [](unsigned char c) { return std::tolower(c); });
 				if (username == "")
 					username = "anonymous";
@@ -883,7 +912,7 @@ void handleExit(sf::Event sfEvent, int& curState, GameFlow::GameState& newState)
 
 void GameFlow::run()
 {
-	music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
+	music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
 	music.setLoop(true);
 	music.setVolume(60);
 	music.play();
@@ -921,15 +950,10 @@ void GameFlow::run()
 			break;
 
 		case GameState::PauseMenu:
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/pause.wav"));
-			music.setLoop(false);
-			music.setVolume(40);
-			music.play();
+			SFX.setBuffer(Resources::sfx["pause.wav"]);
+			SFX.setVolume(40);
+			SFX.play();
 			handlePauseMenu();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
-			music.setLoop(true);
-			music.setVolume(60);
-			music.play();
 			break;
 
 		case GameState::AskRestart:
@@ -958,34 +982,20 @@ void GameFlow::run()
 			music.setVolume(40);
 			music.play();
 			handleLooseGame();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
-			music.setLoop(true);
-			music.setVolume(60);
-			music.play();
 			break;
 
 		case GameState::WinGame:
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/worldclear.wav"));
-			music.setLoop(false);
-			music.setVolume(40);
-			music.play();
+			SFX.setBuffer(Resources::sfx["worldclear.wav"]);
+			SFX.setVolume(40);
+			SFX.play();
 			handleWinGame();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
-			music.setLoop(true);
-			music.setVolume(60);
-			music.play();
 			break;
 		
 		case GameState::AskNextLevel:
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/flag.wav"));
-			music.setLoop(false);
-			music.setVolume(40);
-			music.play();
+			SFX.setBuffer(Resources::sfx["flag.wav"]);
+			SFX.setVolume(40);
+			SFX.play();
 			handleAskNextLevel();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/" + background));
-			music.setLoop(true);
-			music.setVolume(60);
-			music.play();
 			break;
 
 		}
@@ -1018,18 +1028,37 @@ void Menu::MoveDown() //keyboard input DOWN in menu
 void Menu::handleUpDown(sf::Event sfEvent)
 {
 	if (sfEvent.key.code == sf::Keyboard::Up)
+	{
+		SFX.setBuffer(Resources::sfx["uporleft.wav"]);
+		SFX.setVolume(30);
+		SFX.play();
 		MoveUp();
+	}
 	else if (sfEvent.key.code == sf::Keyboard::Down)
+	{
+		SFX.setBuffer(Resources::sfx["downorright.wav"]);
+		SFX.setVolume(30);
+		SFX.play();
 		MoveDown();
-
+	}
 }
 
 void Menu::handleLeftRight(sf::Event sfEvent)
 {
 	if (sfEvent.key.code == sf::Keyboard::Left)
+	{
+		SFX.setBuffer(Resources::sfx["uporleft.wav"]);
+		SFX.setVolume(30);
+		SFX.play();
 		MoveLeft();
+	}
 	else if (sfEvent.key.code == sf::Keyboard::Right)
+	{
+		SFX.setBuffer(Resources::sfx["downorright.wav"]);
+		SFX.setVolume(30);
+		SFX.play();
 		MoveRight();
+	}
 }
 
 void Menu::MoveLeft()
