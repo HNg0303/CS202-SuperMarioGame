@@ -21,14 +21,14 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
     }
     FixtureData* data = reinterpret_cast<FixtureData*> (other->GetUserData().pointer);
     if (!data) return;
-    if (data->type == FixtureDataType::MapTile && data->entity->getName() == "goal") {
+    if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "goal" || data->entity->getName() == "peach")) {
         soundEffect.setBuffer(Resources::sfx["win.wav"]);
         soundEffect.setVolume(10);
         soundEffect.play();
         win = true;
         return;
     }
-    if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "spike" || data->entity->getName() == "lava"|| data->entity->getName() == "spikeyTurtle" || data->entity->getName() == "lava2")) {
+    if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "spike" || data->entity->getName() == "plant3" || data->entity->getName() == "lava" || data->entity->getName() == "spikeyTurtle" || data->entity->getName() == "lava2")) {
         cout << "Death Block" << endl;
         handleDeath();
         return;
@@ -136,10 +136,6 @@ void Character::handleDeath() {
     else {
         isDead = true;
     }
-}
-void Character::setPosition(float x, float y) {
-    position.x = x;
-    position.y = y;
 }
 
 void Character::setPos(Vector2f position) {
@@ -283,13 +279,13 @@ void Mario::Begin() {
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.35f, 0.28f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.2f, 0.27f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.35f, 0.28f * (scale), b2Vec2(0.0f, -1.0f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.2f, 0.27f * (scale), b2Vec2(0.0f, -1.0f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
@@ -563,13 +559,13 @@ void Luigi::Begin() {
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.35f, 0.28f * (scale), b2Vec2(0.0f, 1.0f * (scale)), 0.0f);
+    polygonShape.SetAsBox(0.2f, 0.27f * (scale), b2Vec2(0.0f, 1.0f * (scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.35f, 0.28f * (scale), b2Vec2(0.0f, -1.0f * (scale)), 0.0f);
+    polygonShape.SetAsBox(0.2f, 0.27f * (scale), b2Vec2(0.0f, -1.0f * (scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;

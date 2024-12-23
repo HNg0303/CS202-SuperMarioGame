@@ -212,7 +212,7 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 	if (z == GridColor::tileMap3)
 		entity = new Block("tileMap3", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::fireBar)
-		entity = new Elevator("fireBar", 0.0, 0.3f, x_pos, x_pos, y_pos, (cellSize * y - (4.0f * cellSize) / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+		entity = new Elevator("fireBar", 0.0, 0.4f, x_pos, x_pos, cellSize * y + cellSize / 2.0f, (cellSize * y - 6 * cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::shell)
 		entity = new Enemy("goombas", 0.5f, 0.3f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 		//entity = new Bowser("bowser", 0, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), y_pos, y_pos, Vector2f(2.0f * cellSize, 2.0f * cellSize), Vector2f(x, y));
@@ -229,6 +229,11 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Block("spike", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
 	if (z == GridColor::pipe)
 		entity = new Block("pipe", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize * 2.0f, cellSize * 4.0f), Vector2f(x, y));
+	if (z == GridColor::peach)
+		entity = new Block("peach", 0.2, x_pos, y_pos, Vector2f(cellSize, 2 * cellSize), Vector2f(x, y));
+	if (z == GridColor::plant)
+		entity = new Block("plant3", 0.3, x_pos, y_pos, Vector2f(cellSize, 2 * cellSize), Vector2f(x, y));
+
 	
 	return entity;
 	/*

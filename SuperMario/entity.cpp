@@ -99,7 +99,7 @@ void Moveable::Update(float deltaTime)
 			//std::cout << "check frame " << currentFrame << " " << frames.size() << '\n';
 			clock.restart();
 		}
-		move();
+		move(deltaTime);
 		const b2Vec2& bodyPos = body->GetPosition();
 		position.x = bodyPos.x;
 		position.y = bodyPos.y;
@@ -109,21 +109,21 @@ void Moveable::Update(float deltaTime)
 	//cout << "x: " << position.x << ", y:" << position.y << endl;
 }
 
-void Moveable::move()
+void Moveable::move(float deltaTime)
 {
 	//cout << "Im moving !!" << endl;
 	//position.x += speed * direction;
+
 	b2Vec2 velocity = body->GetLinearVelocity();
 	if (abs(velocity.x) <= 0.02f) {
 		x_direction = -1.0f * x_direction;
 	}
+	/*
 	if (abs(velocity.y) <= 0.02f) {
 		y_direction = -1.0f * y_direction;
-	}
-
+	}*/
 	velocity.x = speed * x_direction;
 	velocity.y = speed * y_direction;
-
 	body->SetLinearVelocity(velocity);  // Update the body's velocity
 	checkAndChangeDirection();
 }
@@ -139,14 +139,14 @@ void Moveable::checkAndChangeDirection()
 		//velocity.x = 0.0f;
 	}
 	if (body->GetPosition().y >= yBound.first && y_direction != 0.0f) {
-		//cout << "Go Up" << endl;
+		cout << "Go Up" << endl;
 		y_direction = -1.0f;
-		//velocity.y = 0.0f;
+		//velocity.x = 0.0f;
 	}
-	if (body->GetPosition().y <= yBound.second && y_direction != 0.0f) {
-		//cout << "Go Down" << endl;
+	else if (body->GetPosition().y <= yBound.second && y_direction != 0.0f) {
+		cout << "Go Down" << endl;
 		y_direction = 1.0f;
-		//velocity.y = 0.0f;
+		//velocity.x = 0.0f;
 	}
 }
 
@@ -394,7 +394,11 @@ void Flame::OnBeginContact(b2Fixture* self, b2Fixture* other) {
 	if (!otherData) return;
 	if (fixture == self) {
 		if (otherData->type == FixtureDataType::Enemy) {
-			Enemy* enemy = dynamic_cast<Enemy*> (otherData->entity);
+			Enemy* enemy = nullptr;
+			if (otherData->entity->getName() == "bowser")
+				enemy = reinterpret_cast<Bowser*> (otherData->entity);
+			else
+				enemy = dynamic_cast<Enemy*> (otherData->entity);
 			if (enemy) {
 				enemy->Die();
 				cout << "Kill " << enemy->getName() << endl;
@@ -442,21 +446,22 @@ void Elevator::Begin()
 	fixtureData->entity = this;
 	fixtureData->type = FixtureDataType::Enemy;
 
+	
 	b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
+	bodyDef.type = b2_kinematicBody;
 	bodyDef.position.Set(position.x, position.y);
 	bodyDef.fixedRotation = true;
 	body = Physics::world.CreateBody(&bodyDef);
 	x_direction = 0.0f;
-	//y_direction = -1.0f;
 	
+	b2PolygonShape shape;
+	shape.SetAsBox(size.x / 2.0f, size.y / 2.0f);
+
 	b2FixtureDef fixtureDef;
 	fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (fixtureData);
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.1f;
-	b2PolygonShape shape;
-	shape.SetAsBox((size.x - 0.2f) / 2.0f, size.y / 2.0f);
 	fixtureDef.shape = &shape;
+	fixtureDef.friction = 0.0f;
+	fixtureDef.density = 1.0f;
 	body->CreateFixture(&fixtureDef);
 
 	body->SetLinearVelocity(b2Vec2(0.0f, speed * y_direction));
@@ -481,7 +486,7 @@ void Bowser::Begin() {
 
 
 	b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
+	bodyDef.type = b2_kinematicBody;
 	bodyDef.position.Set(position.x, position.y);
 	bodyDef.fixedRotation = true;
 	body = Physics::world.CreateBody(&bodyDef);

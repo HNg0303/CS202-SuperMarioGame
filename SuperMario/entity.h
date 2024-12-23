@@ -53,7 +53,7 @@ public:
 
 class Moveable : public Entity
 {
-private:
+protected:
 	
 	pair<float, float> xBound; //fixed bound [start, end]
 	pair<float, float> yBound;
@@ -76,7 +76,7 @@ public:
 	void Begin() override {};
 	void Update(float deltaTime) override;
 	void checkAndChangeDirection();
-	void move();
+	void move(float deltaTime);
 
 };
 
@@ -168,7 +168,7 @@ public:
 class Elevator : public Moveable {
 public:
 	Elevator(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords) :
-		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, x_end, coords)
+		Moveable(name_i, frameDuration_i, speed_i, x_start, x_end, y_start, y_end, coords)
 	{
 		this->size = size;
 	}
