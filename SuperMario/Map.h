@@ -27,7 +27,7 @@ public:
 		this->readObj("colorSheet.csv");
 	}
 	void CreateCheckerBoard(int width, int height);
-	void Draw(Renderer& renderer, Resources& resource);
+	void Draw(Renderer& renderer);
 	sf::Vector2f CreateFromImage(const sf::Image& image, vector<Entity*>& entites);
 	void setMapIndex(int index);
 	int getIndex();

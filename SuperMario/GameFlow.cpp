@@ -1,6 +1,7 @@
 ﻿#include "GameFlow.h"
 
 Music music{};
+Sound SFX{};
 
 //using namespace std;
 GameFlow* GameFlow::getInstance() {
@@ -181,6 +182,9 @@ void GameFlow::handleMainMenu() //handles controls in menu
 
 			if (sfEvent.key.code == sf::Keyboard::Enter)
 			{
+				SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
+				SFX.setVolume(30);
+				SFX.play();
 				if (mainMenu.GetPressedItem() == 0)
 				{
 					//if (pausedTime == sf::Time::Zero)
@@ -237,7 +241,7 @@ void GameFlow::handlePlayingGame()
 	cout << "CHECK TIME " << formatTime(pausedTime)<<" "<<formatTime(pausedTime + clock.getElapsedTime()) << endl;
 	while (window->isOpen())
 	{
-		
+	
 		if (isRestarted) {
 			Restart();
 			this->game = new Game(this->map, this->character, this->camera);
@@ -365,6 +369,9 @@ void GameFlow::handleChooseCharacter()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
+					SFX.setVolume(30);
+					SFX.play();
 					curState = static_cast<int>(GameState::ChooseLevel);
 					return;
 				}
@@ -402,6 +409,9 @@ void GameFlow::handleChooseLevel()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setVolume(60);
+					SFX.play();
 					if (mainMenu.GetPressedItem() == 1)
 						ResetLevel(chooseLevel.GetPressedItem());
 					resumeClock();
@@ -479,12 +489,18 @@ void GameFlow::handleChooseThemes()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setVolume(60);
+					SFX.play();
 					Entity::setcurTheme(chooseThemes.GetPressedItem() + 1);
 					return;
 				}
 
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
+					SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
+					SFX.setVolume(30);
+					SFX.play();
 					curState = static_cast<int>(GameState::MainMenu);
 					return;
 				}
@@ -517,6 +533,9 @@ void GameFlow::handlePauseMenu()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setVolume(60);
+					SFX.play();
 					if (pauseMenu.GetPressedItem() == 0) //continue
 					{
 						curState = static_cast<int>(GameState::PlayingGame);
@@ -564,6 +583,9 @@ void GameFlow::handleAskRestart()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setVolume(60);
+					SFX.play();
 					if (askRestart.GetPressedItem() == 0) //restart
 					{
 						resumeClock();
@@ -609,6 +631,9 @@ void GameFlow::handleAskNextLevel()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setVolume(60);
+					SFX.play();
 					if (askNextLevel.GetPressedItem() == 0) //next level
 					{
 						chooseLevel.setPressedItem(chooseLevel.GetPressedItem() + 1);
@@ -718,6 +743,9 @@ void GameFlow::handleLooseGame()
 			{
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
+					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setVolume(60);
+					SFX.play();
 					ResetLevel(chooseLevel.GetPressedItem());
 					curState = static_cast<int>(GameState::MainMenu);
 					return;
@@ -829,6 +857,9 @@ void GameFlow::handleWinGame()
 
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter)
 			{
+				SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+				SFX.setVolume(60);
+				SFX.play();
 				transform(levelStr.begin(), levelStr.end(), levelStr.begin(), [](unsigned char c) { return std::tolower(c); });
 				if (username == "")
 					username = "anonymous";
@@ -920,15 +951,10 @@ void GameFlow::run()
 			break;
 
 		case GameState::PauseMenu:
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/pause.wav"));
-			music.setLoop(false);
-			music.setVolume(40);
-			music.play();
+			SFX.setBuffer(Resources::sfx["pause.wav"]);
+			SFX.setVolume(40);
+			SFX.play();
 			handlePauseMenu();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
-			music.setLoop(true);
-			music.setVolume(40);
-			music.play();
 			break;
 
 		case GameState::AskRestart:
@@ -936,6 +962,18 @@ void GameFlow::run()
 			break;
 
 		case GameState::PlayingGame:
+			if (chooseThemes.GetPressedItem())
+			{
+				music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/cloud.wav"));
+				music.setVolume(20);
+			}
+			else
+			{
+				music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+				music.setVolume(60);
+			}
+			music.setLoop(true);
+			music.play();
 			handlePlayingGame();
 			break;
 
@@ -945,34 +983,20 @@ void GameFlow::run()
 			music.setVolume(40);
 			music.play();
 			handleLooseGame();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
-			music.setLoop(true);
-			music.setVolume(40);
-			music.play();
 			break;
 
 		case GameState::WinGame:
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/worldclear.wav"));
-			music.setLoop(false);
-			music.setVolume(40);
-			music.play();
+			SFX.setBuffer(Resources::sfx["worldclear.wav"]);
+			SFX.setVolume(40);
+			SFX.play();
 			handleWinGame();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
-			music.setLoop(true);
-			music.setVolume(40);
-			music.play();
 			break;
-		
+
 		case GameState::AskNextLevel:
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/worldclear.wav"));
-			music.setLoop(false);
-			music.setVolume(40);
-			music.play();
+			SFX.setBuffer(Resources::sfx["flag.wav"]);
+			SFX.setVolume(40);
+			SFX.play();
 			handleAskNextLevel();
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
-			music.setLoop(true);
-			music.setVolume(40);
-			music.play();
 			break;
 
 		}

@@ -76,7 +76,3 @@ void Resources::loadResource() {
 		}
 	}
 }
-
-Texture Resources :: getTexture(string textureName) {
-	return textures[textureName];
-}
