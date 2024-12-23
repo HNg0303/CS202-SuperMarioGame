@@ -1,0 +1,471 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+class Animation {
+	+Animation(float time, vector<Frame> _frames)
+	+operator=(const Animation& other) : Animation&
+	+getTexture() : Texture
+	-currentTime : float
+	-endTime : float
+	-currentFrame : int
+	-frames : vector<Frame>
+	+Update(float deltaTime) : void
+}
+
+
+class Block {
+	+Block(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords)
+	+~Block()
+	+Begin() : void
+}
+
+
+class Camera {
+	+Camera(float zoomLevel)
+	+zoomLevel : float
+	+position : sf::Vector2f
+	+GetView(sf::Vector2u windowSize) : sf::View
+}
+
+
+abstract class Character {
+	+~Character()
+	#changeStateAnimation : Animation
+	#runAnimation : Animation
+	#fixtureData : FixtureData*
+	#jumpSFX : Sound
+	#drawingTexture : Texture
+	#standAnimation : Texture
+	#standAnimation : Texture
+	#jumpAnimation : Texture standAnimation{
+	+getPos() : Vector2f
+	+position : Vector2f
+	#dynamicBody : b2Body*
+	#groundFixture : b2Fixture*
+	#headFixture : b2Fixture*
+	+faceLeft : bool
+	+isDead : bool
+	+transform : bool
+	+win : bool
+	+angle : float
+	+jumpVelocity : float
+	+movementVelocity : float
+	+transformTimer : float
+	+yBound : float
+	#changeStateCounter : int
+	+coin : int
+	+lives : int
+	+onGround : int
+	+xBound : pair<float, float>
+	#startPos : sf::Vector2f
+	+{abstract} Begin() : void
+	+{abstract} Draw(Renderer& renderer) : void
+	+OnBeginContact(b2Fixture* self, b2Fixture* other) : void
+	+OnEndContact(b2Fixture* self, b2Fixture* other) : void
+	+{abstract} Update(float& deltaTime) : void
+	+handleDeath() : void
+	+setPos(Vector2f position) : void
+	+setPosition(float x, float y) : void
+}
+
+
+class Character::CharacterFactory {
+	+{static} createCharacter(CharacterType type, int lives) : Character*
+}
+
+
+class Character::Luigi {
+	+Luigi(float x, float y, int lives)
+	+Begin() : void
+	+Draw(Renderer& renderer) : void
+	+OnBeginContact(b2Fixture* self, b2Fixture* other) : void
+	+Update(float& deltaTime) : void
+}
+
+
+class Character::Mario {
+	+Mario(float x, float y, int lives)
+	+Begin() : void
+	+Draw(Renderer& renderer) : void
+	+OnBeginContact(b2Fixture* self, b2Fixture* other) : void
+	+Update(float& deltaTime) : void
+}
+
+
+class Coin {
+	+Coin(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords)
+	+~Coin()
+	+Begin() : void
+}
+
+
+abstract class ContactListener {
+	+~ContactListener()
+	+{abstract} OnBeginContact(b2Fixture* self, b2Fixture* other) : void
+	+{abstract} OnEndContact(b2Fixture* self, b2Fixture* other) : void
+}
+
+
+class Enemy {
+	+Enemy(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords)
+	+~Enemy()
+	+fixture : b2Fixture*
+	+Begin() : void
+	+Die() : void
+	+OnBeginContact(b2Fixture* self, b2Fixture* other) : void
+	+OnEndContact(b2Fixture* self, b2Fixture* other) : void
+}
+
+
+abstract class Entity {
+	+Entity(string name_i, double frameDuration_i, float x, float y, Vector2f coords)
+	+~Entity()
+	+clock : Clock
+	+fixtureData : FixtureData*
+	+coords : Vector2f
+	+getCoords() : Vector2f
+	+position : Vector2f
+	+size : Vector2f
+	+body : b2Body*
+	+deleted : bool
+	+faceLeft : bool
+	+frameDuration : double
+	+x_direction : float
+	+y_direction : float
+	+currentFrame : int
+	+{static} curTheme : static int
+	+getName() : string
+	+name : string
+	+frames : vector<Texture>
+	+loadFrame(string folderPath) : vector<Texture>
+	+{abstract} Begin() : void
+	+{abstract} Update(float deltaTime) : void
+	+draw(RenderWindow* window, const Vector2f& size) : void
+	+markDeleted() : void
+	+{static} setcurTheme(int value) : void
+}
+
+
+class Flame {
+	+Flame(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords)
+	+~Flame()
+	-soundFX : Sound
+	+fixture : b2Fixture*
+	+Begin() : void
+	+OnBeginContact(b2Fixture* self, b2Fixture* other) : void
+	+OnEndContact(b2Fixture* self, b2Fixture* other) : void
+}
+
+
+class Flame::Bowser {
+	+Bowser(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords)
+	+~Bowser()
+	+fireTime : float
+	+Begin() : void
+	+Update(float deltaTime) : void
+}
+
+
+class Flame::Elevator {
+	+Elevator(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f size, Vector2f coords)
+	+~Elevator()
+	+Begin() : void
+}
+
+
+class Game {
+	+Game(Map* map, Character* character, Camera* camera)
+	+~Game()
+	-camera : Camera*
+	-character : Character*
+	+getEntity(string name) : Entity*
+	-map : Map*
+	-startPos : Vector2f
+	+lose : bool
+	+win : bool
+	+coins : int
+	+getCoin() : int
+	-map_image : sf::Image
+	+view : sf::View
+	-mapPaths : vector<vector<string>>
+	+Begin(sf::RenderWindow& window) : void
+	+InitMapPath() : void
+	+Render(Renderer& renderer, Resources& resource) : void
+	+Update(float& deltaTime, RenderWindow& window) : void
+	+chooseCharacter(CharacterType type) : void
+}
+
+
+class Map {
+	+Map(float c, int d, int s, int index)
+	+~Map()
+	+createEntityFromMap(int z, int x, int y) : Entity*
+	+isTheme : bool
+	+cellSize : float
+	+difficulty : int
+	+getIndex() : int
+	-index : int
+	+stage : int
+	-objectMap : map<string, sf::Color>
+	-startingPos : pair<int, int>
+	+CreateFromImage(const sf::Image& image, vector<Entity*>& entites) : sf::Vector2f
+	+grid : std::vector<std::vector<int>>
+	-objName : vector<string>
+	+CreateCheckerBoard(int width, int height) : void
+	+Draw(Renderer& renderer, Resources& resource) : void
+	+Update(Vector2f pos) : void
+	+drawBackground(Renderer& renderer, int n) : void
+	+readMapState(string filename) : void
+	+readObj(string filename) : void
+	+saveMapState(string filename, Vector2f& CharPos) : void
+	+setGrid(const sf::Image& image) : void
+	+setMapIndex(int index) : void
+}
+
+
+class Moveable {
+	+Moveable(string name_i, double frameDuration_i, float speed_i, float x_start, float x_end, float y_start, float y_end, Vector2f coords)
+	+isDead : bool
+	+destroyingTimer : float
+	+speed : float
+	-yPosition : float
+	-xBound : pair<float, float>
+	-yBound : pair<float, float>
+	+Begin() : void
+	+Update(float deltaTime) : void
+	+checkAndChangeDirection() : void
+	+move() : void
+}
+
+
+class MyDebugDraw {
+	+MyDebugDraw(RenderTarget& target)
+	-target : RenderTarget&
+	+DrawCircle(const b2Vec2& center, float radius, const b2Color& color) : void
+	+DrawPoint(const b2Vec2& p, float size, const b2Color& color) : void
+	+DrawPolygon(const b2Vec2* vertices, int vertexCount, const b2Color& color) : void
+	+DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) : void
+	+DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color) : void
+	+DrawSolidPolygon(const b2Vec2* vertices, int vertexCount, const b2Color& color) : void
+	+DrawTransform(const b2Transform& xf) : void
+}
+
+
+class Physics {
+	+{static} debugDraw : static MyDebugDraw*
+	+{static} world : static b2World
+	+{static} Init() : void
+	+{static} Update(float& deltaTime) : void
+	+{static} draw(Renderer& renderer) : void
+}
+
+
+class PowerUp {
+	+PowerUp(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords)
+	+~PowerUp()
+	+Begin() : void
+}
+
+
+class QBlock {
+	-QBlock(string name_i, double frameDuration_i, float x, float y, Vector2f size, Vector2f coords)
+}
+
+
+class Renderer {
+	+Renderer(sf::RenderTarget& t)
+	+getRenderWindow() : RenderWindow*
+	+target : sf::RenderTarget&
+	-sprite : sf::Sprite
+	+Draw(const sf::Texture& texture, const sf::Vector2f& position, const sf::Vector2f& size, float angle, bool faceLeft) : void
+}
+
+
+class Resources {
+	+getTexture(string textureName) : Texture
+	+{static} sfx : static unordered_map<string, SoundBuffer>
+	+{static} textures : static unordered_map<string, Texture>
+	+loadResource() : void
+}
+
+
+class Unmoveable {
+	+Unmoveable(string name_i, double frameDuration_i, float x, float y, Vector2f coords)
+	+Begin() : void
+	+Update(float deltaTime) : void
+}
+
+
+enum CharacterType {
+	CustomCharacter
+	LUIGI
+	MARIO
+}
+
+
+enum FixtureDataType {
+	Character
+	Enemy
+	Entity
+	MapTile
+}
+
+
+enum GridColor {
+	block
+	bowser
+	bridge
+	coin
+	fireBar
+	goal
+	lava1
+	lava2
+	mario
+	nothing
+	peach
+	pipe
+	plant
+	powerup_green
+	powerup_red
+	question
+	shell
+	spike
+	spikyTurtle
+	stone
+	tile
+	tileMap3
+	woodBlock
+}
+
+
+class FixtureData {
+	+listener : ContactListener*
+	+entity : Entity*
+	+type : FixtureDataType
+}
+
+
+class Frame {
+	+Frame(float time, Texture _texture)
+	+texture : Texture
+	+endTime : float
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+Character <|-- Character::Luigi
+
+
+Character <|-- Character::Mario
+
+
+ContactListener <|-- Character
+
+
+ContactListener <|-- Enemy
+
+
+ContactListener <|-- Flame
+
+
+Enemy <|-- Flame::Bowser
+
+
+Entity <|-- Moveable
+
+
+Entity <|-- Unmoveable
+
+
+Moveable <|-- Enemy
+
+
+Moveable <|-- Flame
+
+
+Moveable <|-- Flame::Elevator
+
+
+Unmoveable <|-- Block
+
+
+Unmoveable <|-- Coin
+
+
+Unmoveable <|-- PowerUp
+
+
+Unmoveable <|-- QBlock
+
+
+
+
+
+/' Aggregation relationships '/
+
+Animation *-- Frame
+
+
+Character "2" *-- Animation
+
+
+Character o-- FixtureData
+
+
+Entity o-- FixtureData
+
+
+FixtureData o-- ContactListener
+
+
+FixtureData o-- Entity
+
+
+FixtureData *-- FixtureDataType
+
+
+Game o-- Camera
+
+
+Game o-- Character
+
+
+Game o-- Map
+
+
+Physics o-- MyDebugDraw
+
+
+
+
+
+
+/' Nested objects '/
+
+Character +-- Character::CharacterFactory
+
+
+Character +-- Character::Luigi
+
+
+Character +-- Character::Mario
+
+
+Flame +-- Flame::Bowser
+
+
+Flame +-- Flame::Elevator
+
+
+
+
+@enduml
