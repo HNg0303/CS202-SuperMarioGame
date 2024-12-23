@@ -159,6 +159,9 @@ Character::~Character() {
 }
 
 Mario::Mario(float x, float y, int lives) {
+    soundEffect.setBuffer(Resources::sfx["chooseMario.wav"]);
+    soundEffect.setVolume(20);
+    soundEffect.play();
     position.x = x;
     position.y = y;
     movementVelocity = 5.0f;
@@ -431,6 +434,9 @@ void Mario::OnBeginContact(b2Fixture* self, b2Fixture* other)
 
 
 Luigi::Luigi(float x, float y, int lives) {
+    soundEffect.setBuffer(Resources::sfx["chooseLuigi.wav"]);
+    soundEffect.setVolume(40);
+    soundEffect.play();
     position.x = x;
     position.y = y;
     movementVelocity = 4.0f;

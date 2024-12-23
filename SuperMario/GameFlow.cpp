@@ -1029,18 +1029,37 @@ void Menu::MoveDown() //keyboard input DOWN in menu
 void Menu::handleUpDown(sf::Event sfEvent)
 {
 	if (sfEvent.key.code == sf::Keyboard::Up)
+	{
+		SFX.setBuffer(Resources::sfx["uporleft.wav"]);
+		SFX.setVolume(30);
+		SFX.play();
 		MoveUp();
+	}
 	else if (sfEvent.key.code == sf::Keyboard::Down)
+	{
+		SFX.setBuffer(Resources::sfx["downorright.wav"]);
+		SFX.setVolume(30);
+		SFX.play();
 		MoveDown();
-
+	}
 }
 
 void Menu::handleLeftRight(sf::Event sfEvent)
 {
 	if (sfEvent.key.code == sf::Keyboard::Left)
+	{
+		SFX.setBuffer(Resources::sfx["uporleft.wav"]);
+		SFX.setVolume(30);
+		SFX.play();
 		MoveLeft();
+	}
 	else if (sfEvent.key.code == sf::Keyboard::Right)
+	{
+		SFX.setBuffer(Resources::sfx["downorright.wav"]);
+		SFX.setVolume(30);
+		SFX.play();
 		MoveRight();
+	}
 }
 
 void Menu::MoveLeft()
