@@ -321,7 +321,6 @@ void Mario::Update(float& deltaTime)
         }
         return;
     }
-    drawingTexture = Resources::textures["mario1.png"];
     float move = movementVelocity;
     float jump = jumpVelocity;
     if (changeStateCounter) {
