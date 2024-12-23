@@ -147,8 +147,6 @@ public:
 };
 
 class Flame : public Moveable, public ContactListener {
-private:
-	Sound soundFX{};
 public:
 	b2Fixture* fixture = nullptr;
 
