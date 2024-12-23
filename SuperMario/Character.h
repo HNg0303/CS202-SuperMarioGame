@@ -48,6 +48,7 @@ protected:
     Texture standAnimation{}, jumpAnimation{};
     Animation runAnimation, changeStateAnimation;
     Sound jumpSFX{};
+    Sound soundEffect{};
 };
 
 
