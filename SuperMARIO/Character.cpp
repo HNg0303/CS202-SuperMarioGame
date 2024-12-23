@@ -75,7 +75,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         else if (data->entity->getName() == "goombas") {
             if (groundFixture == self) {
                 soundEffect.setBuffer(Resources::sfx["kill.wav"]);
-                soundEffect.setVolume(20);
+                soundEffect.setVolume(40);
                 soundEffect.play();
                 Enemy* enemy = dynamic_cast<Enemy*> (data->entity);
                 if (enemy) {
@@ -159,6 +159,9 @@ Character::~Character() {
 }
 
 Mario::Mario(float x, float y, int lives) {
+    soundEffect.setBuffer(Resources::sfx["chooseMario.wav"]);
+    soundEffect.setVolume(20);
+    soundEffect.play();
     position.x = x;
     position.y = y;
     movementVelocity = 7.0f;
@@ -426,6 +429,9 @@ void Mario::OnBeginContact(b2Fixture* self, b2Fixture* other)
 
 
 Luigi::Luigi(float x, float y, int lives) {
+    soundEffect.setBuffer(Resources::sfx["chooseLuigi.wav"]);
+    soundEffect.setVolume(40);
+    soundEffect.play();
     position.x = x;
     position.y = y;
     movementVelocity = 5.0f;
