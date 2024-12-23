@@ -3,6 +3,7 @@
 
 vector<Entity*> onEntities;
 int Entity::curTheme = 1;
+Sound soundFX{};
 
 
 Entity::Entity(string name_i, double frameDuration_i, float x, float y, Vector2f coords) :
@@ -82,6 +83,12 @@ void Moveable::Update(float deltaTime)
 {
 	if (isDead) {
 		if (body) {
+			if (this->getName() == "bowser")
+			{
+				soundFX.setBuffer(Resources::sfx["bowserfall.wav"]);
+				soundFX.setVolume(30);
+				soundFX.play();
+			}
 			Physics::world.DestroyBody(this->body);
 			this->body = nullptr;
 		}
