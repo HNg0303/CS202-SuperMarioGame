@@ -982,7 +982,11 @@ void GameFlow::run()
 			music.setLoop(false);
 			music.setVolume(40);
 			music.play();
-			handleLooseGame();
+			handleLooseGame(); 
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.setLoop(false);
+			music.setVolume(40);
+			music.play();
 			break;
 
 		case GameState::WinGame:
