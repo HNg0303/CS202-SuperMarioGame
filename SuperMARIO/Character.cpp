@@ -441,7 +441,7 @@ Luigi::Luigi(float x, float y, int lives) {
     position.x = x;
     position.y = y;
     movementVelocity = 4.0f;
-    jumpVelocity = 6.0f;
+    jumpVelocity = 5.0f;
     angle = 0.0f;
 
     this->lives = lives;
