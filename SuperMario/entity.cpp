@@ -352,7 +352,7 @@ Enemy :: ~Enemy() {
 void Enemy::Die() {
 	isDead = true;
 	deleted = true;
-	size.y = size.y / 4.0f;
+	size.y = size.y / 5.0f;
 	//position.y += size.y / 5.0f;
 }
 

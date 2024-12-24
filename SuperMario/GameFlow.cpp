@@ -990,17 +990,27 @@ void GameFlow::run()
 			break;
 
 		case GameState::WinGame:
-			SFX.setBuffer(Resources::sfx["worldclear.wav"]);
-			SFX.setVolume(40);
-			SFX.play();
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/worldclear.wav"));
+			music.setLoop(false);
+			music.setVolume(40);
+			music.play();
 			handleWinGame();
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.setLoop(true);
+			music.setVolume(40);
+			music.play();
 			break;
 
 		case GameState::AskNextLevel:
-			SFX.setBuffer(Resources::sfx["flag.wav"]);
-			SFX.setVolume(40);
-			SFX.play();
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/worldclear.wav"));
+			music.setLoop(false);
+			music.setVolume(40);
+			music.play();
 			handleAskNextLevel();
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/background.wav"));
+			music.setLoop(true);
+			music.setVolume(40);
+			music.play();
 			break;
 
 		}
