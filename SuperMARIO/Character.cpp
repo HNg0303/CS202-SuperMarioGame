@@ -20,9 +20,6 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
     FixtureData* data = reinterpret_cast<FixtureData*> (other->GetUserData().pointer);
     if (!data) return;
     if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "goal" || data->entity->getName() == "peach")) {
-        soundEffect.setBuffer(Resources::sfx["win.wav"]);
-        soundEffect.setVolume(10);
-        soundEffect.play();
         win = true;
         return;
     }

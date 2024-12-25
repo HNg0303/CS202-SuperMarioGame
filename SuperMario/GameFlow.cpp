@@ -1002,7 +1002,7 @@ void GameFlow::run()
 			break;
 
 		case GameState::AskNextLevel:
-			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/worldclear.wav"));
+			music.openFromFile(convertToUnixPath(fs::current_path().string() + "/Resource/Music/flag.wav"));
 			music.setLoop(false);
 			music.setVolume(40);
 			music.play();
