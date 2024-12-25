@@ -13,6 +13,7 @@ Character* CharacterFactory::createCharacter(CharacterType type, int lives) {
 }
 
 void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
+    if (isDead) return;
     if (!self) {
         std::cerr << "Warning: Null fixture detected in OnBeginContact!" << std::endl;
         return;  // Exit the function if fixture is invalid
@@ -110,6 +111,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
 }
 
 void Character::OnEndContact(b2Fixture* self, b2Fixture* other) {
+    if (isDead) return;
     if (!other) {
         std::cerr << "Warning: Null fixture detected in OnEndContact!" << std::endl;
         return;  // Exit the function if fixture is invalid
@@ -301,7 +303,7 @@ void Mario::Update(float& deltaTime)
         changeStateAnimation.Update(deltaTime);
         drawingTexture = changeStateAnimation.getTexture();
         transformTimer += deltaTime;
-        if (transformTimer > 1.0f) {
+        if (transformTimer > 10.0f) {
             if (isDead) {
                 if (lives > 1) lives -= 1;
                 else {
@@ -369,9 +371,12 @@ void Mario::Update(float& deltaTime)
 
     position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
     //Check Bound 
-    if (position.y >= yBound || position.x < xBound.first - 2.0f || position.x > xBound.second + 2.0f) 
-        handleDeath();
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
+
+    if ((position.y >= yBound || position.x < xBound.first - 2.0f || position.x > xBound.second + 2.0f) && !isDead) {
+        handleDeath();
+        return;
+    }
 }
 
 void Mario::OnBeginContact(b2Fixture* self, b2Fixture* other)
@@ -654,13 +659,13 @@ void Luigi::Update(float& deltaTime)
     dynamicBody->SetLinearVelocity(velocity);
     //Update position and angle
 
-    if (position.y >= yBound || position.x <= xBound.first - 2.0f || position.x >= xBound.second + 2.0f) {
-        cout << "Out of bound" << endl;
-        handleDeath();
-    }
-
     position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
+
+    if ((position.y >= yBound || position.x < xBound.first - 2.0f || position.x > xBound.second + 2.0f) && !isDead) {
+        handleDeath();
+        return;
+    }
 }
 
 void Luigi::Draw(Renderer& renderer) {

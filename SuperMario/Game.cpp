@@ -71,13 +71,14 @@ void Game :: Begin(sf::RenderWindow& window)
 }
 
 void Game :: Update(float& deltaTime, RenderWindow& window) {
-	Physics::Update(deltaTime);
 	//cout << "Physic Update is okay" << endl;
+	Physics::Update(deltaTime);
 	if (character->win) {
 		this->win = true;
 		return;
 	}
 	if (character->isDead) {
+		cout << "Dead" << endl;
 		character->Update(deltaTime);
 		if (!character->lives) {
 			this->lose = true;
@@ -89,6 +90,7 @@ void Game :: Update(float& deltaTime, RenderWindow& window) {
 		window.setView(view);
 		return;
 	}
+	
 	//cout << "Check Character dead is Okay !" << endl;
 	character->Update(deltaTime);
 	//cout << "Character Update is okay" << endl;
