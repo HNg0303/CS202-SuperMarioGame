@@ -20,9 +20,6 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
     FixtureData* data = reinterpret_cast<FixtureData*> (other->GetUserData().pointer);
     if (!data) return;
     if (data->type == FixtureDataType::MapTile && (data->entity->getName() == "goal" || data->entity->getName() == "peach")) {
-        soundEffect.setBuffer(Resources::sfx["win.wav"]);
-        soundEffect.setVolume(10);
-        soundEffect.play();
         win = true;
         return;
     }
@@ -75,7 +72,7 @@ void Character::OnBeginContact(b2Fixture* self, b2Fixture* other) {
         else if (data->entity->getName() == "goombas") {
             if (groundFixture == self) {
                 soundEffect.setBuffer(Resources::sfx["kill.wav"]);
-                soundEffect.setVolume(10);
+                soundEffect.setVolume(70);
                 soundEffect.play();
                 Enemy* enemy = dynamic_cast<Enemy*> (data->entity);
                 if (enemy) {
@@ -276,7 +273,7 @@ void Mario::Begin() {
     circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
     dynamicBody->CreateFixture(&fixtureDef);
     b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.48f, 0.4f * scale);
+    polygonShape.SetAsBox(0.45f, 0.4f * scale);
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
@@ -562,7 +559,7 @@ void Luigi::Begin() {
     circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
     dynamicBody->CreateFixture(&fixtureDef);
     b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.48f, 0.4f * scale);
+    polygonShape.SetAsBox(0.45f, 0.4f * scale);
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 

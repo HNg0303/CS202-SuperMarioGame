@@ -63,8 +63,7 @@ void Entity::draw(sf::RenderWindow* window, const Vector2f& size)
 		sf::Vector2f origin(frames[currentFrame].getSize().x / 2.0f, frames[currentFrame].getSize().y / 2.0f);
 		sprite.setOrigin(origin);
 		Vector2f scale;
-		if (name == "goal") scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
-		else scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
+		scale = Vector2f(this->size.x / frames[currentFrame].getSize().x, this->size.y / frames[currentFrame].getSize().y);
 		sprite.setScale(scale);
 		//sprite.setScale(2.f * direction, 2.f);
 		sprite.setPosition(position);
