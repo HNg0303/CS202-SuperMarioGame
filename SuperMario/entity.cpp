@@ -441,7 +441,7 @@ void deleteEntity(Entity* entity) {
 void clearEntities() {
 	for (Entity* entity : onEntities) {
 		delete entity;
-		//entity = nullptr;
+		entity = nullptr;
 	}
 	onEntities.clear();
 }
