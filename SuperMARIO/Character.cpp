@@ -273,7 +273,7 @@ void Mario::Begin() {
     circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
     dynamicBody->CreateFixture(&fixtureDef);
     b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.48f, 0.4f * scale);
+    polygonShape.SetAsBox(0.45f, 0.4f * scale);
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
@@ -559,7 +559,7 @@ void Luigi::Begin() {
     circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
     dynamicBody->CreateFixture(&fixtureDef);
     b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(0.48f, 0.4f * scale);
+    polygonShape.SetAsBox(0.45f, 0.4f * scale);
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
