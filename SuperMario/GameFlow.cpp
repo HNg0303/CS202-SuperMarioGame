@@ -378,6 +378,9 @@ void GameFlow::handleChooseCharacter()
 
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
+					SFX.setBuffer(Resources::sfx["escape.wav"]);
+					SFX.setVolume(40);
+					SFX.play();
 					curState = static_cast<int>(GameState::MainMenu); 
 					return;
 				}
@@ -423,6 +426,9 @@ void GameFlow::handleChooseLevel()
 
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
+					SFX.setBuffer(Resources::sfx["escape.wav"]);
+					SFX.setVolume(40);
+					SFX.play();
 					curState = static_cast<int>(GameState::ChooseCharacter);
 					return;
 				}
@@ -489,7 +495,7 @@ void GameFlow::handleChooseThemes()
 
 				if (sfEvent.key.code == sf::Keyboard::Enter)
 				{
-					SFX.setBuffer(Resources::sfx["secondchoose.wav"]);
+					SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
 					SFX.setVolume(60);
 					SFX.play();
 					Entity::setcurTheme(chooseThemes.GetPressedItem() + 1);
@@ -498,8 +504,8 @@ void GameFlow::handleChooseThemes()
 
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
-					SFX.setBuffer(Resources::sfx["firstchoose.wav"]);
-					SFX.setVolume(30);
+					SFX.setBuffer(Resources::sfx["escape.wav"]);
+					SFX.setVolume(40);
 					SFX.play();
 					curState = static_cast<int>(GameState::MainMenu);
 					return;
@@ -557,6 +563,9 @@ void GameFlow::handlePauseMenu()
 
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
+					SFX.setBuffer(Resources::sfx["escape.wav"]);
+					SFX.setVolume(40);
+					SFX.play();
 					curState = static_cast<int>(GameState::PlayingGame);
 					return;
 				}
@@ -604,6 +613,9 @@ void GameFlow::handleAskRestart()
 
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
+					SFX.setBuffer(Resources::sfx["escape.wav"]);
+					SFX.setVolume(40);
+					SFX.play();
 					curState = static_cast<int>(GameState::PlayingGame);
 					return;
 				}
@@ -652,6 +664,9 @@ void GameFlow::handleAskNextLevel()
 
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
+					SFX.setBuffer(Resources::sfx["escape.wav"]);
+					SFX.setVolume(40);
+					SFX.play();
 					curState = static_cast<int>(GameState::MainMenu);
 					return;
 				}
@@ -677,6 +692,9 @@ void GameFlow::handleScoreboard()
 			{
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
+					SFX.setBuffer(Resources::sfx["escape.wav"]);
+					SFX.setVolume(40);
+					SFX.play();
 					curState = static_cast<int>(GameState::MainMenu); 
 					return;
 				}
@@ -700,6 +718,9 @@ void GameFlow::handleHelpMenu()
 			{
 				if (sfEvent.key.code == sf::Keyboard::Escape)
 				{
+					SFX.setBuffer(Resources::sfx["escape.wav"]);
+					SFX.setVolume(40);
+					SFX.play();
 					curState = static_cast<int>(GameState::MainMenu); 
 					return;
 				}
@@ -906,6 +927,9 @@ void handleExit(sf::Event sfEvent, int& curState, GameFlow::GameState& newState)
 {
 	if (sfEvent.key.code == sf::Keyboard::Escape)
 	{
+		SFX.setBuffer(Resources::sfx["escape.wav"]);
+		SFX.setVolume(40);
+		SFX.play();
 		curState = static_cast<int>(newState);
 		return;
 	}

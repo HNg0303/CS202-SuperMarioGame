@@ -26,9 +26,9 @@ F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(354,68): warning C4244:         
 F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(354,68): warning C4244:         [
 F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(354,68): warning C4244:             T=float
 F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(354,68): warning C4244:         ]
-F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(839,75): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(867,75): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(1025,40): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(842,75): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(870,75): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+F:\GitHub\supermariosub\SuperMARIO\GameFlow.cpp(1028,40): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   Generating code
   1 of 2037 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
