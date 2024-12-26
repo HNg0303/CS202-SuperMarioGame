@@ -89,12 +89,10 @@ void Game :: Update(float& deltaTime, RenderWindow& window) {
 }
 
 void Game :: Render(Renderer& renderer, Resources& resource) {
-	//map->Draw(renderer, resource);
 	map->drawBackground(renderer, 2);
 	for (auto& entity : onEntities)
 		entity->draw(renderer.getRenderWindow(), Vector2f(map->cellSize, map->cellSize));
 	character->Draw(renderer);
-	Physics::draw(renderer);
 }
 
 int Game::getCoin() {

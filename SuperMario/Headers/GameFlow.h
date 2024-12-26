@@ -44,13 +44,6 @@ private:
 		loadPausedTimeToFile();
 		
 		mainMenu.loadResultsToArray();
-		//game->loadEntities(entities);
-		
-		//map = new Map(1.0f);
-		
-		camera = new Camera(30.0f);
-		
-
 		this->window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Mario");
 		this->window->setFramerateLimit(60);
 		this->renderer = new Renderer(*this->window);

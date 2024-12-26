@@ -1,5 +1,4 @@
-#include "../Headers/Map.h"
-#include <iostream>
+#include "Map.h"
 
 void Map::CreateCheckerBoard(int width, int height)
 {
@@ -93,15 +92,14 @@ sf::Vector2f Map::CreateFromImage(const sf::Image& image, vector<Entity*>& entit
 				entities.push_back(goomba);
 			}*/
 			int z = grid[x][y];
-			Entity* entity = nullptr;
 			if (z == GridColor::mario) {
 				startingPos.first = x;
 				startingPos.second = y;
 				marioPos = sf::Vector2f(cellSize * x, cellSize * y);
 			}
 			else {
-				entity = this->createEntityFromMap(z, x, y);
-				if (entity != nullptr)
+				Entity* entity = this->createEntityFromMap(z, x, y);
+				if (entity)
 					entities.push_back(entity);
 			}
 		}
@@ -233,8 +231,6 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Block("peach", 0.2, x_pos, y_pos, Vector2f(cellSize, 2 * cellSize), Vector2f(x, y));
 	if (z == GridColor::plant)
 		entity = new Block("plant3", 0.3, x_pos, y_pos, Vector2f(cellSize, 2 * cellSize), Vector2f(x, y));
-
-	
 	return entity;
 	/*
 	Entity* entity = nullptr;
@@ -265,8 +261,6 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 	if (z == GridColor::bowser) {
 		entity = new Bowser("bowser", 0.5, 1.0f, (cellSize * x - 2 * cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, 2.0f * cellSize), Vector2f(x, y));
 	}*/
-	
-	return entity;
 }
 
 void Map::readMapState(string filename)
@@ -295,10 +289,10 @@ void Map::setMapIndex(int index) {
 }
 
 int Map::getIndex() { return this->index; }
-
+/*
 Map :: ~Map() {
-	clearEntities();
-}
+	cout << "Map Destructor called !" << endl;
+}*/
 
 void Map::drawBackground(Renderer& renderer, int n)
 {
