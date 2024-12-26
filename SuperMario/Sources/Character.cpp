@@ -659,7 +659,7 @@ void Luigi::Update(float& deltaTime)
     position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
 
-    if (position.y >= yBound || position.x <= xBound.first - 2.0f || position.x >= xBound.second + 2.0f) {
+    if (position.y >= yBound - 0.5 || position.x <= xBound.first - 2.0f || position.x >= xBound.second + 2.0f) {
         cout << "Out of bound" << endl;
         handleDeath();
     }
