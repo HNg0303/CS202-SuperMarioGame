@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "INCLUDE.h"
+#include "../Headers/INCLUDE.h"
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 900

@@ -1,5 +1,5 @@
-#include "entity.h"
-#include "Resources.h"
+#include "../Headers/entity.h"
+#include "../Headers/Resources.h"
 
 vector<Entity*> onEntities;
 int Entity::curTheme = 1;

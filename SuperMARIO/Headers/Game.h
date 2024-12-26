@@ -1,11 +1,11 @@
 #pragma once
-#include "Entity.h"
-#include "Map.h"
-#include "Resources.h"
-#include "Camera.h"
-#include "Renderer.h"
-#include "Physics.h"
-#include "Character.h"
+#include "../Headers/Entity.h"
+#include "../Headers/Map.h"
+#include "../Headers/Resources.h"
+#include "../Headers/Camera.h"
+#include "../Headers/Renderer.h"
+#include "../Headers/Physics.h"
+#include "../Headers/Character.h"
 
 
 class Game {

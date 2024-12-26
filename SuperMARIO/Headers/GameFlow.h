@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "Menu.h"
-#include "Game.h"
+#include "../Headers/Menu.h"
+#include "../Headers/Game.h"
 
 //using namespace std;
 

@@ -1,6 +1,6 @@
 #pragma once
-#include "INCLUDE.h"
-#include "Physics.h"
+#include "../Headers/INCLUDE.h"
+#include "../Headers/Physics.h"
 
 using namespace sf;
 

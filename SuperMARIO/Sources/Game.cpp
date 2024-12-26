@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "../Headers/Game.h"
 
 Game::Game(Map* map, Character* character, Camera* camera) : map(map), character(character), camera(camera) {
 	InitMapPath();

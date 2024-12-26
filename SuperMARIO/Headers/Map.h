@@ -1,9 +1,9 @@
 #pragma once
-#include "INCLUDE.h"
-#include "Physics.h"
-#include "entity.h"
-#include "Resources.h"
-#include "Renderer.h"
+#include "../Headers/INCLUDE.h"
+#include "../Headers/Physics.h"
+#include "../Headers/entity.h"
+#include "../Headers/Resources.h"
+#include "../Headers/Renderer.h"
 
 
 enum GridColor {

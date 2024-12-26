@@ -1,4 +1,4 @@
-#include "Character.h"
+#include "../Headers/Character.h"
 
 Character* CharacterFactory::createCharacter(CharacterType type, int lives) {
     

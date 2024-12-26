@@ -1,6 +1,6 @@
 #pragma once
-#include "INCLUDE.h"
-#include "Renderer.h"
+#include "../Headers/INCLUDE.h"
+#include "../Headers/Renderer.h"
 
 class Character;
 class Entity;

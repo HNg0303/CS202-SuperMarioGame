@@ -1,5 +1,5 @@
-#include "Animation.h"
-#include "Resources.h"
+#include "../Headers/Animation.h"
+#include "../Headers/Resources.h"
 
 
 

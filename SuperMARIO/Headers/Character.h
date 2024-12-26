@@ -1,10 +1,10 @@
 #pragma once
-#include "INCLUDE.h"
-#include "Renderer.h"
-#include "Resources.h"
-#include "Physics.h"
-#include "entity.h"
-#include "Animation.h"
+#include "../Headers/INCLUDE.h"
+#include "../Headers/Renderer.h"
+#include "../Headers/Resources.h"
+#include "../Headers/Physics.h"
+#include "../Headers/entity.h"
+#include "../Headers/Animation.h"
 
 enum CharacterType { MARIO, LUIGI, CustomCharacter };
 

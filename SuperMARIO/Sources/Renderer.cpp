@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "../Headers/Renderer.h"
 
 Renderer::Renderer(sf::RenderTarget& t) : target(t) {} //Target is Window
 

@@ -1,6 +1,6 @@
-﻿#include "Menu.h"
-#include "INCLUDE.h"
-#include "Resources.h"
+﻿#include "../Headers/Menu.h"
+#include "../Headers/INCLUDE.h"
+#include "../Headers/Resources.h"
 #include <fstream>
 #include <filesystem>
 

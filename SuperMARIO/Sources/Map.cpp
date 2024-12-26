@@ -1,4 +1,4 @@
-#include "Map.h"
+#include "../Headers/Map.h"
 #include <iostream>
 
 void Map::CreateCheckerBoard(int width, int height)

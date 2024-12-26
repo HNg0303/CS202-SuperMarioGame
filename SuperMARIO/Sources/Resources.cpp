@@ -1,4 +1,4 @@
-#include "Resources.h"
+#include "../Headers/Resources.h"
 
 unordered_map<string, Texture> Resources::textures;
 unordered_map<string, SoundBuffer> Resources::sfx;
