@@ -151,6 +151,7 @@ Character::~Character() {
         delete fixtureData;
         fixtureData = nullptr;
     }
+    cout << "Destroy Character !" << endl;
 }
 
 Mario::Mario(float x, float y, int lives) {
@@ -277,13 +278,13 @@ void Mario::Begin() {
     fixtureDef.shape = &polygonShape;
     dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.2f, 0.27f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.3f, 0.25f * (scale), b2Vec2(0.0f, 1.0f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     groundFixture = dynamicBody->CreateFixture(&fixtureDef);
 
-    polygonShape.SetAsBox(0.2f, 0.27f * (scale), b2Vec2(0.0f, -1.0f*(scale)), 0.0f);
+    polygonShape.SetAsBox(0.3f, 0.25f * (scale), b2Vec2(0.0f, -1.0f*(scale)), 0.0f);
     //fixtureDef.userData.pointer = reinterpret_cast<uintptr_t> (this);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
@@ -368,9 +369,10 @@ void Mario::Update(float& deltaTime)
     //Update position and angle
 
     position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
-    //Check Bound 
-    if (position.y >= yBound || position.x < xBound.first - 2.0f || position.x > xBound.second + 2.0f) 
+
+    if (position.y >= yBound - 0.5f || position.x < xBound.first - 2.0f || position.x > xBound.second + 2.0f) 
         handleDeath();
+
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
 }
 
@@ -654,13 +656,13 @@ void Luigi::Update(float& deltaTime)
     dynamicBody->SetLinearVelocity(velocity);
     //Update position and angle
 
+    position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
+    angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
+
     if (position.y >= yBound || position.x <= xBound.first - 2.0f || position.x >= xBound.second + 2.0f) {
         cout << "Out of bound" << endl;
         handleDeath();
     }
-
-    position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
-    angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
 }
 
 void Luigi::Draw(Renderer& renderer) {

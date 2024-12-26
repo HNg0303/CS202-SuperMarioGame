@@ -231,10 +231,6 @@ void Block::Begin() {
 }
 
 Block::~Block() {
-	/*for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext()) {
-		auto* data = reinterpret_cast<FixtureData*>(fixture->GetUserData().pointer);
-		delete data;  // Free the FixtureData memory
-	}*/
 	if (body) {
 		Physics::world.DestroyBody(body);
 		body = nullptr;
@@ -243,6 +239,7 @@ Block::~Block() {
 		delete fixtureData;
 		fixtureData = nullptr;
 	}
+	cout << "Successfully Destroyed Block !" << endl;
 }
 
 
@@ -435,13 +432,14 @@ void deleteEntity(Entity* entity) {
 	if (it != onEntities.end()) {
 		onEntities.erase(it);
 		delete entity;
+		entity = nullptr;
 	}
 }
 
 void clearEntities() {
-	for (Entity* entity : onEntities) {
-		delete entity;
-		entity = nullptr;
+	for (Entity*& entity : onEntities) {
+			delete entity;
+			//entity = nullptr;
 	}
 	onEntities.clear();
 }
@@ -536,5 +534,5 @@ Bowser :: ~Bowser() {
 		delete fixtureData;
 		fixtureData = nullptr;
 	}
-	cout << "Successfully Destroyed Enemy !" << endl;
+	cout << "Successfully Destroyed Bowser !" << endl;
 }

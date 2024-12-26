@@ -40,5 +40,5 @@ public:
 	Entity* createEntityFromMap(int z, int x, int y);
 	void drawBackground(Renderer& renderer, int n);
 	void readMapState(string filename);
-	~Map();
+	//~Map();
 };

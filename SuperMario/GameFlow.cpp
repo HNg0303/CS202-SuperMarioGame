@@ -275,13 +275,6 @@ void GameFlow::handlePlayingGame()
 					curState = static_cast<int>(GameState::PauseMenu);
 					return;
 				}
-
-				/*
-				if (sfEvent.key.code == sf::Keyboard::Escape)
-				{
-					curState = static_cast<int>(GameState::ChooseLevel);
-					return;
-				}*/
 			}
 		}
 
@@ -1147,16 +1140,15 @@ std::vector<sf::Texture> GameFlow::loadFrame(std::string folderPath)
 void GameFlow::Restart() {
 	// Delete and recreate Map, Character, and Camera
 	//this->coins = game->getCoin();
-
-	if (map) {
-		delete map;
-		map = nullptr;
-		cout << "GameFlow :: Map deleted" << endl;
-	}
 	if (character) {
 		delete character;
 		character = nullptr;
 		cout << "GameFlow :: Character deleted" << endl;
+	}
+	if (this->map) {
+		delete this->map;
+		this->map = nullptr;
+		cout << "GameFlow :: Map deleted" << endl;
 	}
 	if (camera) {
 		delete camera;
@@ -1169,6 +1161,9 @@ void GameFlow::Restart() {
 		cout << "GameFlow :: Game deleted in gameFlow" << endl;
 	}
 	
+	clearEntities();
+	cout << "Clear Entities successfully !" << endl;
+
 	map = new Map(1.0f, chooseLevel.GetPressedItem(), 0, mapState);
 	//map = new Map(1.0f, 2, 0, 2);
 	if (chooseCharacterMenu.GetPressedItem() == 1)
