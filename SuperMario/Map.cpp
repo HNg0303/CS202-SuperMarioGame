@@ -208,7 +208,7 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 	if (z == GridColor::powerup_green)
 		entity = new PowerUp("levelUp", 0.3, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::goal)
-		entity = new Block("goal", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
+		entity = new Block("goal", 0.0, x_pos, y_pos, Vector2f(cellSize, 7 * cellSize), Vector2f(x, y));
 	if (z == GridColor::tileMap3)
 		entity = new Block("tileMap3", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::fireBar)
