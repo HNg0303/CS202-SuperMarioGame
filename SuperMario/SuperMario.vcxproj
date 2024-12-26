@@ -145,33 +145,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="entity.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameFlow.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Character.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Physics.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Resources.cpp" />
+    <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="Headers\Animation.h" />
+    <ClInclude Include="Headers\Camera.h" />
+    <ClInclude Include="Headers\Character.h" />
+    <ClInclude Include="Headers\entity.h" />
+    <ClInclude Include="Headers\Game.h" />
+    <ClInclude Include="Headers\GameFlow.h" />
+    <ClInclude Include="Headers\INCLUDE.h" />
+    <ClInclude Include="Headers\Map.h" />
+    <ClInclude Include="Headers\Menu.h" />
+    <ClInclude Include="Headers\Physics.h" />
+    <ClInclude Include="Headers\Renderer.h" />
+    <ClInclude Include="Headers\Resources.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Animation.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="entity.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GameEngine.h" />
-    <ClInclude Include="GameFlow.h" />
-    <ClInclude Include="INCLUDE.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="Physics.h" />
-    <ClInclude Include="Character.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Resources.h" />
+    <ClCompile Include="Sources\Animation.cpp" />
+    <ClCompile Include="Sources\Camera.cpp" />
+    <ClCompile Include="Sources\Character.cpp" />
+    <ClCompile Include="Sources\entity.cpp" />
+    <ClCompile Include="Sources\Game.cpp" />
+    <ClCompile Include="Sources\GameFlow.cpp" />
+    <ClCompile Include="Sources\main.cpp" />
+    <ClCompile Include="Sources\Map.cpp" />
+    <ClCompile Include="Sources\Menu.cpp" />
+    <ClCompile Include="Sources\Physics.cpp" />
+    <ClCompile Include="Sources\Renderer.cpp" />
+    <ClCompile Include="Sources\Resources.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,0 @@
-﻿Animation.obj : warning LNK4204: '' is missing debugging information for referencing module; linking object as if no debug info
-entity.obj : warning LNK4204: '' is missing debugging information for referencing module; linking object as if no debug info
-Menu.obj : warning LNK4204: '' is missing debugging information for referencing module; linking object as if no debug info
-Physics.obj : warning LNK4204: '' is missing debugging information for referencing module; linking object as if no debug info
-Renderer.obj : warning LNK4204: '' is missing debugging information for referencing module; linking object as if no debug info
-Resources.obj : warning LNK4204: '' is missing debugging information for referencing module; linking object as if no debug info
-  SuperMario.vcxproj -> D:\CS202-SuperMarioGame\SuperMario\x64\Debug\SuperMario.exe
