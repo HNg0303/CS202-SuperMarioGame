@@ -512,15 +512,17 @@ void Bowser::Begin() {
 
 void Bowser::Update(float deltaTime) {
 	//cout << "Update Bowser !!!" << endl;
-	fireTime += deltaTime;
-	if (fireTime > 4.0f) {
-		Entity* flame = new Flame("flame", 0.5, 5.0f, body->GetPosition().x - 151.0f, body->GetPosition().x + 200.0f, body->GetPosition().y, body->GetPosition().y + 1000.0f, Vector2f(2.0f, 1.0f), Vector2f(body->GetPosition().x, body->GetPosition().y));
-		flame->faceLeft = true;
-		flame->Begin();
-		cout << "Bowser has fire too !" << endl;
-		onEntities.push_back(flame);
-		fireTime = 0.0f;
-		return;
+	if (!isDead) {
+		fireTime += deltaTime;
+		if (fireTime > 4.0f) {
+			Entity* flame = new Flame("flame", 0.5, 5.0f, body->GetPosition().x - 151.0f, body->GetPosition().x + 200.0f, body->GetPosition().y, body->GetPosition().y + 1000.0f, Vector2f(2.0f, 1.0f), Vector2f(body->GetPosition().x, body->GetPosition().y));
+			flame->faceLeft = true;
+			flame->Begin();
+			cout << "Bowser has fire too !" << endl;
+			onEntities.push_back(flame);
+			fireTime = 0.0f;
+			return;
+		}
 	}
 	Moveable::Update(deltaTime);
 }

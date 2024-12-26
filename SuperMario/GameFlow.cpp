@@ -888,7 +888,7 @@ void GameFlow::handleWinGame()
 				mainMenu.saveResultsFromFile(levelStr, coins[level], getTime.asSeconds(), username);
 
 				cout << "still here" << endl;
-				if (chooseLevel.GetPressedItem() > 2) {
+				if (chooseLevel.GetPressedItem() == 2 && mapState == 2) {
 					curState = static_cast<int>(GameState::MainMenu);
 					return;
 				}

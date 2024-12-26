@@ -34,3 +34,5 @@ medium 33 101 anonymous
 easy 30 72 quangg
 easy 60 75 quanggg
 medium 43 71 anonymous
+easy 20 57 anonymous
+hard 7 38 anonymous

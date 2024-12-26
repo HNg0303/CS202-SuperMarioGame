@@ -5,23 +5,9 @@ Game::Game(Map* map, Character* character, Camera* camera) : map(map), character
 }
 
 Game :: ~Game() {
-	//map = nullptr;
-	//character = nullptr;
-	//camera = nullptr;
 	cout << "Successfully delete game !" << endl;
 }
-/*
-Game* Game::getInstance(Map* map, Character* character, Camera* camera, bool isRestarted) {
-	if (isRestarted) {
-		delete instance;
-		instance = nullptr;
-	}
-	if (instance == nullptr) {
-		instance = new Game(map, character, camera);
-		cout << "Initializing new Instance of the main game !!!!!!" << endl;
-	}
-	return instance;
-}*/
+
 
 Entity* Game::getEntity(string name) {
 	for (auto& entity : onEntities) {
@@ -114,9 +100,3 @@ void Game :: Render(Renderer& renderer, Resources& resource) {
 int Game::getCoin() {
 	return this->character->coin + this->coins;
 }
-
-/*void Game::deleteEntities(Entity* entity) {
-	const auto& it = find(onEntities.begin(), onEntities.end(), entity);
-	if (it != onEntities.end())
-		onEntities.erase(it);
-}*/

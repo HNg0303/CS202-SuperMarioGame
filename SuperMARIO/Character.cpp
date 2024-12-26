@@ -267,7 +267,7 @@ void Mario::Begin() {
     b2CircleShape circle{};
     fixtureDef.shape = &circle;
     circle.m_p.Set(0.0f, -0.5f * scale); //His head.
-    circle.m_radius = 0.48f * scale;
+    circle.m_radius = 0.45f * scale;
     dynamicBody->CreateFixture(&fixtureDef);
 
     circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
@@ -553,7 +553,7 @@ void Luigi::Begin() {
     b2CircleShape circle{};
     fixtureDef.shape = &circle;
     circle.m_p.Set(0.0f, -0.5f * scale); //His head.
-    circle.m_radius = 0.48f * scale;
+    circle.m_radius = 0.45f * scale;
     dynamicBody->CreateFixture(&fixtureDef);
 
     circle.m_p.Set(0.0f, 0.5f * scale); //His feet.
