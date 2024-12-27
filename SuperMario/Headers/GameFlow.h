@@ -14,7 +14,7 @@ private:
 	inline static GameFlow* instance = nullptr;
 	int curState = 0;
 	int mapState = 0;
-	//int lives = 3;
+	vector<int> tempLives;
 	Map* map = nullptr;
 	Camera* camera = nullptr;
 	Character* character = nullptr;
@@ -39,7 +39,8 @@ private:
 		sfEvent(),
 		isPassed(3, vector<bool>(3, 0)),
 		lives(3, 3),
-		coins(3, 0)
+		coins(3, 0),
+		tempLives(3, 3)
 	{
 		loadPausedTimeToFile();
 		
