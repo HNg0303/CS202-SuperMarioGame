@@ -241,7 +241,6 @@ void GameFlow::handlePlayingGame()
 	cout << "CHECK TIME " << formatTime(pausedTime)<<" "<<formatTime(pausedTime + clock.getElapsedTime()) << endl;
 	while (window->isOpen())
 	{
-	
 		if (isRestarted) {
 			Restart();
 			this->game = new Game(this->map, this->character, this->camera);
@@ -297,13 +296,12 @@ void GameFlow::handlePlayingGame()
 			}
 			else {
 				pauseClock();
-
 				isPassed[chooseLevel.GetPressedItem()][mapState] = true;
 				mapState += 1;
 				curState = static_cast <int>(GameState::PlayingGame);
 				isRestarted = true;
+				tempLives[chooseLevel.GetPressedItem()] = this->lives[chooseLevel.GetPressedItem()];
 				cout << "CHECK TIME " << formatTime(pausedTime + clock.getElapsedTime()) << endl;
-
 				return;
 			}
 		}
@@ -317,8 +315,6 @@ void GameFlow::handlePlayingGame()
 		game->Render(*renderer, resources);
 		coins[chooseLevel.GetPressedItem()] = game->getCoin();
 		handleGameInfo();
-		//handleEntity();
-
 
 		window->display();
 	}
@@ -333,6 +329,7 @@ void GameFlow::handleChooseState(int difficulty) {
 		}
 	mapState = 2;
 	this->lives[difficulty] = 3;
+	this->tempLives[difficulty] = 3;
 	this->coins[difficulty] = 0;
 	//If we have passed every stages in a difficulty then we play the hardest level.
 }
@@ -1164,11 +1161,15 @@ void GameFlow::Restart() {
 	clearEntities();
 	cout << "Clear Entities successfully !" << endl;
 
+	this->lives[chooseLevel.GetPressedItem()] = tempLives[chooseLevel.GetPressedItem()];
+
 	map = new Map(1.0f, chooseLevel.GetPressedItem(), 0, mapState);
 	//map = new Map(1.0f, 2, 0, 2);
 	if (chooseCharacterMenu.GetPressedItem() == 1)
 		character = CharacterFactory::createCharacter(LUIGI, this->lives[chooseLevel.GetPressedItem()]);
 	else character = CharacterFactory::createCharacter(MARIO, this->lives[chooseLevel.GetPressedItem()]);
+
+	
 
 	camera = new Camera(30.0f);
 	//isRestarted = true;
@@ -1183,6 +1184,7 @@ void GameFlow::ResetLevel(int difficulty) {
 	isPassed[difficulty][2] = false;
 	this->coins[difficulty] = 0;
 	this->lives[difficulty] = 3;
+	this->tempLives[difficulty] = 3;
 }
 
 void GameFlow::Start() {
