@@ -20,7 +20,10 @@ private:
 	Character* character = nullptr;
 	vector<vector<bool>> isPassed;
 	vector<int> lives;
+	vector<int> tempLives;
+	vector<sf::Time> tempTime;
 	vector<int> coins;
+
 	//main game
 
 	 //Check if we have passed the difficulty.
@@ -39,7 +42,10 @@ private:
 		sfEvent(),
 		isPassed(3, vector<bool>(3, 0)),
 		lives(3, 3),
+		tempLives(3, 3),
+		tempTime(3, sf::Time::Zero),
 		coins(3, 0)
+
 	{
 		loadPausedTimeToFile();
 		

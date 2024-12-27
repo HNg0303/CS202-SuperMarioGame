@@ -158,7 +158,7 @@ void GameFlow::pauseClock()
 void GameFlow::resumeClock()
 {
 	isPaused = true;
-	pausedTime = sf::Time::Zero;
+	pausedTime = tempTime[chooseLevel.GetPressedItem()];
 }
 
 void GameFlow::handleMainMenu() //handles controls in menu
@@ -296,11 +296,13 @@ void GameFlow::handlePlayingGame()
 			}
 			else {
 				pauseClock();
+				
 				isPassed[chooseLevel.GetPressedItem()][mapState] = true;
 				mapState += 1;
 				curState = static_cast <int>(GameState::PlayingGame);
 				isRestarted = true;
 				tempLives[chooseLevel.GetPressedItem()] = this->lives[chooseLevel.GetPressedItem()];
+				tempTime[chooseLevel.GetPressedItem()] = pausedTime;
 				cout << "CHECK TIME " << formatTime(pausedTime + clock.getElapsedTime()) << endl;
 				return;
 			}
@@ -546,6 +548,7 @@ void GameFlow::handlePauseMenu()
 
 					if (pauseMenu.GetPressedItem() == 2) //restart
 					{
+						
 						curState = static_cast<int>(GameState::MainMenu);
 						return;
 					}
@@ -588,6 +591,7 @@ void GameFlow::handleAskRestart()
 					if (askRestart.GetPressedItem() == 0) //restart
 					{
 						resumeClock();
+						
 						isRestarted = true;
 						this->coins[chooseLevel.GetPressedItem()] -= character->coin;
 						curState = static_cast<int>(GameState::PlayingGame);
@@ -1168,12 +1172,9 @@ void GameFlow::Restart() {
 	if (chooseCharacterMenu.GetPressedItem() == 1)
 		character = CharacterFactory::createCharacter(LUIGI, this->lives[chooseLevel.GetPressedItem()]);
 	else character = CharacterFactory::createCharacter(MARIO, this->lives[chooseLevel.GetPressedItem()]);
-
 	
 
 	camera = new Camera(30.0f);
-	//isRestarted = true;
-	
 }
 
 void GameFlow::ResetLevel(int difficulty) {

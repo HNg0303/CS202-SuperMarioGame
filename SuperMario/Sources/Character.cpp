@@ -370,7 +370,7 @@ void Mario::Update(float& deltaTime)
 
     position = Vector2f(dynamicBody->GetPosition().x, dynamicBody->GetPosition().y);
 
-    if (position.y >= yBound - 0.5f || position.x < xBound.first - 2.0f || position.x > xBound.second + 2.0f) 
+    if (position.y >= yBound - 0.75f || position.x < xBound.first - 2.0f || position.x > xBound.second + 2.0f) 
         handleDeath();
 
     angle = dynamicBody->GetAngle() * (180.0f / PI); //Angle calculated in radian
