@@ -42,7 +42,8 @@ private:
 		isPassed(3, vector<bool>(3, 0)),
 		lives(3, 3),
 		coins(3, 0),
-		tempLives(3, 3)
+		tempLives(3, 3),
+		tempTime(3, sf::Time::Zero)
 	{
 		loadPausedTimeToFile();
 		
