@@ -1,5 +1,5 @@
 #include "../Headers/Map.h"
-
+#include <random>
 void Map::CreateCheckerBoard(int width, int height)
 {
 	grid = vector<vector<int>>(width, vector<int>(height, 0));
@@ -184,6 +184,13 @@ void Map::readObj(string filename)
 	fin.close();
 }
 
+int randSeed(int min, int max) {
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<> distrib(min, max);
+	return distrib(gen);
+}
+
 Entity* Map::createEntityFromMap(int z, int x, int y)
 {
 	float x_pos = cellSize * x + cellSize / 2.0f;
@@ -209,8 +216,10 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 		entity = new Block("goal", 0.0, x_pos, y_pos, Vector2f(cellSize, 7 * cellSize), Vector2f(x, y));
 	if (z == GridColor::tileMap3)
 		entity = new Block("tileMap3", 0.0, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
-	if (z == GridColor::fireBar)
-		entity = new Elevator("fireBar", 0.0, 0.4f, x_pos, x_pos, cellSize * y + cellSize / 2.0f, (cellSize * y - 6 * cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	if (z == GridColor::fireBar) {
+		float speed = 0.2f * randSeed(2, 5);
+		entity = new Elevator("fireBar", 0.0, speed, x_pos, x_pos, cellSize * y + cellSize / 2.0f, (cellSize * y - 6 * cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
+	}
 	if (z == GridColor::shell)
 		entity = new Enemy("goombas", 0.5f, 0.3f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize, cellSize), Vector2f(x, y));
 		//entity = new Bowser("bowser", 0, 1.0f, (cellSize * x - cellSize / 2.0f), (cellSize * x + 3 * cellSize / 2.0f), y_pos, y_pos, Vector2f(2.0f * cellSize, 2.0f * cellSize), Vector2f(x, y));
@@ -222,9 +231,9 @@ Entity* Map::createEntityFromMap(int z, int x, int y)
 	if (z == GridColor::lava1)
 		entity = new Block("lava", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
 	if (z == GridColor::lava2)
-		entity = new Block("lava2", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
+		entity = new Block("lava", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
 	if (z == GridColor::spike)
-		entity = new Block("spike", 0.0, x_pos, y_pos, Vector2f(cellSize, 3 * cellSize), Vector2f(x, y));
+		entity = new Block("spike", 0.4, x_pos, y_pos, Vector2f(cellSize, cellSize), Vector2f(x, y));
 	if (z == GridColor::pipe)
 		entity = new Block("pipe", 0.0, (cellSize * x + cellSize / 2.0f), (cellSize * y + cellSize / 2.0f), Vector2f(cellSize * 2.0f, cellSize * 4.0f), Vector2f(x, y));
 	if (z == GridColor::peach)
